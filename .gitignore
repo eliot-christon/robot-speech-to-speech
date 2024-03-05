@@ -3,6 +3,6 @@
 *.mp3
 *.mp4
 *.raw
-*.png
+*.pyc
 *__pycache__*
 old/*
