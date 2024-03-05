@@ -2,7 +2,7 @@ from .Profiles import User, Human, Assistant
 from .Message import Message
 from typing import List
 import time
-from .prompt_template import get_prompt_template
+from text_generation.prompt_template import get_prompt_template
 
 
 class Conversation:
@@ -13,9 +13,9 @@ class Conversation:
         self.filename = txt_filename
         self.csv_filename = csv_filename
         if self.filename is None:
-            self.filename = "py311_pckg\\text_generation\\historique\\conversation-" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + ".txt"
+            self.filename = "py311_pckg\\conversation\\historique\\conversation-" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + ".txt"
         if self.csv_filename is None:
-            self.csv_filename = "py311_pckg\\text_generation\\historique\\conversation-" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + ".csv"
+            self.csv_filename = "py311_pckg\\conversation\\historique\\conversation-" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + ".csv"
 
         self.messages = [Message("","")]
         self.save(only_last=True)  # create the empty file

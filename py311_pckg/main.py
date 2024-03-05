@@ -1,7 +1,7 @@
 from ctransformers import AutoModelForCausalLM
-from text_generation.Profiles import Assistant, Human
-from text_generation.Conversation import Conversation
-from HumanSpeaker import HumanSpeaker
+from conversation.Profiles import Assistant, Human
+from conversation.Conversation import Conversation
+from conversation.HumanSpeaker import HumanSpeaker
 
 mistral = AutoModelForCausalLM.from_pretrained("TheBloke/Mistral-7B-Instruct-v0.1-GGUF", model_file="mistral-7b-instruct-v0.1.Q4_K_M.gguf", model_type="mistral", gpu_layers=50)
 # mistral = AutoModelForCausalLM.from_pretrained("Hvsq/ARIA-7B-V3-mistral-french-v1-GGUF", model_file="aria-7b-v3-mistral-french-v1.Q5_K_M.gguf", model_type="mistral", gpu_layers=50)

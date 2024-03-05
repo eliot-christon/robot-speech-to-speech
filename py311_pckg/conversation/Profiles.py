@@ -1,5 +1,5 @@
 from .Message import Message
-from .prompt_template import get_prompt_template
+from text_generation.prompt_template import get_prompt_template
 
 from abc import ABC, abstractmethod
 from ctransformers import AutoModelForCausalLM

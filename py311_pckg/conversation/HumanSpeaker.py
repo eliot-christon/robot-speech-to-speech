@@ -1,6 +1,6 @@
-from text_generation.Profiles import Human
-from text_generation.Message import Message
-from stt.real_time_transcribe_2 import SpeechTranscriber
+from conversation.Profiles import Human
+from conversation.Message import Message
+from stt.real_time_transcribe_wav import SpeechTranscriber
 
 
 class HumanSpeaker(Human):
