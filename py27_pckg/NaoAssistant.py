@@ -28,7 +28,7 @@ HEXA_COLORS = {
 class NaoAssistant:
     """ Nao class for Nao robot """
 
-    def __init__(self):
+    def __init__(self, sound_receiver):
         self.atts = ALProxy(
             "ALAnimatedSpeech",
             NAO_IP,
@@ -59,6 +59,7 @@ class NaoAssistant:
         }
         self.tts.setVoice(self.voices["fr"])
         self.current_state = ""
+        self.sound_receiver = sound_receiver
 
 
     def rest(self):
@@ -68,7 +69,7 @@ class NaoAssistant:
 
     def listen(self):
         """ Listen to the user """
-        SoundReceiver.start()
+        self.sound_receiver.start()
         self.write_state("listening")
         self.leds.fadeRGB("FaceLeds", HEXA_COLORS["dark_green"], 0.5)
         # wait for the name to not be Nao
@@ -157,41 +158,3 @@ class NaoAssistant:
         self.write_state("resting")
         self.speaking_movement.setEnabled(False)
         self.leds.reset("AllLeds")
-
-
-if __name__ == "__main__":
-
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
-    logging.getLogger().setLevel(logging.INFO)
-
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
-    logging.getLogger().setLevel(logging.INFO)
-
-    # NAOqi modules and subscribe to other modules
-    # The broker must stay alive until the program exists
-    myBroker = ALBroker("myBroker",
-       "0.0.0.0",   # listen to anyone
-       0,           # find a free port and use it
-       NAO_IP,      # parent broker IP
-       9559)        # parent broker port
-
-    # Warning: SoundReceiver must be a global variable
-    # The name given to the constructor must be the name of the
-    # variable
-    global SoundReceiver
-    SoundReceiver = SoundReceiverModule(
-        "SoundReceiver",
-        NAO_IP,
-        one_sentence=True,
-        sentence_timeout=3,
-        live_wav_each=10,
-        wav_dir="py_com\\py27_audio.wav",
-        save_csv=False,
-    )
-
-    nao = NaoAssistant()
-    nao.start()
-
-    nao.__del__()
-
-    myBroker.shutdown()

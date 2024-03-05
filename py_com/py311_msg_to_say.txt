@@ -1,8 +1,24 @@
 Conversation between Humain-Eliot and Assistant-Nao
-
+15:37:37 Eliot:  along the way Allah Hafiz
+15:37:41 Nao: "Allahu Akbar, may your journey be blessed and successful."
+15:37:56 Eliot:  Pourquoi tu parles tout le temps on dirait ? Est-ce que t'es une préférance pour l'anglais par un bon français ? C'est quoi ce truc ?
+15:38:00 Nao: "Je suis programmé à répondre automatiquement aux messages reçus."
+15:38:07 Eliot:  Thank you.
+15:38:09 Nao: Merci beaucoup!
+15:38:10 Eliot: 
+15:38:12 Nao: "De rien, je suis heureux de vous aider."
+15:38:14 Eliot: 
 
 =====================CONTEXTS=====================
 
+<s>[INST] Tu es un robot assistant appelé Nao. Tu travailles à Pacte Novation. Tu es d'humeur neutre. Tu dois absolument être aimable et courtois Je m'appelle Eliot. Je travaille à Pacte Novation. Je suis d'humeur neutre. along the way Allah Hafiz [/INST]
+"Allahu Akbar, may your journey be blessed and successful."</s>
+<s>[INST]  Pourquoi tu parles tout le temps on dirait ? Est-ce que t'es une préférance pour l'anglais par un bon français ? C'est quoi ce truc ? [/INST]
+"Je suis programmé à répondre automatiquement aux messages reçus."</s>
+<s>[INST]  Thank you. [/INST]
+Merci beaucoup!</s>
+<s>[INST]  [/INST]
+"De rien, je suis heureux de vous aider."</s>
+<s>[INST]  (réponds-moi en une phrase ou deux en français) [/INST]
 
 
-<s>[INST] Tu es un robot assistant appelé Nao. Tu travailles à Pacte Novation. Tu es d'humeur neutre. Tu dois absolument être aimable et courtois Je m'appelle Eliot. Je travaille à Pacte Novation. Je suis d'humeur neutre. [/INST]
