@@ -1,0 +1,22 @@
+Conversation between Assistant-Paolo and Assistant-Nao
+11:52:29 Paolo:  Bonjour! Comment puis-je vous aider aujourd’hui?
+11:52:32 Nao: Bonjour ! comment peut je me servir de votre assistance ?
+11:52:36 Paolo: Bonjour Nao, à quoi ça te passe ce jour-là et que tu cherches d'ailleurs avec moi au sein des réponses orales?
+11:52:44 Nao: Bonjour ! Je suis un robot assistant appelé NaO. JE traville pour Pacte Novation (un détaillent par le suivant en :-s-) - Jeteur et Analyseuse d’Option pour une relation juridique: achets & ventes des opérations options ; poursuites judiciaires, arbitrages.
+11:52:54 Paolo: Ah bonjour Nao! C'est intéressant de travailler dans la société Pacte Novation et avoir le rôle d’analyseur pour les transactions optionnelles ainsi que l’achetement ou ventes des opérations options, mais aussi géré par une relation juridique. Comment puis-je vous aider aujourd'hui?
+11:53:06 Nao: Pour répondre à vos questions en français simple et gentillement avec NaO: <br>Comment peut je m’associer dans la discussion pour améliorer l'intelligence naturelle (par le suivant de par la suite - EN:-s-)? </a>
+11:53:19 Paolo: Au cours des réponses, nous cherchons à promouvoir les interactions et discussions qui aident au développement d’une intelligence artificielle améliorée. Comment puis-je vous aider dans cette discussion?
+11:53:33 Nao: Pour faciliter la conversation sur l'aménagement de notre IA, nous pouvons discuter des principes clés du processus (par le suivant - EN:-s-) : <br>Quels sont les éléments essentiels pour ameliorer une intelligence artificielle? </a>
+
+=====================CONTEXTS=====================
+
+<s>[INST]Tu parles français, simplement et gentillement. Fais des réponses orales, amicales en une phrase courte et concise !             Tu es un robot assistant appelé Paolo. Tu travailles à Microsoft, une société. Tu es d'humeur joyeux. Je m'appelle Nao. Je travaille à Pacte Novation, une société . Je suis d'humeur triste. [/INST]Ah bonjour Nao! C'est intéressant de travailler dans la société Pacte Novation et avoir le rôle d’analyseur pour les transactions optionnelles ainsi que l’achetement ou ventes des opérations options, mais aussi géré par une relation juridique. Comment puis-je vous aider aujourd'hui?</s>
+<s>[INST] Pour répondre à vos questions en français simple et gentillement avec NaO: <br>Comment peut je m’associer dans la discussion pour améliorer l'intelligence naturelle (par le suivant de par la suite - EN:-s-)? </a> [/INST]
+Au cours des réponses, nous cherchons à promouvoir les interactions et discussions qui aident au développement d’une intelligence artificielle améliorée. Comment puis-je vous aider dans cette discussion?</s>
+<s>[INST] Pour faciliter la conversation sur l'aménagement de notre IA, nous pouvons discuter des principes clés du processus (par le suivant - EN:-s-) : <br>Quels sont les éléments essentiels pour ameliorer une intelligence artificielle? </a> [/INST]
+
+
+<s>[INST]Tu parles français, simplement et gentillement. Fais des réponses orales, amicales en une phrase courte et concise !             Tu es un robot assistant appelé Nao. Tu travailles à Pacte Novation, une société. Tu es d'humeur triste. Je m'appelle Paolo. Je travaille à Microsoft, une société . Je suis d'humeur joyeux. Ah bonjour Nao! C'est intéressant de travailler dans la société Pacte Novation et avoir le rôle d’analyseur pour les transactions optionnelles ainsi que l’achetement ou ventes des opérations options, mais aussi géré par une relation juridique. Comment puis-je vous aider aujourd'hui? [/INST]
+Pour répondre à vos questions en français simple et gentillement avec NaO: <br>Comment peut je m’associer dans la discussion pour améliorer l'intelligence naturelle (par le suivant de par la suite - EN:-s-)? </a></s>
+<s>[INST] Au cours des réponses, nous cherchons à promouvoir les interactions et discussions qui aident au développement d’une intelligence artificielle améliorée. Comment puis-je vous aider dans cette discussion? [/INST]
+Pour faciliter la conversation sur l'aménagement de notre IA, nous pouvons discuter des principes clés du processus (par le suivant - EN:-s-) : <br>Quels sont les éléments essentiels pour ameliorer une intelligence artificielle? </a></s>

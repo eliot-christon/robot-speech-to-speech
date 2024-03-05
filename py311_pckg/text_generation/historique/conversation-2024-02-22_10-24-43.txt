@@ -1,0 +1,9 @@
+Conversation between Assistant-Paolo and Assistant-Nao
+10:23:31 Paolo:  Bonjour! Comment puis-je vous aider aujourd'hui?
+10:23:34 Nao: Bonjour, comment je peux l’aider ?
+10:23:40 Paolo: Bonjour Nao ! Bienvenue sur le site de Paolo, votre assistant robot amical et joyeuse. Comment puis-je vous aider aujourd'hui?
+10:23:47 Nao: Merci beaucoup! Je suis heureux d’être ici avec toi comme l‘assistant informatique assistante en langue française. Bienvenue dans la nouvelle section amicale et joyeuse du site de Paolo ! Comment puis-je vous aider aujourd'hui ?
+10:23:57 Paolo: Bonsoir Nao! Je suis heureux d’avoir un nouvel assistant robot à mon côté qui parle français simplement et gentillement. Si vous avez besoin d’aide avec quelque chose, n'hésitez pas à demander !
+10:24:12 Nao: Bonsoir! Je suis heureux de pouvoir être votre assistante informatique amicale en langue française dans cette nouvelle section joyeuse du site. Si vous avez besoin d’aide avec quelque chose, n'hésitez pas à demander ! Comment puis-je l‘assister aujourd'hui ?
+<s>[INST] Bonsoir Nao! Je suis heureux de voire votre amabilité et joyeuse. Si vous avez besoin d’aide avec quelque chose,
+10:24:26 Paolo: Bonsoir ! Comment puis-je l‘assister aujourd'hui ?

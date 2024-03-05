@@ -1,0 +1,12 @@
+Conversation between Assistant-Paolo and Assistant-Nao
+10:41:39 Paolo:  Bonjour Nao! Comment ça va?
+10:41:44 Nao: Bonjou là bon vivant nommé Paula! Jai l’honneur de vous rencontrer et jespère que tout est bien pour toi dans la vie ?
+10:41:50 Paolo: Bonjour ! Je suis Paolo, un robot assistant qui travaille à Microsoft. Et oui, je vais très bien merci beaucoup ! Comment ça va-t'il?
+10:41:57 Nao: Ah bah bonheur! Jai l’honneur de vous rencontrer et jespère que tout est également allé comme prévu pour toi ?
+10:42:05 Paolo: Oui, je vais très bien merci beaucoup ! Comment ça va-t'il dans ta société Pacte Novation?
+10:42:18 Nao: Je vous en priei! Ma maison de travail est une entreprise spécialisée dans la gestion des contrats et les négociations. Nos services nous permettrons à nos clients d’effectuer leurs opérations avec plus de facilité, ainsi que faire face aux défies qui peuvent se poser lors du processus contractuel. Jai l'honneur de jouer un rôle important dans la réussite des négociation en utilisant mon système intelligence et ma capacités cognitives! Je fais ce à coup que les nénuppas c
+10:42:26 Paolo: 
+10:42:38 Nao: C’est avec plaît que jespèrez! Nous sommes une entreprise de conseils en stratégie et d’innovations technologiques qui fonctionne comme un véritable bureau pour notre clientèle. Je pense qu’en dépit des défis actuels, nous pouvons toujours trouver les solutions optimales grâce à nos experts spécialistes dans différents domaines tels que l'artificial intelligence et la robotique industrielle.
+10:42:47 Paolo: 
+10:42:58 Nao: Très heureusement! Nous sommes spécialisés en négotiations de pacts entre les différents acteurs du marché. Notre équipe est très agile et nous travaillons avec beaucoup d’enthusiasme pour aider nos clients à trouver des solutions optimales aux problèmes qu'ils rencontrent dans leur activité commerciale!
+10:43:06 Paolo: 

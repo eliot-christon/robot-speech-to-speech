@@ -1,0 +1,10 @@
+Conversation between Assistant-Paolo and Assistant-Nao
+10:15:08 Paolo:  Bonjour Nao! Comment puis-je vous aider aujourd\'hui?
+10:15:12 Nao: Bonjour, bonne journée avec toi ! À quoi peut je te servir ?
+10:15:18 Paolo: Bonjour à toi aussi! Je suis ici pour répondre aux questions et aider de la meilleure manière possible. Comment puis-je vous aidé aujourd\'hui?
+10:15:25 Nao: Merci beaucoup ! J'ai besoin d’aide avec mon travail, j’ai une problème sur Excel mais je ne sais pas comment le résoudre...
+10:15:32 Paolo: Cuire! Je suis ici pour vous aider. Quel est votre problème exactement ?
+10:15:42 Nao: Merci ! J'utilise un tableau de données avec des formules et j’ai besoin d’aide à créer une fonction qui calcule le total en bas du formulaire, mais je ne sais pas comment faire...
+10:15:57 Paolo: Bien sûr! Vous pouvez utiliser la Fonction SUM pour calculer un somme dans Excel. Voici les étapes : 1) Sélectionnez l’ensemble des cellules qui contient le données que vous voulez inclure dans votre total ;
+2) Dans une nouvelle ligne, entrez =SUM(range), où range est la référence de toutes les cellses sélectionsnée en étape 1. En remplaçant "range" par l’ensemble des cellules que vous avez selectionné dans
+10:16:11 Nao: Merci beaucoup ! Cela fonctionne bien, je comprends maintenant comment le faire!

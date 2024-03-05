@@ -2,4 +2,7 @@
 *.wav
 *.mp3
 *.mp4
+*.raw
+*.png
 *__pycache__*
+old/*
