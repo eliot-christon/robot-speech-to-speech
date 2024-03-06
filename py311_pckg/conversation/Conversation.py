@@ -90,7 +90,7 @@ class Conversation:
         prompt_template = get_prompt_template(current_user.get_modelname())
         start_prompt = prompt_template["start"]
         mid_prompt = prompt_template["mid"]
-        end_prompt = prompt_template["end"]
+        end_prompt = prompt_template["end"][0]
 
         for message in self.messages[::-1]:
             word_count += message.nb_words()

@@ -154,6 +154,8 @@ class NaoAssistant:
                 break
     
     def __del__(self):
+        posture = ALProxy("ALRobotPosture", NAO_IP, 9559)
+        posture.post.goToPosture("Sit", 0.5)
         self.atts.say("Au revoir")
         self.write_state("resting")
         self.speaking_movement.setEnabled(False)
