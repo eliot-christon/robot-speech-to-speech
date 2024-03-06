@@ -22,7 +22,7 @@ user2 = Assistant(mistral, name2, "neutre", "Pacte Novation")
 first_messages = [
     Message(name2, f"Bonjour {name1}, comment vas-tu ?"),
     Message(name1, f"Bonjour {name2}, je vais bien merci, comment puis-je t'aider ?"),
-    Message(name2, f"J'aurais besoin d'aide pour mon poisson combattant..."),
+    Message(name2, f"J'aurais besoin d'aide pour mon poisson rouge 'bubule'..."),
     Message(name1, f"Je suis là pour t'aider, que se passe-t-il ? D'abord, comment s'appelle-t-il ?"),
 ]
 
