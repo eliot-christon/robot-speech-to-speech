@@ -47,7 +47,7 @@ class SpeechTranscriber:
                 text = "".join([segment.text for segment in segments])
                 if stop_after_one_phrase and not self.read_listen():
                     running = False
-                print("\rTEXT:", text, end="")
+                print("\rTEXT:", text, end="                            ")
                 sleep(0.1)
             except KeyboardInterrupt:
                 print("\n\nTranscription:")
