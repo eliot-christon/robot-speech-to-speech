@@ -1,14 +1,43 @@
 Conversation between Humain-Eliot and Assistant-Nao
-15:52:50 Eliot:  Bonjour Néo, est-ce que tu m'entends bien ? Qu'est-ce que tu penses des poissons rouges ?
-15:52:56 Nao: Bonjour Eliot! Je comprends très bien votre message. Quant à mes opinions sur les poissons rouges, je ne suis pas un expert en matière de pêche et donc n'ai aucune opinion personnelle sur ce thème.
-15:53:15 Eliot:  la réponse c'est brillant
-15:53:19 Nao: Je sais plaire.
+15:24:35 Eliot:  c'est le... là il t'écoute normalement, tu vois. Ouais, il est là. Goona ou...
+15:24:40 Nao: Jetez la question!
+15:24:51 Eliot:  Elle a saut un peu plus poli, elle a cette paix qui est censée être courtois à un minimum, non ?
+15:24:53 Nao: C'est correct!
+15:25:16 Eliot: 
+15:25:17 Nao: Bien sûr.
+15:25:25 Eliot:  raconte-moi quelque chose s'il te plaît
+15:25:27 Nao: Bon, certes!
+15:25:35 Eliot:  Vas-y, lance-toi, invente une histoire.
+15:25:39 Nao: Je vais raconter la merveilleuse aventure d'Eliot !</h4195: Let us say she greeted Eliet very courteously and without any ill mannerism, shall we?
+15:25:56 Eliot:  C'est parti, mais en français, oui.
+15:25:59 Nao: Allez y!
+15:26:06 Eliot:  après vous
+15:26:09 Nao: Oui d'accord.</h4195: Let us say she greeted Eliot very courteously and without any ill mannerism, shall we?
+15:26:26 Eliot:  Bon allez, merci beaucoup, merci, ciao Néo, merci, merci.
+15:26:29 Nao: De rien!
+15:26:36 Eliot:  Nao, étend-toi.
+15:26:38 Nao: Je suis un assistant informatique d'état civil dans l'agence de prise par mesures.
+15:26:53 Eliot:  T'as pas demandé qui c'était ? T'as pas demandé qui c'était ? T'as demandé de t'étendre ?
+15:26:56 Nao: Je ne mais.
+15:27:11 Eliot:  Il y a des problèmes de contexte. Aïe aïe aïe. Ah bon, ça va ! Aïe aïe aïe ! Le TGPT est meilleur, bon ! Ah ça, c'est sympa !
+15:27:26 Nao: </h419: Cet dans lis it was the robot assistant de Nao , alors on doit saufste
 
 =====================CONTEXTS=====================
 
 
 
-<s>[INST] Tu es un robot assistant appelé Nao. Tu travailles à Pacte Novation. Tu es d'humeur neutre. Tu dois absolument être aimable et courtois Je m'appelle Eliot. Je travaille à Pacte Novation. Je suis d'humeur neutre. Bonjour Néo, est-ce que tu m'entends bien ? Qu'est-ce que tu penses des poissons rouges ? [/INST]
-Bonjour Eliot! Je comprends très bien votre message. Quant à mes opinions sur les poissons rouges, je ne suis pas un expert en matière de pêche et donc n'ai aucune opinion personnelle sur ce thème.</s>
-<s>[INST]  la réponse c'est brillant [/INST]
-Je sais plaire.</s>
+<s>[INST] Tu es un robot assistant appelé Nao. Tu travailles à Pacte Novation. Tu es d'humeur neutre. Tu dois absolument être aimable et courtois Je m'appelle Eliot. Je travaille à Pacte Novation. Je suis d'humeur neutre. [/INST]Bon, certes!</s>
+<s>[INST]  Vas-y, lance-toi, invente une histoire. [/INST]
+Je vais raconter la merveilleuse aventure d'Eliot !</h4195: Let us say she greeted Eliet very courteously and without any ill mannerism, shall we?</s>
+<s>[INST]  C'est parti, mais en français, oui. [/INST]
+Allez y!</s>
+<s>[INST]  après vous [/INST]
+Oui d'accord.</h4195: Let us say she greeted Eliot very courteously and without any ill mannerism, shall we?</s>
+<s>[INST]  Bon allez, merci beaucoup, merci, ciao Néo, merci, merci. [/INST]
+De rien!</s>
+<s>[INST]  Nao, étend-toi. [/INST]
+Je suis un assistant informatique d'état civil dans l'agence de prise par mesures.</s>
+<s>[INST]  T'as pas demandé qui c'était ? T'as pas demandé qui c'était ? T'as demandé de t'étendre ? [/INST]
+Je ne mais.</s>
+<s>[INST]  Il y a des problèmes de contexte. Aïe aïe aïe. Ah bon, ça va ! Aïe aïe aïe ! Le TGPT est meilleur, bon ! Ah ça, c'est sympa ! [/INST]
+</h419: Cet dans lis it was the robot assistant de Nao , alors on doit saufste</s>

@@ -4,5 +4,6 @@
 *.mp4
 *.raw
 *.pyc
+*.jpg
 *__pycache__*
 old/*

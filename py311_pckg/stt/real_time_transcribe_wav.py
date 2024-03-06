@@ -53,6 +53,8 @@ class SpeechTranscriber:
                 print("\n\nTranscription:")
                 print(text)
                 running = False
+            except Exception as e:
+                print("\n\nError:", e, "\n")
         
         if stop_after_one_phrase:
             # Empty the wav file
