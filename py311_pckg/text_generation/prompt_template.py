@@ -4,7 +4,7 @@ prompt_templates = {
     "TheBloke--LlaMA-Pro-8B-Instruct-GGUF" : {"start":"<|user|>\n", "mid":"\n<|assistant|>", "end":["</s>"]},
     "TheBloke--Llama-2-7B-GGUF" : {"start":"", "mid":"", "end":["</s>"]},
     "TheBloke--EstopianMaid-13B-GGUF" : {"start":"### Instruction:\n", "mid":"\n\n### Response:\n", "end":["</s>", "###"]},
-    "TheBloke--openchat-3.5-0106-GGUF" : {"start":"GPT4 Correct User: ", "mid":"<|end_of_turn|>GPT4 Correct Assistant: ", "end":["<|end_of_turn|>", "</s>"]},
+    "TheBloke--openchat-3.5-0106-GGUF" : {"start":"GPT4 Correct User: ", "mid":"<|end_of_turn|>GPT4 Correct Assistant: ", "end":["<|end_of_turn|>", "</s>", "<|end", "<||", "< |end", "< | end"]},
 }
 
 def get_prompt_template(model_name:str) -> dict:

@@ -20,6 +20,7 @@ class Conversation:
         self.messages = [Message("","")]
         self.save(only_last=True)  # create the empty file
         self.messages = messages
+        self.initial_messages = len(self.messages)
 
         self.data = {
             "modelname": [],
@@ -27,9 +28,9 @@ class Conversation:
             "username": [],
             "usertype": [],
             "messages_content": [],
-            "prompt_latency": [],
-            "response_latency": [],
-            "save_latency": [],
+            "prompt_latency": [None]*len(self.messages),
+            "response_latency": [None]*len(self.messages),
+            "save_latency": [None]*len(self.messages),
         }
 
     def __str__(self):
@@ -132,7 +133,6 @@ class Conversation:
             self.user1.name: self.user1.get_modelname(),
             self.user2.name: self.user2.get_modelname(),
         }
-
 
         for message in self.messages:
             self.data["modelname"].append(dict_user_modelname[message.username])

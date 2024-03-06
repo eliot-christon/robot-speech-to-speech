@@ -60,6 +60,7 @@ class NaoAssistant:
         self.tts.setVoice(self.voices["fr"])
         self.current_state = ""
         self.sound_receiver = sound_receiver
+        self.last_message_said = ""
 
 
     def rest(self):
@@ -84,6 +85,11 @@ class NaoAssistant:
 
         msg_to_say = msg_to_say.split(" ")[2:]
         msg_to_say = " ".join(msg_to_say)
+
+        if msg_to_say == self.last_message_said:
+            return
+        
+        self.last_message_said = msg_to_say
 
         # get the language of the text stored in py311_language.txt
         with open("py_com\\py311_language.txt", "r") as f:

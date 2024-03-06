@@ -1,6 +1,7 @@
 from ctransformers import AutoModelForCausalLM
 from conversation.Profiles import Assistant, Human
 from conversation.Conversation import Conversation
+from conversation.Message import Message
 from conversation.HumanSpeaker import HumanSpeaker
 
 
@@ -12,10 +13,20 @@ from conversation.HumanSpeaker import HumanSpeaker
 # mistral = AutoModelForCausalLM.from_pretrained("TheBloke/EstopianMaid-13B-GGUF", model_file="estopianmaid-13b.Q4_K_M.gguf", model_type="estopianmaid", gpu_layers=50)
 mistral = AutoModelForCausalLM.from_pretrained("TheBloke/openchat-3.5-0106-GGUF", model_file="openchat-3.5-0106.Q4_K_M.gguf", model_type="openchat", gpu_layers=50)
 
-user1 = Assistant(mistral, "Nao", "neutre", "Pacte Novation")
-user2 = Assistant(mistral, "Mia", "neutre", "Pacte Novation")
+name1 = "Nao"
+name2 = "Eliot"
 
-conversation = Conversation(user2, user1, txt_filename="py_com\\py311_msg_to_say.txt")
+user1 = Assistant(mistral, name1, "neutre", "Pacte Novation")
+user2 = Assistant(mistral, name2, "neutre", "Pacte Novation")
+
+first_messages = [
+    Message(name2, f"Bonjour {name1}, comment vas-tu ?"),
+    Message(name1, f"Bonjour {name2}, je vais bien merci, comment puis-je t'aider ?"),
+    Message(name2, f"J'aurais besoin d'aide pour mon poisson combattant..."),
+    Message(name1, f"Je suis là pour t'aider, que se passe-t-il ? D'abord, comment s'appelle-t-il ?"),
+]
+
+conversation = Conversation(user2, user1, txt_filename="py_com\\py311_msg_to_say.txt", messages=first_messages)
 
 conversation.run(save_live=True, only_last=True, max_messages=25)
 conversation.save()
