@@ -5,5 +5,6 @@
 *.raw
 *.pyc
 *.jpg
+*.txt
 *__pycache__*
 old/*

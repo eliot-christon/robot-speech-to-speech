@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import time
 import logging
 
@@ -23,6 +24,49 @@ HEXA_COLORS = {
     "gray": 0x00808080,
     "black": 0x00000000
 }
+
+
+
+# def msg_to_phrases(msg):
+#     """ Convert a message to phrases """
+#     phrases = []
+#     phrase = ""
+
+#     for submsg1 in msg.split("."):
+#         for submsg2 in submsg1.split("?"):
+#             for submsg3 in submsg2.split("!"):
+#                 phrase += submsg3
+#                 if len(phrase) > 0:
+#                     phrases.append(phrase)
+#                     phrase = ""
+            
+#     return phrases
+import re
+
+
+def msg_to_phrases(msg):
+    """ Convert a message to phrases """
+    phrases = []
+    current_phrase = ""
+
+    ponctuation_marks = [".", "!", "?", '...', ':', ',']
+    pattern = '(' + '|'.join(re.escape(p) for p in ponctuation_marks) + ')'
+
+    # Split the message by punctuation marks
+    for sentence in re.split(pattern, msg):
+        if sentence.strip():  # Check if the sentence is not empty
+            if sentence.endswith(tuple(ponctuation_marks)):
+                current_phrase += sentence.strip()
+                if len(current_phrase) > 2:
+                    phrases.append(current_phrase)
+                current_phrase = ""
+            else:
+                current_phrase += sentence.strip()
+    
+    return phrases, current_phrase
+
+# print(msg_to_phrases("Pour tenter d'attraper l'escroc dans son propre piege : 'Bonjour [Nom], je suis ravi de recevoir votre message. Cependant, il serait judicieux pour moi d'organiser un meeting avec vous afin que nous puissions discuter en détail des opportunités offertes par notre entreprise.'."))
+
 
 
 class NaoAssistant:
@@ -60,7 +104,9 @@ class NaoAssistant:
         self.tts.setVoice(self.voices["fr"])
         self.current_state = ""
         self.sound_receiver = sound_receiver
-        self.last_message_said = ""
+        self.phrases_said = []
+        self.phrases_to_say = []
+        self.last_hour = ""
 
 
     def rest(self):
@@ -73,23 +119,17 @@ class NaoAssistant:
         self.sound_receiver.start()
         self.write_state("listening")
         self.leds.fadeRGB("FaceLeds", HEXA_COLORS["dark_green"], 0.5)
-        # wait for the name to not be Nao
-        while self.read_name() == "Nao":
-            time.sleep(0.1)
+        # wait for the end of the listening
+        while not self.sound_receiver.is_stoped():
+            time.sleep(0.05)
     
     def speak(self):
         """ Speak to the user """
-        # first get the message to say
-        with open("py_com\\py311_msg_to_say.txt", "r") as f:
-            msg_to_say = f.read()
 
-        msg_to_say = msg_to_say.split(" ")[2:]
-        msg_to_say = " ".join(msg_to_say)
+        print("phrases to_say / said: ", len(self.phrases_to_say), "/", len(self.phrases_said))
 
-        if msg_to_say == self.last_message_said:
-            return
-        
-        self.last_message_said = msg_to_say
+        msg_to_say = " ".join(self.phrases_to_say)
+        self.phrases_said += self.phrases_to_say
 
         # get the language of the text stored in py311_language.txt
         with open("py_com\\py311_language.txt", "r") as f:
@@ -119,23 +159,41 @@ class NaoAssistant:
         with open("py_com\\py311_listen.txt", "r") as f:
             return f.read() == "yes"
     
-    def read_name(self):
+    def read_hour_name_and_message(self):
         """ Read the message to say from a file """
         with open("py_com\\py311_msg_to_say.txt", "r") as f:
             msg = f.read()
-        return msg.split(" ")[1][:-1]
+        if msg.split(" ").__len__() < 3:
+            if msg.split(" ").__len__() == 1:
+                return  msg.split(" ")[0], "", ""
+            else:
+                return  msg.split(" ")[0], msg.split(" ")[1], ""
+        return  msg.split(" ")[0], msg.split(" ")[1][:-1], " ".join(msg.split(" ")[2:])
     
     def next_state(self):
         """ Get the next state """
-        name = self.read_name()
+        hour, name, msg = self.read_hour_name_and_message()
         listen = self.read_listen()
 
-        if name == "Nao" and self.current_state != "speaking":
-            return "speaking"
-        elif listen:
+        if name == "Nao":
+
+            if hour != self.last_hour:
+                self.last_hour = hour
+                self.phrases_said = []
+            
+            self.phrases_to_say = msg_to_phrases(msg)[0][len(self.phrases_said):]
+
+            if len(self.phrases_to_say) > 0:
+                if self.current_state == "speaking":
+                    return "resting"
+                return "speaking"
+
+        else :
+            self.phrases_said = []
+
+        if listen:
             return "listening"
-        else:
-            return "resting"
+        return "resting"
         
     def start(self):
         """ Start the Nao assistant """

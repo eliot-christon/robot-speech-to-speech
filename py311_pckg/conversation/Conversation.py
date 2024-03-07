@@ -51,13 +51,14 @@ class Conversation:
                 # print("="*50 + "\n\n")
 
                 t2 = time.time()
-                response = self.current_user(prompt, save_live=save_live, filename=self.filename)
+                response = self.current_user(prompt)
                 t3 = time.time()
                 self.messages.append(Message(self.current_user.name + "", response.content, time.time()))
                 self.current_user = self.other_user(self.current_user)
-                if save_live:
-                    self.save(only_last)
                 t4 = time.time()
+
+                if save_live:
+                    self.save(only_last=only_last)
 
                 self.data["prompt_latency"].append(t2 - t1)
                 self.data["response_latency"].append(t3 - t2)
@@ -101,7 +102,7 @@ class Conversation:
                 context = message.content + end_prompt + "\n" + context
             else:
                 if message == self.messages[-1]:
-                    context = start_prompt + message.content  + " (réponds-moi en une phrase ou deux en français)" + mid_prompt + "\n" + context
+                    context = start_prompt + message.content  + " (fais des phrases courtes, réponds-moi en une phrase ou deux en français)" + mid_prompt + "\n" + context
                 else:
                     context = start_prompt + message.content + mid_prompt + "\n" + context
 
