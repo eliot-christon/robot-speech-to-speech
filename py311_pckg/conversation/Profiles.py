@@ -1,9 +1,18 @@
+__author__ = "Eliot CHRISTON"
+__email__ = "eliot.christon@gmail.com"
+
+
+# IMPORTS ================================================================================================================
+
 from .Message import Message
 from text_generation.prompt_template import get_prompt_template
 
 from abc import ABC, abstractmethod
 from ctransformers import AutoModelForCausalLM
+import os
 
+
+#%% USER CLASSES ========================================================================================================
 
 class User(ABC):
     def __init__(self, name:str="name", mood:str="neutre", work:str="Pacte Novation"):
@@ -22,7 +31,7 @@ class User(ABC):
         pass
     
     @abstractmethod
-    def __call__(self, prompt:str) -> Message:
+    def __call__(self, prompt:str, save_live:bool, filename:str) -> Message:
         pass
 
     @abstractmethod
@@ -31,9 +40,22 @@ class User(ABC):
 
     def reset(self):
         pass
+
+    def save(self, file:str, message:str):
+        # if the file does not exist, create it
+        if not os.path.exists(file):
+            os.makedirs(os.path.dirname(file), exist_ok=True)
+        
+        # write the message
+        with open(file, "w", encoding='utf-8') as f:
+            f.write(message)
+
+
+
+#%% HUMAN CLASSES ========================================================================================================
         
 
-class Human(User):
+class HumanWriter(User):
     def __init__(self, name:str="Paolo", mood:str="neutre", work:str="Pacte Novation"):
         super().__init__(name, mood, work)
     
@@ -46,14 +68,57 @@ class Human(User):
     def __repr__(self):
         return "Human(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
     
-    def __call__(self, prompt:str) -> Message:
+    def __call__(self, prompt:str, save_live:bool, filename:str) -> Message:
         response = input(Message(self.name, ""))
         if response.lower() in ["exit", "quit", "bye"]:
             raise KeyboardInterrupt
-        return Message(self.name, response)
+        message = Message(self.name, response)
+        if save_live:
+            self.save(filename, str(message))
+        return message
     
     def get_modelname(self) -> str:
         return "Written_Model"
+
+
+
+class HumanSpeaker(HumanWriter):
+    def __init__(self, name: str = "Pierre", mood: str = "neutre", work: str = "Pacte Novation", **kwargs):
+        super().__init__(name, mood, work)
+        from stt.real_time_transcribe_wav import SpeechTranscriber
+        self.transcriber = SpeechTranscriber(**kwargs)
+
+    def describe(self, for_other: bool = False):
+        return super().describe(for_other)
+
+    def __str__(self):
+        return super().__str__()
+
+    def __repr__(self):
+        return "HumanSpeaker(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
+
+    def write_listen(self, listen:bool):
+        """ Write the conversation state to a file """
+        with open("py_com\\py311_listen.txt", "w") as f:
+            f.write("yes" if listen else "no")
+
+    def __call__(self, prompt: str, save_live:bool, filename:str) -> Message:
+        self.write_listen(True)
+        response = self.transcriber.start_transcribing(stop_after_one_phrase=True)
+        self.write_listen(False)
+        message = Message(self.name, response)
+        if save_live:
+            self.save(filename, str(message))
+        return message
+    
+    def get_modelname(self) -> str:
+        return "Audio_Model"
+
+    def reset(self):
+        self.write_listen(False)
+
+
+#%% ASSISTANT CLASSES ========================================================================================================
 
 
 class Assistant(User):
@@ -73,14 +138,23 @@ class Assistant(User):
     def __repr__(self):
         return "Assistant(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
     
-    def __call__(self, prompt:str) -> Message:
+    def __call__(self, prompt:str, save_live:bool, filename:str) -> Message:
         # response to cuda
-        response = self.model(prompt=prompt, stop=self.stop_char)
+        response = ""
+        print(Message(self.name, ""), end="")
+        for text in self.model(prompt, stream=True):
+            print(text, end="", flush=True)
+            response += text
+            if save_live:
+                self.save(filename, str(Message(self.name, response)))
+            for stop_char in self.stop_char:
+                if stop_char in response:
+                    break
+        print()
         response = response.replace("\n", "").replace("\n", "")
         for stop_char in self.stop_char:
             response = response.replace(stop_char, "")
         res = Message(self.name, response)
-        print(res)
         return res
     
     def get_modelname(self) -> str:

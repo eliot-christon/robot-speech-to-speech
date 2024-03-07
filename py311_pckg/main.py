@@ -1,8 +1,7 @@
 from ctransformers import AutoModelForCausalLM, AutoConfig, Config
-from conversation.Profiles import Assistant, Human
+from conversation.Profiles import Assistant, HumanWriter, HumanSpeaker
 from conversation.Conversation import Conversation
 from conversation.Message import Message
-from conversation.HumanSpeaker import HumanSpeaker
 
 
 config=AutoConfig(
@@ -13,6 +12,7 @@ config=AutoConfig(
         top_p=0.95,
         temperature=0.8,
         repetition_penalty=1.5,
+        stream=True,
     )
 )
 
@@ -28,7 +28,7 @@ name1 = "Nao"
 name2 = "Eliot"
 
 user1 = Assistant(mistral, name1, "neutre", "Pacte Novation")
-user2 = Human(name2, "neutre", "Pacte Novation")
+user2 = HumanWriter(name2, "neutre", "Pacte Novation")
 
 first_messages = [
     Message(name2, f"Bonjour {name1}, comment vas-tu ?"),
@@ -37,7 +37,7 @@ first_messages = [
     Message(name1, f"Je suis là pour t'aider, que se passe-t-il ? Raconte m'en plus..."),
 ]
 
-conversation = Conversation(user2, user1, txt_filename="py_com\\py311_msg_to_say.txt", messages=first_messages)
+conversation = Conversation(user2, user1, txt_filename="py_com\\py311_msg_to_say.txt") # , messages=first_messages)
 
 conversation.run(save_live=True, only_last=True, max_messages=25)
 conversation.save()

@@ -1,4 +1,4 @@
-from .Profiles import User, Human, Assistant
+from .Profiles import User, HumanWriter, Assistant
 from .Message import Message
 from typing import List
 import time
@@ -51,7 +51,7 @@ class Conversation:
                 # print("="*50 + "\n\n")
 
                 t2 = time.time()
-                response = self.current_user(prompt)
+                response = self.current_user(prompt, save_live=save_live, filename=self.filename)
                 t3 = time.time()
                 self.messages.append(Message(self.current_user.name + "", response.content, time.time()))
                 self.current_user = self.other_user(self.current_user)
@@ -80,7 +80,7 @@ class Conversation:
 
     def build_prompt(self, current_user:User, max_words:int=150) -> str:
 
-        if isinstance(current_user, Human):
+        if isinstance(current_user, HumanWriter):
             return ""
         
         # initialisation
