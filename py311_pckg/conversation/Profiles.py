@@ -75,15 +75,7 @@ class Assistant(User):
     
     def __call__(self, prompt:str) -> Message:
         # response to cuda
-        response = self.model(
-            prompt=prompt,
-            max_new_tokens=128,
-            top_k=50,
-            top_p=0.95,
-            temperature=0.8,
-            repetition_penalty=1.5,
-            stop=self.stop_char,
-            )
+        response = self.model(prompt=prompt, stop=self.stop_char)
         response = response.replace("\n", "").replace("\n", "")
         for stop_char in self.stop_char:
             response = response.replace(stop_char, "")
