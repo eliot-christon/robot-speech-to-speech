@@ -6,5 +6,7 @@
 *.pyc
 *.jpg
 *.txt
+*.flac
 *__pycache__*
 old/*
+pretrained_models/*

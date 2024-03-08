@@ -317,7 +317,8 @@ def main():
         pip,
         one_sentence=False,
         sentence_timeout=3,
-        save_csv=False
+        save_csv=False,
+        last=False
         )
     SoundReceiver.start()
 
@@ -327,7 +328,7 @@ def main():
     except KeyboardInterrupt:
         logging.info("Interrupted by user, shutting down")
         SoundReceiver.build_wav_files()
-        SoundReceiver.build_csv_files()
+        # SoundReceiver.build_csv_files()
         myBroker.shutdown()
         sys.exit(0)
 
