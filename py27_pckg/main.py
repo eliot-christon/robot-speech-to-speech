@@ -28,7 +28,7 @@ if __name__ == "__main__":
         "SoundReceiver",
         NAO_IP,
         one_sentence=True,
-        sentence_timeout=3,
+        sentence_timeout=1.5,
         live_wav_each=10,
         wav_dir="py_com\\py27_audio.wav",
         save_csv=False,

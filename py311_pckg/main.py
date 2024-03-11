@@ -29,7 +29,7 @@ def main():
     # local_llm = AutoModelForCausalLM.from_pretrained("TheBloke/EstopianMaid-13B-GGUF", model_file="estopianmaid-13b.Q4_K_M.gguf", model_type="estopianmaid", config=config)
     # local_llm = AutoModelForCausalLM.from_pretrained("TheBloke/openchat-3.5-0106-GGUF", model_file="openchat-3.5-0106.Q4_K_M.gguf", model_type="openchat", config=config)
 
-    ollama_model_name = "openchat" # "llama2" "mistral" "mixtral" "openchat"
+    ollama_model_name = "llama2" # "llama2" "mistral" "mixtral" "openchat"
 
     ollama.chat(
         model=ollama_model_name,
@@ -41,7 +41,7 @@ def main():
     name2 = "Eliot"
 
     user1 = Assistant(name=name1, mood="neutre", work="Pacte Novation", role="assistant", ollama_model_name=ollama_model_name, model=local_llm)
-    user2 = HumanWriter(name=name2, mood="neutre", work="Pacte Novation", role="user") #, ollama_model_name=ollama_model_name, model=local_llm)
+    user2 = HumanSpeaker(name=name2, mood="neutre", work="Pacte Novation", role="user") #, ollama_model_name=ollama_model_name, model=local_llm)
 
     first_messages = [
         Message(name2, f"Bonjour {name1}, comment vas-tu ?"),

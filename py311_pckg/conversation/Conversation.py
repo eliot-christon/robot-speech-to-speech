@@ -117,6 +117,7 @@ class Conversation:
         messages = []
 
         # first the system messages
+        messages.append({"role": "system", "content": "Début de la conversation orale entre {} et {}".format(self.user1.name, self.user2.name)})
         messages.append({"role": "system", "content": current_user.describe(for_other=False)})
         messages.append({"role": "system", "content": self.other_user(current_user).describe(for_other=True)})
 
@@ -145,6 +146,8 @@ class Conversation:
                 file.write(self.build_prompt(self.current_user))
                 file.write("\n\n")
                 file.write(self.build_prompt(self.other_user(self.current_user)))
+                file.write("\n\n=====================MESSAGES=====================\n\n")
+                file.write(self.build_ollama_messages(self.current_user))
             else:
                 file.write(str(self.messages[-1]))
 

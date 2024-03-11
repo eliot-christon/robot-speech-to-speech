@@ -49,7 +49,7 @@ def msg_to_phrases(msg):
     phrases = []
     current_phrase = ""
 
-    ponctuation_marks = [".", "!", "?", '...', ':', ',']
+    ponctuation_marks = [".", "!", "?", '...', ':']
     pattern = '(' + '|'.join(re.escape(p) for p in ponctuation_marks) + ')'
 
     # Split the message by punctuation marks
@@ -126,7 +126,9 @@ class NaoAssistant:
     def speak(self):
         """ Speak to the user """
 
-        print("phrases to_say / said: ", len(self.phrases_to_say), "/", len(self.phrases_said))
+        # print("====== phrases to_say / said: ", len(self.phrases_to_say), "/", len(self.phrases_said))
+        # print("====== phrases to_say       : ", self.phrases_to_say)
+        # print("====== phrases said         : ", self.phrases_said)
 
         msg_to_say = " ".join(self.phrases_to_say)
         self.phrases_said += self.phrases_to_say
@@ -180,7 +182,7 @@ class NaoAssistant:
             if hour != self.last_hour:
                 self.last_hour = hour
                 self.phrases_said = []
-            
+
             self.phrases_to_say = msg_to_phrases(msg)[0][len(self.phrases_said):]
 
             if len(self.phrases_to_say) > 0:

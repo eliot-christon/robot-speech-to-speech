@@ -144,16 +144,20 @@ class Assistant(User):
         return "Assistant(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
     
     def __call__(self, prompt) -> Message:
+
+        res = Message(self.name, "")
+
         if self.model:
             response = ""
             stop_char_found = False
-            print(Message(self.name, ""), end="")
+            print(res, end="")
             for text in self.model(prompt, stream=True):
                 if stop_char_found:
                     break
                 print(text, end="", flush=True)
                 response += text
-                self.save(str(Message(self.name, response)))
+                res.content = response
+                self.save(str(res))
                 for stop_char in self.stop_char:
                     if stop_char in response:
                         stop_char_found = True
@@ -167,17 +171,18 @@ class Assistant(User):
                 messages=prompt,
                 stream=True,
             )
-            print(Message(self.name, ""), end=" ")
+            print(res, end=" ")
             for chunk in stream:
                 print(chunk['message']['content'], end='', flush=True)
                 response += chunk['message']['content']
-                self.save(str(Message(self.name, response)))
+                res.content = response
+                self.save(str(res))
             print()
         
         response = response.replace("\n", "").replace("\n", "")
         for stop_char in self.stop_char:
             response = response.replace(stop_char, "")
-        res = Message(self.name, response)
+        res.content = response
         self.save(str(res)+".")
 
         return res
