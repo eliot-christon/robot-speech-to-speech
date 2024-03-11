@@ -112,9 +112,6 @@ class SoundReceiverModule(naoqi.ALModule):
         """stop the listening process"""
         logging.info("SoundReceiverModule: stopping...")
 
-        self.started = False
-        self.write_listen(False)
-
         # close files if needed
         if(self.aOutfile != [None]*4):
             for channel_number in range(0, 4):
@@ -124,6 +121,8 @@ class SoundReceiverModule(naoqi.ALModule):
         # unsubscribe from the ALAudioDevice (stop listening)
         # self.audio_proxy.unsubscribe(self.getName())
         # print("audio_proxy.unsubscribe(self.getName()) done!")
+        self.started = False
+        self.write_listen(False)
 
         logging.info("SoundReceiverModule: stopped!")
     
@@ -231,9 +230,10 @@ class SoundReceiverModule(naoqi.ALModule):
         return res
     
 
-    def build_wav_files(self, number_of_channels=4):
+    def build_wav_files(self, number_of_channels=4, offset=1):
         """build the wav files from the raw files"""
-        for channel_number in range(0, number_of_channels):
+        for i in range(0, number_of_channels):
+            channel_number = (i + offset) % number_of_channels
             # get both file paths
             raw_file_path = self.get_file_path(channel_number, ".raw")
             wav_file_path = self.get_file_path(channel_number, ".wav")
