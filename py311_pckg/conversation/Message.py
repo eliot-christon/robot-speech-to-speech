@@ -1,8 +1,10 @@
 import time 
 
 class Message:
-    def __init__(self, username:str, content:str, timestamp:float=time.time()):
+    def __init__(self, username:str, content:str, timestamp:float=None):
         self.timestamp = timestamp
+        if self.timestamp is None:
+            self.timestamp = time.time()
         self.username = username
         self.content = content.replace("\n", "")
 
