@@ -166,15 +166,22 @@ class Assistant(User):
 
         else: # ollama
             response = ""
-            stream = ollama.chat(
+            stream = ollama.generate(
                 model=self.ollama_model_name,
-                messages=prompt,
+                prompt=prompt,
                 stream=True,
+                options={
+                    "top_k": 50,
+                    "top_p": 0.95,
+                    "temperature": 0.85,
+                    "repeat_penalty": 1.9,
+                    "repeat_last_n": 100,
+                }
             )
             print(res, end=" ")
             for chunk in stream:
-                print(chunk['message']['content'], end='', flush=True)
-                response += chunk['message']['content']
+                print(chunk['response'], end='', flush=True)
+                response += chunk['response']
                 res.content = response
                 self.save(str(res))
             print()

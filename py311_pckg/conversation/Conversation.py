@@ -44,10 +44,7 @@ class Conversation:
         while True:
             try:
                 t1 = time.time()
-                if self.ollama:
-                    prompt = self.build_ollama_messages(self.current_user)
-                else:
-                    prompt = self.build_prompt(self.current_user)
+                prompt = self.build_prompt(self.current_user)
 
                 t2 = time.time()
                 response = self.current_user(prompt)
@@ -78,7 +75,7 @@ class Conversation:
             return self.user2
         return self.user1
 
-    def build_prompt(self, current_user:User, max_words:int=150) -> str:
+    def build_prompt(self, current_user:User, max_words:int=750) -> str:
 
         if isinstance(current_user, HumanWriter) or isinstance(current_user, HumanSpeaker):
             return ""
@@ -109,31 +106,31 @@ class Conversation:
         context = context.replace(mid_prompt+start_prompt, "")
         return context
     
-    def build_ollama_messages(self, current_user:User):
-        # messages = [{"role": "user", "content": "Bonjour, comment vas-tu ?"}]
-        if isinstance(current_user, HumanWriter) or isinstance(current_user, HumanSpeaker):
-            return []
+    # def build_ollama_messages(self, current_user:User):
+    #     # messages = [{"role": "user", "content": "Bonjour, comment vas-tu ?"}]
+    #     if isinstance(current_user, HumanWriter) or isinstance(current_user, HumanSpeaker):
+    #         return []
         
-        messages = []
+    #     messages = []
 
-        # first the system messages
-        messages.append({"role": "system", "content": "Début de la conversation orale entre {} et {}".format(self.user1.name, self.user2.name)})
-        messages.append({"role": "system", "content": current_user.describe(for_other=False)})
-        messages.append({"role": "system", "content": self.other_user(current_user).describe(for_other=True)})
+    #     # first the system messages
+    #     messages.append({"role": "system", "content": "Début de la conversation orale entre {} et {}".format(self.user1.name, self.user2.name)})
+    #     messages.append({"role": "system", "content": current_user.describe(for_other=False)})
+    #     messages.append({"role": "system", "content": self.other_user(current_user).describe(for_other=True)})
 
-        # then the user messages
-        for message in self.messages:
-            content = message.content
-            if content == "" or len(content) < 1 or content is None:
-                content = "nothing"
-            if current_user.name == message.username:
-                messages.append({"role": current_user.role, "content": message.content})
-            else:
-                messages.append({"role": self.other_user(current_user).role, "content": message.content})
+    #     # then the user messages
+    #     for message in self.messages:
+    #         content = message.content
+    #         if content == "" or len(content) < 1 or content is None:
+    #             content = "nothing"
+    #         if current_user.name == message.username:
+    #             messages.append({"role": current_user.role, "content": message.content})
+    #         else:
+    #             messages.append({"role": self.other_user(current_user).role, "content": message.content})
         
-        messages.append({"role": "system", "content": "(fais des phrases courtes, réponds en une phrase ou deux en français)"})
+    #     messages.append({"role": "system", "content": "(fais des phrases courtes, réponds en une phrase ou deux en français)"})
 
-        return messages
+    #     return messages
     
     def save(self, only_last:bool=False):
         import os
@@ -146,8 +143,6 @@ class Conversation:
                 file.write(self.build_prompt(self.current_user))
                 file.write("\n\n")
                 file.write(self.build_prompt(self.other_user(self.current_user)))
-                file.write("\n\n=====================MESSAGES=====================\n\n")
-                file.write(self.build_ollama_messages(self.current_user))
             else:
                 file.write(str(self.messages[-1]))
 
