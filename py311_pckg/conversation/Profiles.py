@@ -10,22 +10,24 @@ from text_generation.prompt_template import get_prompt_template
 from abc import ABC, abstractmethod
 from ctransformers import AutoModelForCausalLM
 import os
+import ollama
 
 
 #%% USER CLASSES ========================================================================================================
 
 class User(ABC):
-    def __init__(self, name:str="name", mood:str="neutre", work:str="Pacte Novation", save_filename:str=None):
+    def __init__(self, name:str="name", mood:str="neutre", work:str="Pacte Novation", role="user", save_filename:str=None):
         self.name = name
         self.mood = mood
         self.work = work
+        self.role = role
         self.filename = save_filename
     
     def __str__(self):
         return "Utilisateur-" + self.name
     
     def __repr__(self):
-        return "User(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
+        return "User(name={}, mood={}, work={}, role={})".format(self.name, self.mood, self.work, self.role)
     
     @abstractmethod
     def describe(self, for_other:bool=False):
@@ -59,8 +61,8 @@ class User(ABC):
         
 
 class HumanWriter(User):
-    def __init__(self, name:str="Paolo", mood:str="neutre", work:str="Pacte Novation", save_filename:str=None):
-        super().__init__(name, mood, work, save_filename)
+    def __init__(self, name:str="Paolo", mood:str="neutre", work:str="Pacte Novation", role="user", save_filename:str=None):
+        super().__init__(name, mood, work, role, save_filename)
     
     def describe(self, for_other:bool=False):
         return "Je m'appelle {}. Je travaille à {}. Je suis d'humeur {}.".format(self.name, self.work, self.mood)
@@ -85,8 +87,8 @@ class HumanWriter(User):
 
 
 class HumanSpeaker(HumanWriter):
-    def __init__(self, name: str = "Pierre", mood: str = "neutre", work: str = "Pacte Novation", save_filename:str=None, **kwargs):
-        super().__init__(name, mood, work, save_filename)
+    def __init__(self, name: str = "Pierre", mood: str = "neutre", work: str = "Pacte Novation", role="user", save_filename:str=None, **kwargs):
+        super().__init__(name, mood, work, role, save_filename)
         from stt.real_time_transcribe_wav import SpeechTranscriber
         self.transcriber = SpeechTranscriber(**kwargs)
 
@@ -124,9 +126,10 @@ class HumanSpeaker(HumanWriter):
 
 
 class Assistant(User):
-    def __init__(self, model:AutoModelForCausalLM, name:str="Nao", mood:str="neutre", work:str="Pacte Novation", save_filename:str="py_com\\py311_msg_to_say.txt"):
+    def __init__(self, name:str="Nao", mood:str="neutre", work:str="Pacte Novation", role="user",  model:AutoModelForCausalLM=None, ollama_model_name='llama2', save_filename:str="py_com\\py311_msg_to_say.txt"):
         self.model = model
-        super().__init__(name, mood, work, save_filename)
+        self.ollama_model_name = ollama_model_name
+        super().__init__(name, mood, work, role, save_filename)
         self.stop_char = get_prompt_template(self.get_modelname())["end"]
 
     def describe(self, for_other:bool=False):
@@ -140,28 +143,46 @@ class Assistant(User):
     def __repr__(self):
         return "Assistant(name={}, mood={}, work={})".format(self.name, self.mood, self.work)
     
-    def __call__(self, prompt:str) -> Message:
-        # response to cuda
-        response = ""
-        stop_char_found = False
-        print(Message(self.name, ""), end="")
-        for text in self.model(prompt, stream=True):
-            if stop_char_found:
-                break
-            print(text, end="", flush=True)
-            response += text
-            self.save(str(Message(self.name, response)))
-            for stop_char in self.stop_char:
-                if stop_char in response:
-                    stop_char_found = True
+    def __call__(self, prompt) -> Message:
+        if self.model:
+            response = ""
+            stop_char_found = False
+            print(Message(self.name, ""), end="")
+            for text in self.model(prompt, stream=True):
+                if stop_char_found:
                     break
-        print()
+                print(text, end="", flush=True)
+                response += text
+                self.save(str(Message(self.name, response)))
+                for stop_char in self.stop_char:
+                    if stop_char in response:
+                        stop_char_found = True
+                        break
+            print()
+
+        else: # ollama
+            response = ""
+            stream = ollama.chat(
+                model=self.ollama_model_name,
+                messages=prompt,
+                stream=True,
+            )
+            print(Message(self.name, ""), end=" ")
+            for chunk in stream:
+                print(chunk['message']['content'], end='', flush=True)
+                response += chunk['message']['content']
+                self.save(str(Message(self.name, response)))
+            print()
+        
         response = response.replace("\n", "").replace("\n", "")
         for stop_char in self.stop_char:
             response = response.replace(stop_char, "")
         res = Message(self.name, response)
         self.save(str(res)+".")
+
         return res
     
     def get_modelname(self) -> str:
-        return self.model.model_path.replace("C:\\Users\\echriston\\.cache\\huggingface\\hub\\models--", "")
+        if self.model:
+            return self.model.model_path.replace("C:\\Users\\echriston\\.cache\\huggingface\\hub\\models--", "")
+        return self.ollama_model_name

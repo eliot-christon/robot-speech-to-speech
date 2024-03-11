@@ -12,4 +12,4 @@ def get_prompt_template(model_name:str) -> dict:
     for key in prompt_templates.keys():
         if key in model_name:
             return prompt_templates[key]
-    raise Warning("Model name not found in prompt_templates")
+    return {"start":"", "mid":"", "end":["</s>"]}

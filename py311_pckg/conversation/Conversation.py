@@ -1,4 +1,4 @@
-from .Profiles import User, HumanWriter, Assistant
+from .Profiles import User, HumanWriter, Assistant, HumanSpeaker
 from .Message import Message
 from typing import List
 import time
@@ -6,12 +6,13 @@ from text_generation.prompt_template import get_prompt_template
 
 
 class Conversation:
-    def __init__(self, user1:User, user2:User, messages:List[Message]=[], txt_filename:str=None, csv_filename:str=None):
+    def __init__(self, user1:User, user2:User, messages:List[Message]=[], txt_filename:str=None, csv_filename:str=None, ollama:bool=False):
         self.user1 = user1
         self.user2 = user2
         self.current_user = user1
         self.filename = txt_filename
         self.csv_filename = csv_filename
+        self.ollama = ollama
         if self.filename is None:
             self.filename = "py311_pckg\\conversation\\historique\\conversation-" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + ".txt"
         if self.csv_filename is None:
@@ -43,12 +44,10 @@ class Conversation:
         while True:
             try:
                 t1 = time.time()
-                prompt = self.build_prompt(self.current_user)
-
-                # print the prompt
-                # print("\n" + "="*50)
-                # print(prompt)
-                # print("="*50 + "\n\n")
+                if self.ollama:
+                    prompt = self.build_ollama_messages(self.current_user)
+                else:
+                    prompt = self.build_prompt(self.current_user)
 
                 t2 = time.time()
                 response = self.current_user(prompt)
@@ -81,7 +80,7 @@ class Conversation:
 
     def build_prompt(self, current_user:User, max_words:int=150) -> str:
 
-        if isinstance(current_user, HumanWriter):
+        if isinstance(current_user, HumanWriter) or isinstance(current_user, HumanSpeaker):
             return ""
         
         # initialisation
@@ -109,6 +108,31 @@ class Conversation:
         context = start_prompt + current_user.describe(for_other=False) + " " + self.other_user(current_user).describe(for_other=True) + mid_prompt + context
         context = context.replace(mid_prompt+start_prompt, "")
         return context
+    
+    def build_ollama_messages(self, current_user:User):
+        # messages = [{"role": "user", "content": "Bonjour, comment vas-tu ?"}]
+        if isinstance(current_user, HumanWriter) or isinstance(current_user, HumanSpeaker):
+            return []
+        
+        messages = []
+
+        # first the system messages
+        messages.append({"role": "system", "content": current_user.describe(for_other=False)})
+        messages.append({"role": "system", "content": self.other_user(current_user).describe(for_other=True)})
+
+        # then the user messages
+        for message in self.messages:
+            content = message.content
+            if content == "" or len(content) < 1 or content is None:
+                content = "nothing"
+            if current_user.name == message.username:
+                messages.append({"role": current_user.role, "content": message.content})
+            else:
+                messages.append({"role": self.other_user(current_user).role, "content": message.content})
+        
+        messages.append({"role": "system", "content": "(fais des phrases courtes, réponds en une phrase ou deux en français)"})
+
+        return messages
     
     def save(self, only_last:bool=False):
         import os
