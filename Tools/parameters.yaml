@@ -1,0 +1,7 @@
+T8: {
+  python_version: 3.11,
+  port: 5008,
+  model_size: small,
+  input_wav_file: data/live/audio_recorded.wav,
+  output_text_file: data/live/text_transcribed.txt,
+}
