@@ -22,7 +22,6 @@ def start_transcription():
     
     if not speech_to_text.get_running():
         # Start transcription process in a separate thread
-        speech_to_text.set_running(True)
         transcription_thread = Thread(target=speech_to_text.start)
         transcription_thread.start()
         

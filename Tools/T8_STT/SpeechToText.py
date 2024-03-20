@@ -1,4 +1,6 @@
 from faster_whisper import WhisperModel
+import logging
+import time
 
 
 class SpeechToText:
@@ -21,7 +23,7 @@ class SpeechToText:
 
     def __write_to_file(self):
         """Write the transcribed text to the output text file."""
-        with open(self.__text_file, "w") as file:
+        with open(self.__text_file, "w", encoding='utf-8') as file:
             file.write(self.__transcription)
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -37,16 +39,23 @@ class SpeechToText:
     def start(self):
         """Start the transcription process"""
 
+        logging.info("SpeechToText: Starting the transcription process...")
+
+        self.__running = True
+
         while self.__running:
             try:
                 segments, info = self.__audio_model.transcribe(self.__wav_file)
                 text = "".join([segment.text for segment in segments])
                 self.__transcription = text
                 self.__write_to_file()
+                time.sleep(0.2)
+
                 
             except Exception as e:
                 pass
     
     def stop(self):
         """Stop the transcription process"""
+        logging.info("SpeechToText: Stopping the transcription process...")
         self.__running = False
