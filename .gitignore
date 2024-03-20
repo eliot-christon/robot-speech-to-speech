@@ -11,4 +11,4 @@
 *__pycache__*
 old/*
 checkpoints/*
-pretrained_models/*
+data/pretrained_models/*
