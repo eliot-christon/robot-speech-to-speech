@@ -53,7 +53,7 @@ T6_RecordAudio: {
   channel: 2,
   output_wav_file: data/live/audio_recorded.wav,
   output_speech_detected_file: data/live/time_speech_detected.txt,
-  seconds_to_keep: 15,
+  seconds_to_keep: 10,
   sample_rate: 48000,
   loudness_threshold: 0.5,
 }

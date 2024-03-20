@@ -22,7 +22,7 @@ if __name__ == "__main__":
     test_start_recording()
 
     # Wait for a while to simulate some recording time
-    time.sleep(5)
+    time.sleep(16)
 
     # Test stopping recording
     print("\nStopping recording...")

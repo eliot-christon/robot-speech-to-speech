@@ -45,6 +45,8 @@ class SoundReceiverModule(naoqi.ALModule):
         """write the wav file from the raw file"""
         with open(self.__raw_file, 'rb') as raw_file:
             raw_data = raw_file.read()
+        
+        raw_data = raw_data[-self.__samples_to_keep * 2:] # keep only the last N seconds
 
         wav_file = wave.open(self.__wav_file, 'wb')
         wav_file.setnchannels(1)
