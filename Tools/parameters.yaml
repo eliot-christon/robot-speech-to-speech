@@ -1,4 +1,72 @@
-T8: {
+#---------------------------------------#
+#        FINITE TOOLS PARAMETERS        #
+#---------------------------------------#
+
+# Tool 0: Read Audio (from file to NAO)
+T0_ReadAudio: {
+  python_version: 2.7,
+  port: 5000,
+  nao_ip: "192.168.0.105",
+}
+
+# Tool 1: Person Recognition
+T1_PersonRecognition: {
+  python_version: 3.11,
+  port: 5001,
+}
+
+# Tool 2: Text Generation
+T2_TextGeneration: {
+  python_version: 3.11,
+  port: 5002,
+}
+
+# Tool 3: Text to Speech
+T3_TTS: {
+  python_version: 3.11,
+  port: 5003,
+  input_text_file: data/live/text_generated.txt,
+  output_wav_file: data/live/audio_generated.wav,
+}
+
+# Tool 4: Action Selection
+T4_ActionSelection: {
+  python_version: 3.11,
+  port: 5004,
+  input_text_file: data/live/text_generated.txt,
+}
+
+# Tool 5: Perform Action
+T5_PerformAction: {
+  port: 5005,
+}
+
+#---------------------------------------#
+#       INFINITE TOOLS PARAMETERS       #
+#---------------------------------------#
+
+# Tool 6: Record Audio (from NAO)
+T6_RecordAudio: {
+  python_version: 2.7,
+  port: 5006,
+  nao_ip: "192.168.0.105",
+  channel: 2,
+  output_wav_file: data/live/audio_recorded.wav,
+  output_speech_detected_file: data/live/time_speech_detected.txt,
+  seconds_to_keep: 15,
+  sample_rate: 48000,
+  loudness_threshold: 0.5,
+}
+
+# Tool 7: Capture Images (from NAO)
+T7_CaptureImages: {
+  python_version: 2.7,
+  port: 5007,
+  nao_ip: "192.168.0.105",
+}
+
+# Tool 8: Speech to Text
+T8_STT: {
   python_version: 3.11,
   port: 5008,
   model_size: small,
