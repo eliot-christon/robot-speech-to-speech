@@ -4,8 +4,6 @@ from SpeechToText import SpeechToText
 import logging
 import yaml
 
-
-
 app = Flask(__name__)
 
 
@@ -39,7 +37,6 @@ def stop_transcription():
     if speech_to_text.get_running():
         # Stop transcription process
         speech_to_text.stop()
-        speech_to_text = None
         
         return jsonify({'message': 'Transcription stopped successfully.'}), 200
     else:
@@ -64,7 +61,7 @@ if __name__ == '__main__':
     logging.info("Starting the Speech-to-Text API server...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T8"]
+    params = load_yaml("Tools/parameters.yaml")["T8_STT"]
 
     # Initialize the SpeechToText object
     speech_to_text = SpeechToText(
