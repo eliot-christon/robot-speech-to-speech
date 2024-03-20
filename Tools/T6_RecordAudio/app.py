@@ -1,6 +1,6 @@
 import BaseHTTPServer
 import json
-from RecordAudio import RecordAudio
+from SoundReceiverModule import SoundReceiverModule
 import logging
 import yaml
 
@@ -22,11 +22,11 @@ class MyHttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self._get_recording_status()
 
     def _start_recording(self):
-        global record_audio
+        global SoundReceiver
         print("MyHttpRequestHandler: _start_recording()")
-        if not record_audio.get_running():
+        if not SoundReceiver.get_running():
             # Start recording process in a separate thread
-            record_audio.start()
+            SoundReceiver.start()
             self._set_response(200)
             self.wfile.write(json.dumps({'message': 'Recording started successfully.'}).encode())
         else:
@@ -34,10 +34,10 @@ class MyHttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({'message': 'Recording is already running.'}).encode())
 
     def _stop_recording(self):
-        global record_audio
-        if record_audio.get_running():
+        global SoundReceiver
+        if SoundReceiver.get_running():
             # Stop recording process
-            record_audio.stop()
+            SoundReceiver.stop()
             self._set_response(200)
             self.wfile.write(json.dumps({'message': 'Recording stopped successfully.'}).encode())
         else:
@@ -45,9 +45,9 @@ class MyHttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({'message': 'No recording process running.'}).encode())
 
     def _get_recording_status(self):
-        global record_audio
-        if record_audio:
-            status = record_audio.get_running()
+        global SoundReceiver
+        if SoundReceiver:
+            status = SoundReceiver.get_running()
             self._set_response(200)
             self.wfile.write(json.dumps({'status': status}).encode())
         else:
@@ -82,8 +82,8 @@ if __name__ == '__main__':
                                9559)                # parent broker port
 
     # Initialize the SpeechToText object
-    record_audio = RecordAudio(
-        strModuleName="RecordAudio",
+    SoundReceiver = SoundReceiverModule(
+        strModuleName="SoundReceiver",
         nao_ip=params["nao_ip"],
         output_wav_file=params["output_wav_file"],
         output_speech_detected_file=params["output_speech_detected_file"],

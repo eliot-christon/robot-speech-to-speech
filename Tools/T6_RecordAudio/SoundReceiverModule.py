@@ -7,7 +7,7 @@ import logging
 import wave
 
 
-class RecordAudio(naoqi.ALModule):
+class SoundReceiverModule(naoqi.ALModule):
     """
     Use this object to get call back from the ALMemory of the naoqi world.
     Your callback needs to be a method with two parameter (variable name, value).
@@ -22,6 +22,7 @@ class RecordAudio(naoqi.ALModule):
         self.__audio_proxy = naoqi.ALProxy("ALAudioDevice", nao_ip, 9559)
 
         self.__wav_file = output_wav_file
+        self.__raw_file = output_wav_file.replace(".wav", ".raw")
         self.__speech_detected_file = output_speech_detected_file
         self.__channel = channel
         self.__sample_rate = sample_rate
@@ -31,27 +32,27 @@ class RecordAudio(naoqi.ALModule):
         self.__running = False
         self.__aSoundData = None
 
+        self.__rfile = None
+
     def __del__(self):
         """clean when module is destroyed"""
         logging.info("RecordAudio.__del__: cleaning everything")
         self.stop()
 
 #%% METHODS ==============================================================================================================
-    
-    def __write_wav_to_file(self):
-        """write the buffer to the wav file, only samples_to_keep samples are kept"""
-        logging.debug("RecordAudio: writing to file")
-        with open(self.__wav_file, 'ab') as file:
-            # get the samples from the file
-            all_samples = file.read()
-            overflown_samples = len(all_samples) + len(self.__aSoundData[self.__channel]) - self.__samples_to_keep
-            if overflown_samples > 0:
-                # remove the oldest samples
-                all_samples = all_samples[overflown_samples:]
-                file.seek(0)
-                file.write(all_samples)
-            # write the new samples
-            file.write(self.__aSoundData[self.__channel].tobytes())
+
+    def __write_wav_to_file_from_raw(self):
+        """write the wav file from the raw file"""
+        with open(self.__raw_file, 'rb') as raw_file:
+            raw_data = raw_file.read()
+
+        wav_file = wave.open(self.__wav_file, 'wb')
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(self.__sample_rate)
+        wav_file.writeframes(raw_data)
+        
+        wav_file.close()
     
     def __write_time_speech_detected_to_file(self):
         """write the current time to the file"""
@@ -101,6 +102,7 @@ class RecordAudio(naoqi.ALModule):
         # save the current configuration and subscribe to the audio device
         self.__audio_proxy.setClientPreferences(self.getName(),  self.__sample_rate, nNbrChannelFlag, nDeinterleave) # setting same as default generate a bug !?!
         self.__audio_proxy.subscribe(self.getName())
+        self.__rfile = open(self.__raw_file, 'wb')
 
         self.__running = True
 
@@ -110,6 +112,8 @@ class RecordAudio(naoqi.ALModule):
         """stop the listening process"""
 
         self.__audio_proxy.unsubscribe(self.getName())
+        self.__rfile.close()
+
         self.__running = False
 
         logging.info("RecordAudio: stopped!")
@@ -130,7 +134,8 @@ class RecordAudio(naoqi.ALModule):
         self.__aSoundData = np.reshape(aSoundDataInterlaced, (nbOfChannels, nbrOfSamplesByChannel), 'F')
 
         # write to file
-        self.__write_wav_to_file()
+        self.__rfile.write(self.__aSoundData[self.__channel].tobytes())
+        self.__write_wav_to_file_from_raw()
 
         if self.__speechDetected():
             self.__write_time_speech_detected_to_file()
