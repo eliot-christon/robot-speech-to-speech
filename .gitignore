@@ -7,6 +7,8 @@
 *.jpg
 *.txt
 *.flac
+*.pth
 *__pycache__*
 old/*
+checkpoints/*
 pretrained_models/*
