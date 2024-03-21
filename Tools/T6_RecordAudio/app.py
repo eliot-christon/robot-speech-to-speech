@@ -23,7 +23,6 @@ class MyHttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def _start_recording(self):
         global SoundReceiver
-        print("MyHttpRequestHandler: _start_recording()")
         if not SoundReceiver.get_running():
             # Start recording process in a separate thread
             SoundReceiver.start()
@@ -81,7 +80,7 @@ if __name__ == '__main__':
                                params["nao_ip"],    # parent broker IP
                                9559)                # parent broker port
 
-    # Initialize the SpeechToText object
+    # Initialize the SoundReceiver object
     SoundReceiver = SoundReceiverModule(
         strModuleName="SoundReceiver",
         nao_ip=params["nao_ip"],
