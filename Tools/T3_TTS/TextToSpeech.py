@@ -22,7 +22,7 @@ class TextToSpeech:
 
     def __read_text(self) -> str:
         """Read the input text file and return the text as string"""
-        with open(self.__text_file, 'r') as file:
+        with open(self.__text_file, 'r', encoding='utf-8') as file:
             text = file.read().replace('\n', '')
         return text
 
