@@ -23,7 +23,6 @@ class MyHttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def _start_recording(self):
         global read_audio
-        print("MyHttpRequestHandler: _start_recording()")
         if not read_audio.get_running():
             # Start recording process in a separate thread
             read_audio.start()

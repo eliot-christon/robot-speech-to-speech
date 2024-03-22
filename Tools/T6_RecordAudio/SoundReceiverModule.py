@@ -13,8 +13,7 @@ class SoundReceiverModule(naoqi.ALModule):
     Your callback needs to be a method with two parameter (variable name, value).
     """
 
-#%% CONSTRUCTOR AND DESTRUCTOR ============================================================================================
-
+#%% CONSTRUCTOR ===========================================================================================================
     def __init__(self, strModuleName, nao_ip, output_wav_file, output_speech_detected_file, channel, seconds_to_keep, sample_rate, loudness_threshold):
         
         naoqi.ALModule.__init__(self, strModuleName)
@@ -33,11 +32,6 @@ class SoundReceiverModule(naoqi.ALModule):
         self.__aSoundData = None
 
         self.__rfile = None
-
-    def __del__(self):
-        """clean when module is destroyed"""
-        logging.info("RecordAudio.__del__: cleaning everything")
-        self.stop()
 
 #%% METHODS ==============================================================================================================
 
