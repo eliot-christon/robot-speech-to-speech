@@ -7,18 +7,18 @@ server_processes = []
 def start_servers():
 
     # Command to start each server
-    server_T6_command = "py -2.7 Tools/T6_RecordAudio/fast_app.py"
-    server_T7_command = "py -2.7 Tools/T7_CaptureImages/fast_app.py"
-    server_T8_command = "py -3.11 Tools/T8_STT/fast_app.py"
-    server_T3_command = "py -3.10 Tools/T3_TTS/fast_app.py"
-    server_T0_command = "py -2.7 Tools/T0_ReadAudio/fast_app.py"
+    server_command_T = [None] * 9
+    server_command_T[0] = "py -2.7 Tools/T0_ReadAudio/fast_app.py"
+    server_command_T[2] = "py -3.11 Tools/T2_TextGeneration/fast_app.py"
+    server_command_T[3] = "py -3.10 Tools/T3_TTS/fast_app.py"
+    server_command_T[6] = "py -2.7 Tools/T6_RecordAudio/fast_app.py"
+    server_command_T[7] = "py -2.7 Tools/T7_CaptureImages/fast_app.py"
+    server_command_T[8] = "py -3.11 Tools/T8_STT/fast_app.py"
 
     # Start each server in a separate subprocess
-    server_processes.append(subprocess.Popen(server_T6_command, shell=True))
-    server_processes.append(subprocess.Popen(server_T7_command, shell=True))
-    server_processes.append(subprocess.Popen(server_T8_command, shell=True))
-    server_processes.append(subprocess.Popen(server_T3_command, shell=True))
-    server_processes.append(subprocess.Popen(server_T0_command, shell=True))
+    for server_command in server_command_T:
+        if server_command:
+            server_processes.append(subprocess.Popen(server_command, shell=True))
 
 
 def stop_servers():
