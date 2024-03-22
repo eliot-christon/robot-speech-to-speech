@@ -4,7 +4,7 @@ import time
 # T7_CaptureImages
 # T8_STT
 
-tool_code = "T7_CaptureImages"
+tool_code = "T8_STT"
 
 COMMAND_FILE_PATH = "Tools/" + tool_code + "/fast_com/command.txt"
 STATUS_FILE_PATH = "Tools/" + tool_code + "/fast_com/status.txt"

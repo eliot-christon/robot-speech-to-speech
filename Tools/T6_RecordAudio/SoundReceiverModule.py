@@ -120,7 +120,6 @@ class SoundReceiverModule(naoqi.ALModule):
         """
         This is THE method that receives all the sound buffers from the "ALAudioDevice" module
         """
-        print("RecordAudio: processRemote()")
 
         if not self.__running:
             return
