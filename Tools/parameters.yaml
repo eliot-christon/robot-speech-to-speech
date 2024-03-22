@@ -22,7 +22,7 @@ T2_TextGeneration: {
   port: 5002,
   input_text_file: data/live/prompt.txt,
   output_text_file: data/live/text_generated.txt,
-  model_name: "llama2",
+  model_name: "mistral", # openchat, mistral, llama2, gemma
   ollama_generate_options: {
     "top_k": 50,
     "top_p": 0.95,
@@ -38,16 +38,16 @@ T3_TTS: {
   port: 5003,
   model_name: "tts_models/multilingual/multi-dataset/your_tts", # "tts_models/multilingual/multi-dataset/your_tts", "tts_models/fr/css10/vits"
   language: "fr-fr",
-  input_text_file: data/live/text_generated.txt,
+  input_text_file: data/live/text_to_say.txt,
   output_wav_file: data/live/audio_generated.wav,
-  speaker_wav_file: data/stored/speaker_wavs/perrine_laffont.mp3,
+  speaker_wav_file: data/stored/speaker_wavs/ptisham.mp3, # eliot_christon, example_reference, jean_pierre_pernaut, perrine_laffont, ptisham, roberto_caurand, teddy_riner
 }
 
 # Tool 4: Action Selection
 T4_ActionSelection: {
   python_version: 3.11,
   port: 5004,
-  input_text_file: data/live/text_generated.txt,
+  input_text_file: data/live/text_to_say.txt,
 }
 
 # Tool 5: Perform Action

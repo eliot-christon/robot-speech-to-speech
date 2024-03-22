@@ -39,7 +39,7 @@ class ToolFastApp:
     def __execute_command(self, command):
         """Execute the command in a separate thread"""
         if command in self.__command_dict:
-            logging.info("Executing command: " + command)
+            logging.info("Executing command: " + command + " (" + self.__command_file + ")")
             threading.Thread(target=self.__command_dict[command]).start()
 
     def run(self):
