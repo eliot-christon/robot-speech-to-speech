@@ -1,6 +1,7 @@
 import logging
 import time
 import yaml
+import threading
 
 def load_yaml(file_path):
     with open(file_path, 'r') as file:
@@ -9,7 +10,6 @@ def load_yaml(file_path):
             return data
         except yaml.YAMLError as exc:
             logging.error(exc)
-
 
 class ToolFastApp:
 
@@ -50,3 +50,36 @@ class ToolFastApp:
                     self.__erase_command()
             self.__write_status()
             time.sleep(0.1)
+
+#%% ================================================================================================
+
+import logging
+from SpeechToText import SpeechToText
+
+if __name__ == '__main__':
+
+    # Set up the logging configuration
+    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
+    logging.getLogger().setLevel(logging.INFO)
+
+    logging.info("Starting the Speech-to-Text API server...")
+
+    # Load the configuration parameters from the config file
+    params = load_yaml("Tools/parameters.yaml")["T8_STT"]
+
+    # Initialize the SpeechToText object
+    speech_to_text = SpeechToText(
+        model_size=params["model_size"],
+        input_wav_file=params["input_wav_file"],
+        output_text_file=params["output_text_file"]
+    )
+    logging.info("Speech-to-Text object initialized successfully.")
+
+    T8_fast_app = ToolFastApp(
+        command_dict        = {"start": speech_to_text.start, "stop": speech_to_text.stop},
+        get_status_function = speech_to_text.get_running,
+        status_file         = "Tools/T8_STT/fast_com/status.txt",
+        command_file        = "Tools/T8_STT/fast_com/command.txt"
+    )
+
+    T8_fast_app.run()

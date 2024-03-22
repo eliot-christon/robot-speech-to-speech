@@ -1,6 +1,7 @@
 import logging
 import time
 import yaml
+import threading
 
 def load_yaml(file_path):
     with open(file_path, 'r') as file:
@@ -9,7 +10,6 @@ def load_yaml(file_path):
             return data
         except yaml.YAMLError as exc:
             logging.error(exc)
-
 
 class ToolFastApp:
 
@@ -50,3 +50,5 @@ class ToolFastApp:
                     self.__erase_command()
             self.__write_status()
             time.sleep(0.1)
+
+#%% ================================================================================================

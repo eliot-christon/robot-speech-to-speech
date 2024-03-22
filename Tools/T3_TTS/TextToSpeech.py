@@ -67,11 +67,17 @@ class TextToSpeech:
             return
 
         # Generate the speech directly to a file
-        self.__tts.tts_to_file(
-            text        = text,
-            file_path   = self.__wav_file,
-            language    = self.__language,
-            speaker_wav = self.__speaker_wav
-        )
+        if "multilingual" in self.__tts.model_name:
+            self.__tts.tts_to_file(
+                text        = text,
+                file_path   = self.__wav_file,
+                language    = self.__language,
+                speaker_wav = self.__speaker_wav
+            )
+        else:
+            self.__tts.tts_to_file(
+                text      = text,
+                file_path = self.__wav_file
+            )
 
         self.__running = False
