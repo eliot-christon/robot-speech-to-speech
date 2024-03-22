@@ -20,7 +20,7 @@ T1_PersonRecognition: {
 T2_TextGeneration: {
   python_version: 3.11,
   port: 5002,
-  input_text_file: data/live/text_transcribed.txt,
+  input_text_file: data/live/prompt.txt,
   output_text_file: data/live/text_generated.txt,
   model_name: "llama2",
   ollama_generate_options: {
