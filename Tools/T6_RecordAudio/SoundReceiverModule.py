@@ -52,7 +52,7 @@ class SoundReceiverModule(naoqi.ALModule):
     
     def __write_time_speech_detected_to_file(self):
         """write the current time to the file"""
-        with open(self.__speech_detected_file, 'ab') as file:
+        with open(self.__speech_detected_file, 'w') as file:
             file.write("speech detected at: " + time.strftime("%c") + "\n")
     
     def __speechDetected(self):
@@ -108,7 +108,8 @@ class SoundReceiverModule(naoqi.ALModule):
         """stop the listening process"""
 
         self.__audio_proxy.unsubscribe(self.getName())
-        self.__rfile.close()
+        if self.__rfile:
+            self.__rfile.close()
 
         self.__running = False
 
