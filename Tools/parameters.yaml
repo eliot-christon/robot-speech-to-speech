@@ -20,6 +20,16 @@ T1_PersonRecognition: {
 T2_TextGeneration: {
   python_version: 3.11,
   port: 5002,
+  input_text_file: data/live/text_transcribed.txt,
+  output_text_file: data/live/text_generated.txt,
+  model_name: "llama2",
+  ollama_generate_options: {
+    "top_k": 50,
+    "top_p": 0.95,
+    "temperature": 0.85,
+    "repeat_penalty": 1.9,
+    "repeat_last_n": 100,
+  }
 }
 
 # Tool 3: Text to Speech

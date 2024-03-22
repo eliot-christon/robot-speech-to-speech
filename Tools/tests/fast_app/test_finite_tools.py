@@ -8,7 +8,7 @@ import time
 # T4_ActionSelection
 # T5_PerformAction
 
-tool_code = "T3_TTS"
+tool_code = "T2_TextGeneration"
 
 COMMAND_FILE_PATH = "Tools/" + tool_code + "/fast_com/command.txt"
 STATUS_FILE_PATH = "Tools/" + tool_code + "/fast_com/status.txt"
