@@ -1,5 +1,17 @@
 from State import State
-from utils import last_speech_detected_seconds, text_transcribed, tools_running, generated_sentences, sleep_02, empty_time_speech_detected, move_bonjour_to_generated, empty_data_live_folder, build_prompt, load_yaml
+from utils import \
+    last_speech_detected_seconds, \
+    text_transcribed, \
+    tools_running, \
+    generated_sentences, \
+    sleep_02, \
+    clear_time_speech_detected, \
+    clear_data_live_folder, \
+    clear_text_transcribed, \
+    build_prompt, \
+    load_yaml, \
+    move_hi_to_say, \
+    move_bye_to_say
 from Message import Message
 import logging
 import time
@@ -11,23 +23,27 @@ class StateMachine:
             "WAIT"      : State(number=0, name="WAIT",
                                 start_tools=['T6', 'T8'],
                                 stop_tools=['T7']),
+            "GEN_HI"    : State(number=13, name="GEN_HI",
+                                start_tools=['T3'],
+                                stop_tools=['T6', 'T8'],
+                                on_enter=(move_hi_to_say,),
+                                on_exit=(sleep_02,)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
-                                stop_tools=['T6', 'T8'],
-                                on_enter=(move_bonjour_to_generated, self.init_current_conversation),
-                                on_exit=(empty_time_speech_detected,)),
+                                on_enter=(self.init_current_conversation,),
+                                on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen)),
+                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed),
+                                on_exit=(sleep_02, sleep_02)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T6', 'T7', 'T8'],
                                 on_enter=(self.add_transcribed_to_conversation,)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
-                                on_enter=(self.edit_prompt,),
-                                on_exit=(sleep_02,)),
+                                on_enter=(self.edit_prompt,)),
             "GEN"       : State(number=4, name="GEN",
-                                on_exit =(self.write_text_to_say, self.update_sentences_said, empty_time_speech_detected)),
+                                on_exit =(self.write_text_to_say, self.update_sentences_said, clear_time_speech_detected)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
                                 start_tools=['T3', 'T4']),
             "SAY_A"     : State(number=6, name="SAY_A",
@@ -38,23 +54,29 @@ class StateMachine:
                                 start_tools=['T5']),
             "SAY_B"     : State(number=9, name="SAY_B",
                                 start_tools=['T0']),
+            "GEN_BYE"   : State(number=12, name="GEN_BYE",
+                                start_tools=['T3'],
+                                stop_tools=['T6', 'T8'],
+                                on_enter=(move_bye_to_say,),
+                                on_exit=(sleep_02,)),
             "BYE"       : State(number=11, name="BYE",
-                                start_tools=['T0'],
-                                stop_tools=['T6', 'T8']),
+                                start_tools=['T0']),
         }
 
         self.conditions = {
-            "WAIT"      : {"CONV"       : self.cond_start},
+            "WAIT"      : {"GEN_HI"     : self.cond_start},
+            "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
-            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "BYE"       : self.cond_nothing_said},
+            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "GEN_BYE"   : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T1_finished},
             "START_GEN" : {"GEN"        : self.cond_true},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,   "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,   "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
             "ACT_A"     : {"SAY_B"      : self.cond_T03_finished},
-            "SAY_B"     : {"BYE"        : self.cond_bye,            "GEN"       : self.cond_else},
-            "ACT_B"     : {"BYE"        : self.cond_bye,            "GEN"       : self.cond_else},
+            "SAY_B"     : {"GEN_BYE"    : self.cond_bye,            "GEN"       : self.cond_else},
+            "ACT_B"     : {"GEN_BYE"    : self.cond_bye,            "GEN"       : self.cond_else},
+            "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
 
@@ -62,9 +84,9 @@ class StateMachine:
         self.next_state = None
 
         # thresholds
-        self.threshold_nothing_said = 6
+        self.threshold_nothing_said = 10
         self.threshold_recently_said = 3
-        self.threshold_end_sentence = 1.5
+        self.threshold_end_sentence = 2
 
         # key words
         self.key_words = {
@@ -87,7 +109,7 @@ class StateMachine:
 #%% METHODS ===============================================================================================================
 
     def init_current_conversation(self):
-        with open("data/stored/assistant/bonjour.txt", "r", encoding="utf-8") as file:
+        with open("data/stored/assistant/hi.txt", "r", encoding="utf-8") as file:
             bonjour_content = file.read()
         with open("data/stored/assistant/context.txt", "r", encoding="utf-8") as file:
             system_context = file.read()
@@ -214,7 +236,7 @@ if __name__ == "__main__":
     logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
     logging.getLogger().setLevel(logging.INFO)
     sm = StateMachine()
-    empty_data_live_folder()
+    clear_data_live_folder()
     try:
         sm.run()
     except KeyboardInterrupt:

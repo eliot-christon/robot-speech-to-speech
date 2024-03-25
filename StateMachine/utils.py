@@ -79,14 +79,21 @@ def tools_running(list_tools):
 
 #%% FILE MANAGEMENT ========================================================================================================
 
-def move_bonjour_to_generated():
-    """Move the bonjour.wav file to audio_generated.wav"""
-    with open("data/stored/assistant/bonjour.wav", "rb") as file:
-        data = file.read()
-    with open("data/live/audio_generated.wav", "wb") as file:
-        file.write(data)
+def move_hi_to_say():
+    """Move the hi.txt file to text_to_say.txt"""
+    with open("data/stored/assistant/hi.txt", "r", encoding="utf-8") as file:
+        text = file.read()
+    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+        file.write(text)
 
-def empty_data_live_folder():
+def move_bye_to_say():
+    """Move the bye.txt file to text_to_say.txt"""
+    with open("data/stored/assistant/bye.txt", "r", encoding="utf-8") as file:
+        text = file.read()
+    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+        file.write(text)
+
+def clear_data_live_folder():
     # AUDIO
     with open("data/live/audio_recorded.wav", "w", encoding="utf-8") as file:
         file.write("")
@@ -106,10 +113,13 @@ def empty_data_live_folder():
     with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
         file.write("")
 
-def empty_time_speech_detected():
+def clear_time_speech_detected():
     with open("data/live/time_speech_detected.txt", "w", encoding="utf-8") as file:
         file.write("")
 
+def clear_text_transcribed():
+    with open("data/live/text_transcribed.txt", "w", encoding="utf-8") as file:
+        file.write("")
 
 #%% READ SPECIFIC FILES ===================================================================================================
 
