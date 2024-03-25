@@ -1,4 +1,5 @@
 from utils import start_tools, stop_tools
+import logging
 
 class State:
     """Base class for all states"""
@@ -12,11 +13,12 @@ class State:
         self.stop_tools = stop_tools
     
     def on_enter(self):
-        start_tools(self.start_tools)
-        stop_tools(self.stop_tools)
         for function in self.on_enter_functions:
             if function is not None:
+                logging.info(f"Running function {function} on entering state {self}")
                 function()
+        start_tools(self.start_tools)
+        stop_tools(self.stop_tools)
     
     def on_exit(self):
         for function in self.on_exit_functions:

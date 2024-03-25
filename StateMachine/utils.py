@@ -25,6 +25,38 @@ fast_com_dict = {
     "T8": "Tools/T8_STT/fast_com/"
 }
 
+def move_bonjour_to_generated():
+    """Move the bonjour.wav file to audio_generated.wav"""
+    with open("data/stored/bonjour.wav", "rb") as file:
+        data = file.read()
+    with open("data/live/audio_generated.wav", "wb") as file:
+        file.write(data)
+
+def empty_live():
+    # AUDIO
+    with open("data/live/audio_recorded.wav", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/audio_recorded.raw", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/audio_generated.wav", "w", encoding="utf-8") as file:
+        file.write("")
+    # TEXT
+    with open("data/live/prompt.txt", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/text_generated.txt", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/text_transcribed.txt", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/time_speech_detected.txt", "w", encoding="utf-8") as file:
+        file.write("")
+    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+        file.write("")
+    
+
+def empty_time_speech_detected():
+    with open("data/live/time_speech_detected.txt", "w", encoding="utf-8") as file:
+        file.write("")
+
 def start_tools(list_tools):
     logging.info("Starting tools: " + str(list_tools))
     for tool in list_tools:

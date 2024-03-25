@@ -131,5 +131,9 @@ class CaptureImages:
     
     def stop(self):
         self.__runnning = False
-        self.__video_device_proxy.unsubscribe(self.__name_id)
-        self.__face_detection_proxy.unsubscribe("FaceDetection")
+        if self.__name_id:
+            try:
+                self.__video_device_proxy.unsubscribe(self.__name_id)
+                self.__face_detection_proxy.unsubscribe("FaceDetection")
+            except Exception as e:
+                logging.error("CaptureImages: unsubscribing error: " + str(e))
