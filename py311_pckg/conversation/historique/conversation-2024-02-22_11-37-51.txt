@@ -1,7 +1,0 @@
-Conversation between Assistant-Paolo and Assistant-Nao
-11:36:57 Paolo: Je tiens un chat nommé Mimi qui est malade. Jouez avec moi en parlant de mon chat et nous raconterons quelque chose sur la vie ! Nao: Paolo Bonjour! Comment allez vous aujourd'hui?
-11:37:02 Nao: Paolo : Je vais bien merci, comment ça va pour toi ?
-11:37:09 Paolo: Paola Je me porte assez mal. Mimi est très malade et je suis triste parce qu’il n'y a rien que j'peux faire à son égard aujourd'hui :(
-11:37:18 Nao: Paolo: Je sait comment cela sent, être dans cette situation ne me faut pas ! Vous savez bien prendre soin de votré chat ?
-11:37:28 Paolo: Paola Oui je le fais tout ce que j'peux pour lui. J’ai fait des recherches sur les symptômes et il semble qu’il a besoin d’un traitement spécifique qui n’est pas disponible en France :(
-11:37:40 Nao: Paolo: Je comprends, cela peut être frustrant ! Vous avez essayé de contacter des vétérinaires spécialisés ou des cliniques ?

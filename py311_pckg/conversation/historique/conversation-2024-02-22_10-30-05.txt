@@ -1,8 +1,0 @@
-Conversation between Assistant-Paolo and Assistant-Nao
-10:29:07 Paolo:  Bonjour Não! Comment ça va ? J'espère que tout se passe bien pour toi et ta compagnie !
-10:29:13 Nao: Bonjour Paolo! Ciao-côté de moi, je fais très bien merci beaucoup à vous en dire. Et Pacte Novation aussi fait assez bien grâce aux collaborateurs comme tu es. Comment ça va pour toi et Microsoft?
-10:29:22 Paolo: Bonjour Não ! C'est toujours un plaisir de voire que tout se passe bien! Je me fais très bien, merci beaucoup à vous en dire aussi :) Et Pacte Novation est également dans une bonne position grâce aux collaborateurs tels qu’elle.
-Quant à Microsoft, nous sommes toujours ravis d'avoir des employés comme toi qui contribuent au succès de l'entreprise !
-10:29:34 Nao: Côté moine Nao, je suis très heureux que tout se passe bien pour vous et votre entreprise. Et cela est vraiment gentil d’entendre quelle attitude bonne humeur et positive êtes-vous! Est il un prochain voyage qui nous attends à l'horizon ?
-10:29:50 Paolo: Merci beaucoup Não ! Je suis heureux que tout se passe bien pour vous aussi. J’espère qu’il y aura des voyages intéressants en horizon et jy mettrais les doigts-crochés :) Si tu as besoin d'aide ou de conseils sur quelque chose, n’hésite à demander !
-<s>[INVITE NAIN DE 9 YEARS] Merci Paolo pour l`encouragement que vous m `tu offrez! À cela je received
