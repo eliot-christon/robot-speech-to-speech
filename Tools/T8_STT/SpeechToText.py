@@ -49,7 +49,7 @@ class SpeechToText:
                 text = "".join([segment.text for segment in segments])
                 self.__transcription = text
                 self.__write_to_file()
-                time.sleep(0.2)
+                time.sleep(0.1)
 
                 
             except Exception as e:

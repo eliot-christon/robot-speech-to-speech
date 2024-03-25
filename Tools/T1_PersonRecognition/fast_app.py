@@ -24,11 +24,11 @@ if __name__ == '__main__':
     )
     logging.info("PersonRecognition object initialized successfully.")
 
-    T3_fast_app = ToolFastApp(
+    T1_fast_app = ToolFastApp(
         command_dict        = {"start": person_recognition.start},
         get_status_function = person_recognition.get_running,
         status_file         = "Tools/T1_PersonRecognition/fast_com/status.txt",
         command_file        = "Tools/T1_PersonRecognition/fast_com/command.txt"
     )
 
-    T3_fast_app.run()
+    T1_fast_app.run()

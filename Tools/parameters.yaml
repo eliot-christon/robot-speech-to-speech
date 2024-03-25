@@ -56,6 +56,13 @@ T5_PerformAction: {
   port: 5005,
 }
 
+T9_LEDS: {
+  python_version: 2.7,
+  port: 5009,
+  nao_ip: "192.168.0.105",
+  input_text_file: data/live/led_rgb.txt,
+}
+
 #---------------------------------------#
 #       INFINITE TOOLS PARAMETERS       #
 #---------------------------------------#
