@@ -1,5 +1,7 @@
 import time
 import re
+import yaml
+from Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
 
@@ -10,8 +12,6 @@ def time_strftime_to_seconds(time_strftime): # time_strftime: "speech detected a
     if time_strftime == None:
         return None
     return time.mktime(time.strptime(time_strftime, "%m/%d/%y %H:%M:%S"))
-
-assert(time_strftime_to_seconds("03/22/24 14:06:46") == 1711112806.0)
 
 def msg_to_sentences(msg):
     """ Convert a message to phrases """
@@ -33,6 +33,15 @@ def msg_to_sentences(msg):
                 current_phrase += sentence.strip()
     
     return phrases, current_phrase
+
+def load_yaml(file_path):
+    with open(file_path, 'r') as file:
+        data = yaml.safe_load(file)
+        return data
+
+# TESTS
+
+assert(time_strftime_to_seconds("03/22/24 14:06:46") == 1711112806.0)
 
 
 #%% TOOL RELATED FUNCTIONS =================================================================================================
@@ -128,14 +137,22 @@ def generated_sentences():
 #%% PROMPTING ==============================================================================================================
 
 prompt_templates = {
-    "TheBloke--Mistral-7B-Instruct-v0.1-GGUF" : {"start":"<s>[INST] ", "mid":" [/INST]", "end":["</s>"]},
-    "mistral" : {"start":"<s>[INST] ", "mid":" [/INST]", "end":["</s>"]},
-    "Hvsq--ARIA-7B-V3-mistral-french-v1-GGUF" : {"start":"<s>[INST] ", "mid":" [/INST]", "end":["</s>"]},
-    "TheBloke--LlaMA-Pro-8B-Instruct-GGUF" : {"start":"<|user|>\n", "mid":"\n<|assistant|>", "end":["</s>"]},
-    "TheBloke--Llama-2-7B-GGUF" : {"start":"", "mid":"", "end":["</s>"]},
-    "llama2" : {"start":"", "mid":"", "end":["</s>"]},
-    "TheBloke--EstopianMaid-13B-GGUF" : {"start":"### Instruction:\n", "mid":"\n\n### Response:\n", "end":["</s>", "###"]},
-    "TheBloke--openchat-3.5-0106-GGUF" : {"start":"GPT4 Correct User: ", "mid":"<|end_of_turn|>GPT4 Correct Assistant: ", "end":["<|end_of_turn|>", "</s>", "<|end", "<||", "< |end", "< | end"]},
+    "test"     : {
+        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
+        "assistant" : {"start":"",                          "end":["</s>"]},
+        "system"    : {"start":"<s>[INST] <<SYS>>",       "end":["<</SYS>>\n"]}},
+    "mistral"  : {
+        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
+        "assistant" : {"start":"",                          "end":["</s>"]},
+        "system"    : {"start":"<s>[INST] <<SYS>>",       "end":["<</SYS>>\n"]}},
+    "llama2"   : {
+        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
+        "assistant" : {"start":"",                          "end":["</s>"]},
+        "system"    : {"start":"<s>[INST] <<SYS>>\n",       "end":["\n<</SYS>>\n\n"]}},
+    "openchat" : {
+        "user"      : {"start":"GPT4 Correct User: ",       "end":["<|end_of_turn|>"]},
+        "assistant" : {"start":"GPT4 Correct Assistant: ",  "end":["<|end_of_turn|>", "</s>", "<|end", "<||", "< |end", "< | end"]},
+        "system"    : {"start":"<|system|>\n",              "end":["<|/system|>\n"]}},
 }
 
 def get_prompt_template(model_name:str) -> dict:
@@ -144,3 +161,25 @@ def get_prompt_template(model_name:str) -> dict:
         if key in model_name:
             return prompt_templates[key]
     return {"start":"", "mid":"", "end":["</s>"]}
+
+
+def build_prompt(model_name:str, list_messages:list) -> str:
+    prompt_template = get_prompt_template(model_name)
+
+    prompt = ""
+    
+    for message in list_messages:
+        if message.role in prompt_template.keys():
+            prompt += prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0]
+        else:
+            raise ValueError(f"Unknown role: {message.role}")
+    
+    prompt = prompt.replace("<</SYS>>\n<s>[INST]", "<</SYS>>\n")
+
+    return prompt
+
+# TESTS
+
+assert(get_prompt_template("mistral") == prompt_templates["mistral"])
+list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
+assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello[/INST]Hi</s>")
