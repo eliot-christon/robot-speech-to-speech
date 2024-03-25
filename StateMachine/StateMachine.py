@@ -11,7 +11,12 @@ from utils import \
     build_prompt, \
     load_yaml, \
     move_hi_to_say, \
-    move_bye_to_say
+    move_bye_to_say, \
+    leds_blue, \
+    leds_magenta, \
+    leds_green, \
+    leds_cyan, \
+    leds_reset
 from Message import Message
 import logging
 import time
@@ -22,11 +27,11 @@ class StateMachine:
         self.states = {
             "WAIT"      : State(number=0, name="WAIT",
                                 start_tools=['T6', 'T8'],
-                                stop_tools=['T7']),
+                                stop_tools=['T7', 'T9']),
             "GEN_HI"    : State(number=13, name="GEN_HI",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8'],
-                                on_enter=(move_hi_to_say,),
+                                on_enter=(move_hi_to_say, leds_magenta),
                                 on_exit=(sleep_02,)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
@@ -34,18 +39,19 @@ class StateMachine:
                                 on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed),
-                                on_exit=(sleep_02, sleep_02)),
+                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
+                                on_exit=(sleep_02, sleep_02, leds_reset)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T6', 'T7', 'T8'],
-                                on_enter=(self.add_transcribed_to_conversation,)),
+                                on_enter=(self.add_transcribed_to_conversation, leds_blue)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
                                 on_enter=(self.edit_prompt,)),
             "GEN"       : State(number=4, name="GEN",
                                 on_exit =(self.write_text_to_say, self.update_sentences_said, clear_time_speech_detected)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
-                                start_tools=['T3', 'T4']),
+                                start_tools=['T3', 'T4'],
+                                on_enter=(leds_cyan,)),
             "SAY_A"     : State(number=6, name="SAY_A",
                                 start_tools=['T0']),
             "ACT_A"     : State(number=7, name="ACT_A",

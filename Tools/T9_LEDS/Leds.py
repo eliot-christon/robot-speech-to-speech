@@ -11,6 +11,7 @@ class Leds:
         self.__text_file = input_text_file
 
         self.__leds_proxy = naoqi.ALProxy("ALLeds", self.__nao_ip, 9559)
+        self.__running = False
 
 #%% METHODS ==============================================================================================================
 

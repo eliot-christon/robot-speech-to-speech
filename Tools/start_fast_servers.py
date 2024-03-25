@@ -7,7 +7,7 @@ server_processes = []
 def start_servers():
 
     # Command to start each server
-    server_command_T = [None] * 9
+    server_command_T = [None] * 10
     server_command_T[0] = "py -2.7 Tools/T0_ReadAudio/fast_app.py"
     server_command_T[1] = "py -3.11 Tools/T1_PersonRecognition/fast_app.py"
     server_command_T[2] = "py -3.11 Tools/T2_TextGeneration/fast_app.py"
@@ -15,6 +15,7 @@ def start_servers():
     server_command_T[6] = "py -2.7 Tools/T6_RecordAudio/fast_app.py"
     server_command_T[7] = "py -2.7 Tools/T7_CaptureImages/fast_app.py"
     server_command_T[8] = "py -3.11 Tools/T8_STT/fast_app.py"
+    server_command_T[9] = "py -2.7 Tools/T9_LEDS/fast_app.py"
 
     # Start each server in a separate subprocess
     for server_command in server_command_T:

@@ -55,7 +55,8 @@ fast_com_dict = {
     "T5": "Tools/T5_PerformAction/fast_com/",
     "T6": "Tools/T6_RecordAudio/fast_com/",
     "T7": "Tools/T7_CaptureImages/fast_com/",
-    "T8": "Tools/T8_STT/fast_com/"
+    "T8": "Tools/T8_STT/fast_com/",
+    "T9": "Tools/T9_LEDS/fast_com/"
 }
 
 def send_command(command, fast_com_dir):
@@ -63,7 +64,6 @@ def send_command(command, fast_com_dir):
         file.write(command)
         
 def get_status(fast_com_dir):
-    send_command('status', fast_com_dir)
     with open(fast_com_dir + "status.txt", 'r') as file:
         return file.read()
 
@@ -194,3 +194,37 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
 assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello[/INST]Hi</s>")
+
+
+#%% LEDS ==================================================================================================================
+
+def write_led_color(color):
+    with open("data/live/led_rgb.txt", "w", encoding="utf-8") as file:
+        file.write(color)
+
+def leds_cyan():
+    write_led_color("cyan")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_magenta():
+    write_led_color("magenta")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_yellow():
+    write_led_color("yellow")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_red():
+    write_led_color("red")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_green():
+    write_led_color("green")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_blue():
+    write_led_color("blue")
+    send_command("start", fast_com_dict["T9"])
+
+def leds_reset():
+    send_command("reset", fast_com_dict["T9"])
