@@ -41,6 +41,8 @@ class ToolFastApp:
         if command in self.__command_dict:
             logging.info("Executing command: " + command + " (" + self.__command_file + ")")
             threading.Thread(target=self.__command_dict[command]).start()
+        elif command == 'status':
+            self.__write_status()
 
     def run(self):
         while True:
@@ -50,7 +52,6 @@ class ToolFastApp:
                     if command != '_':  # Check if command is not empty
                         self.__execute_command(command)
                         self.__erase_command()
-                self.__write_status()
                 time.sleep(0.1)
             except KeyboardInterrupt:
                 logging.info("Exiting the FastApp...")

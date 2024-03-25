@@ -63,6 +63,7 @@ def send_command(command, fast_com_dir):
         file.write(command)
         
 def get_status(fast_com_dir):
+    send_command('status', fast_com_dir)
     with open(fast_com_dir + "status.txt", 'r') as file:
         return file.read()
 
