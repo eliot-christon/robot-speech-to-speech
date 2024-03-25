@@ -39,12 +39,12 @@ if __name__ == "__main__":
         status_T8 = get_status(FAST_COM_T8)
         time.sleep(0.2)
 
-    # write the STT result from text_transcribed.txt to prompt.txt
-    print("Writing the STT result to prompt.txt...")
+    # write the STT result from text_transcribed.txt to text_prompt.txt
+    print("Writing the STT result to text_prompt.txt...")
 
     with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
         text = file.read()
-    with open("data/live/prompt.txt", "w", encoding="utf-8") as file:
+    with open("data/live/text_prompt.txt", "w", encoding="utf-8") as file:
         file.write(text + (" (réponds impérativement en français)"))
 
     print("Text generation process started...")
