@@ -18,7 +18,7 @@ class StateMachine:
                                 on_exit=(empty_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_generated_to_conversation,)),
+                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T6', 'T7', 'T8'],
                                 on_enter=(self.add_transcribed_to_conversation,)),
@@ -38,20 +38,24 @@ class StateMachine:
                                 start_tools=['T5']),
             "SAY_B"     : State(number=9, name="SAY_B",
                                 start_tools=['T0']),
+            "BYE"       : State(number=11, name="BYE",
+                                start_tools=['T0'],
+                                stop_tools=['T6', 'T8']),
         }
 
         self.conditions = {
             "WAIT"      : {"CONV"       : self.cond_start},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
-            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "WAIT"      : self.cond_nothing_said},
+            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "BYE"       : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T1_finished},
             "START_GEN" : {"GEN"        : self.cond_true},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,   "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,   "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
             "ACT_A"     : {"SAY_B"      : self.cond_T03_finished},
-            "SAY_B"     : {"WAIT"       : self.cond_bye,            "GEN"       : self.cond_else},
-            "ACT_B"     : {"WAIT"       : self.cond_bye,            "GEN"       : self.cond_else},
+            "SAY_B"     : {"BYE"        : self.cond_bye,            "GEN"       : self.cond_else},
+            "ACT_B"     : {"BYE"        : self.cond_bye,            "GEN"       : self.cond_else},
+            "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
 
         self.current_state = self.states["WAIT"]
@@ -72,6 +76,8 @@ class StateMachine:
         self.sentences_to_say = []
         self.current_sentence_generated = ""
         self.model_name = load_yaml("Tools/parameters.yaml")["T2_TextGeneration"]["model_name"]
+
+        self.time_when_entered_listen = None
 
         # conversation
         self.current_conversation = []
@@ -113,6 +119,9 @@ class StateMachine:
         self.sentences_said += self.sentences_to_say
         self.sentences_to_say = []
     
+    def update_time_when_entered_listen(self):
+        self.time_when_entered_listen = time.time()
+    
     def add_transcribed_to_conversation(self):
         with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
             text = file.read()
@@ -153,7 +162,7 @@ class StateMachine:
     def cond_nothing_said(self):
         lsds = last_speech_detected_seconds()
         if lsds == None:
-            return False
+            return abs(self.time_when_entered_listen - time.time()) > self.threshold_nothing_said
         return abs(lsds - time.time()) > self.threshold_nothing_said
     
     def cond_T1_finished(self):

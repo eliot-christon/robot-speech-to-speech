@@ -14,7 +14,7 @@ class PersonRecognition:
     def __write_to_file(self):
         """Write the output text to a file"""
         with open(self.__text_file, 'w', encoding='utf-8') as file:
-            file.write("Eliot CHRISTON")
+            file.write("Jean DUPONT")
 
 #%% GETTERS AND SETTERS ==================================================================================================
 
