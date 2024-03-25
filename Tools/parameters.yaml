@@ -14,6 +14,7 @@ T0_ReadAudio: {
 T1_PersonRecognition: {
   python_version: 3.11,
   port: 5001,
+  output_text_file: data/live/person_recognized.txt,
 }
 
 # Tool 2: Text Generation
