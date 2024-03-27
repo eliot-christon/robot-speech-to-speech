@@ -3,11 +3,12 @@ from utils import \
     last_speech_detected_seconds, \
     text_transcribed, \
     tools_running, \
-    generated_sentences, \
+    get_clean_generated_sentences, \
     sleep_02, \
     clear_time_speech_detected, \
     clear_data_live_folder, \
     clear_text_transcribed, \
+    clean_text, \
     build_prompt, \
     load_yaml, \
     move_hi_to_say, \
@@ -48,18 +49,20 @@ class StateMachine:
                                 start_tools=['T2'],
                                 on_enter=(self.edit_prompt,)),
             "GEN"       : State(number=4, name="GEN",
-                                on_exit =(self.write_text_to_say, self.update_sentences_said, clear_time_speech_detected)),
+                                on_exit =(self.write_text_to_say, clear_time_speech_detected, leds_blue)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
                                 start_tools=['T3', 'T4'],
                                 on_enter=(leds_cyan,)),
             "SAY_A"     : State(number=6, name="SAY_A",
-                                start_tools=['T0']),
+                                start_tools=['T0'],
+                                on_enter=(self.update_sentences_said,)),
             "ACT_A"     : State(number=7, name="ACT_A",
                                 start_tools=['T5']),
             "ACT_B"     : State(number=8, name="ACT_B",
                                 start_tools=['T5']),
             "SAY_B"     : State(number=9, name="SAY_B",
-                                start_tools=['T0']),
+                                start_tools=['T0'],
+                                on_enter=(self.update_sentences_said,)),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8'],
@@ -75,7 +78,7 @@ class StateMachine:
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "GEN_BYE"   : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T1_finished},
-            "START_GEN" : {"GEN"        : self.cond_true},
+            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,   "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,   "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
@@ -140,7 +143,7 @@ class StateMachine:
             file.write(" ".join(self.sentences_to_say))
 
     def update_sentences_to_say(self):
-        sentences, current_sentence_generated = generated_sentences()
+        sentences, current_sentence_generated = get_clean_generated_sentences(self.model_name)
         self.sentences_to_say = [sentence for sentence in sentences if sentence not in self.sentences_said]
         self.current_sentence_generated = current_sentence_generated
     
@@ -167,6 +170,7 @@ class StateMachine:
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
             text = file.read()
         if text != "":
+            text = clean_text(self.model_name, text)
             self.current_conversation.append(Message(role="assistant", content=text, timestamp=time.time()))
 
     def edit_prompt(self):
@@ -185,9 +189,6 @@ class StateMachine:
         if lsds == None:
             return False
         return abs(lsds - time.time()) < self.threshold_recently_said and any(word in text_transcribed().lower() for word in self.key_words["start"])
-    
-    def cond_true(self):
-        return True
 
     def cond_end_sentence(self):
         lsds = last_speech_detected_seconds()
@@ -225,7 +226,11 @@ class StateMachine:
     
     def cond_nothing_to_say(self):
         self.update_sentences_to_say()
-        return len(self.sentences_to_say) == 0 and tools_running(['T0', 'T2']) == ['False'] * 2
+        return len(self.sentences_to_say) == 0 and tools_running(['T0', 'T2']) == ['False'] * 2 and len(self.current_sentence_generated) == 0
+    
+    def cond_not_empty_text_gen(self):
+        self.update_sentences_to_say()
+        return len(self.sentences_to_say) > 0 or len(self.current_sentence_generated) > 0
     
 #%% RUN =================================================================================================================
     
@@ -238,7 +243,7 @@ class StateMachine:
         while True:
             self.update_next_state()
             if self.next_state != self.current_state:
-                logging.info(f"Transition from {self.current_state} to {self.next_state}")
+                logging.info(f"Transition from {self.current_state}" + " "*(12 - len(str(self.current_state))) + f" to    {self.next_state}")
                 self.current_state.on_exit()
                 self.current_state = self.next_state
                 self.current_state.on_enter()

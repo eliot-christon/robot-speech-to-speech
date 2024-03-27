@@ -39,6 +39,16 @@ def load_yaml(file_path):
         data = yaml.safe_load(file)
         return data
 
+def rm_parentesis(text):
+    return re.sub(r'\([^)]*\)', '', text)
+
+def rm_smileys(text):
+    # Define a regular expression pattern to match smileys
+    smiley_pattern = r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F780-\U0001F7FF\U0001F800-\U0001F8FF\U0001F900-\U0001F9FF\U0001FA00-\U0001FA6F\U0001FA70-\U0001FAFF\U0001FAB0-\U0001FABF\U0001FAC0-\U0001FAFF\u2600-\u26FF\u2700-\u27BF]'
+    
+    # Remove smileys from the text using the sub() method of the re module
+    return re.sub(smiley_pattern, '', text)
+    
 # TESTS
 
 assert(time_strftime_to_seconds("03/22/24 14:06:46") == 1711112806.0)
@@ -138,12 +148,11 @@ def text_transcribed():
     with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
         return file.read().strip()
 
-def generated_sentences():
+def get_clean_generated_sentences(model_name:str) -> str:
     with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
         message = file.read().replace("\n", " ").strip()
-
-    return msg_to_sentences(message)
-
+    
+    return msg_to_sentences(clean_text(model_name, message))
 
 #%% PROMPTING ==============================================================================================================
 
@@ -173,6 +182,21 @@ prompt_templates = {
         "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
         "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
 }
+
+def clean_text(model_name:str, text:str) -> str:
+    # check if key in model_name
+    prompt_template = get_prompt_template(model_name)
+
+    for end in prompt_template["assistant"]["end"]:
+        text_split = text.split(end)
+        if len(text_split) > 1:
+            text = text_split[0] + "."
+    
+    text = rm_parentesis(text)
+    text = rm_smileys(text)
+
+    return text
+
 
 def get_prompt_template(model_name:str) -> dict:
     # check if key in model_name
@@ -205,6 +229,7 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 
 # TESTS
 
+assert(clean_text("openhermes", "Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
 assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello (réponds moi en deux phrases uniquement)[/INST]Hi</s>")
