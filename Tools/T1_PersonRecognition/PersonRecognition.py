@@ -27,12 +27,20 @@ class PersonRecognition:
     def __list_wav_files(self, folder:str):
         """List all wav files in a folder"""
         files = os.listdir(folder)
-        return [f for f in files if f.endswith('.wav')]
+        print("files: ", files)
+        return [f for f in files if f.endswith('.wav') or f.endswith('.mp3')]
     
     def __verify_person(self, person_voices_folder:str):
         """Verify if the audio file is from the person"""
-        result = self.__model.verify_files(self.__audio_file, self.__list_wav_files(person_voices_folder)[0])
-        return result
+        print("Verifying voices: ", person_voices_folder)
+        list_wav_files = self.__list_wav_files(person_voices_folder)
+        print("list_wav_files: ", list_wav_files)
+        if len(list_wav_files) == 0:
+            return False
+        file_to_verify = list_wav_files[0]
+        proba, result = self.__model.verify_files(self.__audio_file, person_voices_folder + file_to_verify)
+        print("result: ", result)
+        return proba, result
 
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -53,7 +61,8 @@ class PersonRecognition:
 
         # iterate over all the people
         for person_name in people:
-            result = self.__verify_person(self.__people_folder + person_name + "/")
+            print("Verifying person: " + person_name, " at ", self.__people_folder + person_name + "/voices/")
+            _, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
             if result:
                 self.__person_recognized = person_name
                 break
