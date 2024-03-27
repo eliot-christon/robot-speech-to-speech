@@ -148,14 +148,18 @@ def generated_sentences():
 #%% PROMPTING ==============================================================================================================
 
 prompt_templates = {
+    "gemma"    : {
+        "user"      : {"start":"<start_of_turn>user\n",     "end":["<end_of_turn>\n"]},
+        "assistant" : {"start":"<start_of_turn>model\n",    "end":["<end_of_turn>model\n"]},
+        "system"    : {"start":"<start_of_turn>system\n",   "end":["<end_of_turn>system\n"]}},
     "test"     : {
         "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
         "assistant" : {"start":"",                          "end":["</s>"]},
-        "system"    : {"start":"<s>[INST] <<SYS>>",       "end":["<</SYS>>\n"]}},
+        "system"    : {"start":"<s>[INST] <<SYS>>",         "end":["<</SYS>>\n"]}},
     "mistral"  : {
         "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
         "assistant" : {"start":"",                          "end":["</s>"]},
-        "system"    : {"start":"<s>[INST] <<SYS>>",       "end":["<</SYS>>\n"]}},
+        "system"    : {"start":"<s>[INST] <<SYS>>",         "end":["<</SYS>>\n"]}},
     "llama2"   : {
         "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
         "assistant" : {"start":"",                          "end":["</s>"]},
@@ -164,6 +168,10 @@ prompt_templates = {
         "user"      : {"start":"GPT4 Correct User: ",       "end":["<|end_of_turn|>"]},
         "assistant" : {"start":"GPT4 Correct Assistant: ",  "end":["<|end_of_turn|>", "</s>", "<|end", "<||", "< |end", "< | end"]},
         "system"    : {"start":"<|system|>\n",              "end":["<|/system|>\n"]}},
+    "openhermes" : {
+        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
+        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
+        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
 }
 
 def get_prompt_template(model_name:str) -> dict:
@@ -179,9 +187,14 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 
     prompt = ""
     
-    for message in list_messages:
-        if message.role in prompt_template.keys():
-            prompt += prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0]
+    last_user_message = True
+
+    for message in list_messages[::-1]:
+        if last_user_message and message.role == "user":
+            prompt = prompt_template[message.role]["start"] + message.content + " (réponds moi en deux phrases uniquement)" + prompt_template[message.role]["end"][0] + prompt
+            last_user_message = False
+        elif message.role in prompt_template.keys():
+            prompt = prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0] + prompt
         else:
             raise ValueError(f"Unknown role: {message.role}")
     
@@ -193,7 +206,7 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
-assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello[/INST]Hi</s>")
+assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello (réponds moi en deux phrases uniquement)[/INST]Hi</s>")
 
 
 #%% LEDS ==================================================================================================================
