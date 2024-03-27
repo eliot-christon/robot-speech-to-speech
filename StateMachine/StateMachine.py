@@ -13,7 +13,7 @@ from utils import \
     move_hi_to_say, \
     move_bye_to_say, \
     leds_blue, \
-    leds_magenta, \
+    leds_yellow, \
     leds_green, \
     leds_cyan, \
     leds_reset
@@ -31,7 +31,7 @@ class StateMachine:
             "GEN_HI"    : State(number=13, name="GEN_HI",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8'],
-                                on_enter=(move_hi_to_say, leds_magenta),
+                                on_enter=(move_hi_to_say, leds_yellow),
                                 on_exit=(sleep_02,)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
@@ -246,4 +246,4 @@ if __name__ == "__main__":
     try:
         sm.run()
     except KeyboardInterrupt:
-        stop_tools(['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'])
+        stop_tools(['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9'])
