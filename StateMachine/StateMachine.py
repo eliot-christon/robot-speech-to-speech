@@ -43,7 +43,7 @@ class StateMachine:
                                 on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
                                 on_exit=(sleep_02, sleep_02, leds_reset)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
-                                stop_tools=['T6', 'T7', 'T8'],
+                                stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, leds_blue)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
@@ -65,7 +65,7 @@ class StateMachine:
                                 on_enter=(self.update_sentences_said,)),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
-                                stop_tools=['T6', 'T8'],
+                                stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(move_bye_to_say,),
                                 on_exit=(sleep_02,)),
             "BYE"       : State(number=11, name="BYE",
@@ -243,7 +243,7 @@ class StateMachine:
         while True:
             self.update_next_state()
             if self.next_state != self.current_state:
-                logging.info(f"Transition from {self.current_state}" + " "*(12 - len(str(self.current_state))) + f" to    {self.next_state}")
+                logging.info(f"Transition    {self.current_state}" + " "*(16 - len(str(self.current_state))) + f" -->    {self.next_state}")
                 self.current_state.on_exit()
                 self.current_state = self.next_state
                 self.current_state.on_enter()
