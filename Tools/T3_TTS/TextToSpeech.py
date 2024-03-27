@@ -61,8 +61,6 @@ class TextToSpeech:
     def start(self):
         """Start the TTS process"""
 
-        logging.info("SpeechToText: Starting the TTS...")
-
         self.__running = True
 
         text = self.__read_text()
@@ -87,3 +85,5 @@ class TextToSpeech:
             )
 
         self.__running = False
+
+        logging.info("TextToSpeech: Finished.")

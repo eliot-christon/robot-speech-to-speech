@@ -137,3 +137,5 @@ class CaptureImages:
                 self.__face_detection_proxy.unsubscribe("FaceDetection")
             except Exception as e:
                 logging.error("CaptureImages: unsubscribing error: " + str(e))
+        
+        logging.info("CaptureImages: stopped!")

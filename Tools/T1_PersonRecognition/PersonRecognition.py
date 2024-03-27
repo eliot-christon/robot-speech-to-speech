@@ -45,8 +45,6 @@ class PersonRecognition:
     def start(self):
         """Start the process"""
 
-        logging.info("PersonRecognition: Starting...")
-
         self.__running = True
 
         # get all the people in the folder

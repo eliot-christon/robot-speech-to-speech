@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import naoqi
+import logging
 import paramiko
 
 class ReadAudio:
@@ -44,9 +45,14 @@ class ReadAudio:
 #%% START ================================================================================================================
 
     def start(self):
+        """Start the audio reading process"""
+
         self.__running = True
+
         self.__upload_file()
         self.audio_player.playFile(self.__robot_file)
 
         self.__running = False
+
+        logging.info("ReadAudio: Finished.")
     

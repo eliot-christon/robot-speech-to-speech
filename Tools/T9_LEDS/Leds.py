@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import naoqi
+import logging
 
 class Leds:
     """Class to control the LEDs on the NAO robot"""
@@ -31,6 +32,7 @@ class Leds:
         rgb = self.__read_file()
         self.__leds_proxy.fadeRGB("FaceLeds", rgb, 0.5)
         self.__running = False
+        logging.info("Leds: Finished.")
 
     def reset(self):
         self.__leds_proxy.reset("FaceLeds")

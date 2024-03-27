@@ -1,5 +1,4 @@
 import logging
-import time
 import ollama
 
 class TextGeneration:
@@ -55,8 +54,6 @@ class TextGeneration:
     def start(self):
         """Start the text generation process"""
 
-        logging.info("TextGeneration: Starting the text generation process...")
-
         self.__running = True
         self.__text = ""
 
@@ -75,4 +72,6 @@ class TextGeneration:
             logging.error(f"TextGeneration: Error while generating text: {e}")
         
         self.__running = False
+
+        logging.info("TextGeneration: Finished.")
     

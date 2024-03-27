@@ -39,8 +39,6 @@ class SpeechToText:
     def start(self):
         """Start the transcription process"""
 
-        logging.info("SpeechToText: Starting the transcription process...")
-
         self.__running = True
 
         while self.__running:
@@ -51,11 +49,11 @@ class SpeechToText:
                 self.__write_to_file()
                 time.sleep(0.1)
 
-                
             except Exception as e:
-                pass
+                logging.error(f"SpeechToText: {e}")
     
     def stop(self):
         """Stop the transcription process"""
-        logging.info("SpeechToText: Stopping the transcription process...")
         self.__running = False
+
+        logging.info("SpeechToText: stopped!")
