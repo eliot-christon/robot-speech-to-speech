@@ -30,6 +30,13 @@ class TextToSpeech:
         if numbers:
             for num in numbers:
                 text = text.replace(str(num), enlettres(num))
+        text = text.replace("&", "et")
+        text = text.replace("€", "euros")
+        text = text.replace("°", "degrés")
+        text = text.replace("%", "pour cent")
+        text = text.replace("£", "livres")
+        text = text.replace("¥", "yens")
+        text = text.replace("#", "hashtag")
         return text
 
 #%% GETTERS AND SETTERS ==================================================================================================
