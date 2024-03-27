@@ -15,6 +15,9 @@ T1_PersonRecognition: {
   python_version: 3.11,
   port: 5001,
   output_text_file: data/live/person_recognized.txt,
+  input_audio_file: data/live/audio_recorded.wav,
+  input_people_folder: data/stored/people/,
+  input_model_dir: data/stored/pretrained_models/,
 }
 
 # Tool 2: Text Generation
