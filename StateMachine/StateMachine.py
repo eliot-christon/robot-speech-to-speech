@@ -39,11 +39,11 @@ class StateMachine:
                                 on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
+                                on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
                                 on_exit=(sleep_02, sleep_02, leds_reset)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T6', 'T7', 'T8'],
-                                on_enter=(self.add_transcribed_to_conversation, leds_blue)),
+                                on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, leds_blue)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
                                 on_enter=(self.edit_prompt,)),
@@ -121,6 +121,7 @@ class StateMachine:
             system_context = file.read()
         self.current_conversation = [
             Message(role="system",    content=system_context,  timestamp=time.time()),
+            Message(role="system",    content="",  timestamp=time.time()),
             Message(role="assistant", content=bonjour_content, timestamp=time.time())
         ]
 
@@ -155,7 +156,14 @@ class StateMachine:
             text = file.read()
         self.current_conversation.append(Message(role="user", content=text, timestamp=time.time()))
     
-    def add_generated_to_conversation(self):
+    def add_person_info_to_conversation(self):
+        with open("data/live/person_recognized.txt", "r", encoding="utf-8") as file:
+            person_recognized = file.read()
+        with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
+            person_info = file.read()
+        self.current_conversation[1] = Message(role="system", content="Voici les informations de ton locuteur : " + person_info, timestamp=time.time())
+
+    def add_text_generated_to_conversation(self):
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
             text = file.read()
         if text != "":

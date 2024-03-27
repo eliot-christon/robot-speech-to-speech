@@ -198,6 +198,7 @@ def build_prompt(model_name:str, list_messages:list) -> str:
         else:
             raise ValueError(f"Unknown role: {message.role}")
     
+    prompt = prompt.replace(prompt_template["system"]["end"][0] + prompt_template["system"]["start"], "\n")
     prompt = prompt.replace("<</SYS>>\n<s>[INST]", "<</SYS>>\n")
 
     return prompt
