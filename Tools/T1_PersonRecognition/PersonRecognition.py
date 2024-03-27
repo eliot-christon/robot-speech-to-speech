@@ -36,11 +36,13 @@ class PersonRecognition:
         list_wav_files = self.__list_wav_files(person_voices_folder)
         print("list_wav_files: ", list_wav_files)
         if len(list_wav_files) == 0:
-            return False
+            return 0.0, False
         file_to_verify = list_wav_files[0]
-        proba, result = self.__model.verify_files(self.__audio_file, person_voices_folder + file_to_verify)
-        print("result: ", result)
-        return proba, result
+        verification = self.__model.verify_files(self.__audio_file, person_voices_folder + file_to_verify)
+        if len(verification) == 0:
+            return 0.0, False
+        print("verification: ", verification)
+        return verification
 
 
 #%% GETTERS AND SETTERS ==================================================================================================

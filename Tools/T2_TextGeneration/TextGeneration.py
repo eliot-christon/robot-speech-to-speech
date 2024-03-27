@@ -71,6 +71,10 @@ class TextGeneration:
         except Exception as e:
             logging.error(f"TextGeneration: Error while generating text: {e}")
         
+        # Add a dot at the end of the text
+        self.__text += "."
+        self.__write_to_file()
+
         self.__running = False
 
         logging.info("TextGeneration: Finished.")
