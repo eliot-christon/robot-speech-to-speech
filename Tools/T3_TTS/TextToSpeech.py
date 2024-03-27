@@ -1,6 +1,8 @@
 import logging
 import torch
 from TTS.api import TTS
+from extract_num import extract_numbers
+from enlettres import enlettres
 import time
 
 class TextToSpeech:
@@ -24,6 +26,10 @@ class TextToSpeech:
         """Read the input text file and return the text as string"""
         with open(self.__text_file, 'r', encoding='utf-8') as file:
             text = file.read().replace('\n', '')
+        numbers = extract_numbers(text)
+        if numbers:
+            for num in numbers:
+                text = text.replace(str(num), enlettres(num))
         return text
 
 #%% GETTERS AND SETTERS ==================================================================================================
