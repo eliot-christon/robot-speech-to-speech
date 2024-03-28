@@ -51,9 +51,9 @@ class SpeechToText:
 
             except Exception as e:
                 logging.error(f"SpeechToText: {e}")
+        
+        logging.info("SpeechToText: Finished.")
     
     def stop(self):
         """Stop the transcription process"""
         self.__running = False
-
-        logging.info("SpeechToText: stopped!")

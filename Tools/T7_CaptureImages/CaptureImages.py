@@ -128,6 +128,8 @@ class CaptureImages:
 
             except Exception as e:
                 logging.error("CaptureImages: " + str(e))
+        
+        logging.info("CaptureImages: Finished.")
     
     def stop(self):
         self.__runnning = False
@@ -138,4 +140,3 @@ class CaptureImages:
             except Exception as e:
                 logging.error("CaptureImages: unsubscribing error: " + str(e))
         
-        logging.info("CaptureImages: stopped!")
