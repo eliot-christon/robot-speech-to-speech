@@ -22,14 +22,14 @@ class TextToSpeech:
 
 #%% METHODS ==============================================================================================================
 
-    def __read_text(self) -> str:
-        """Read the input text file and return the text as string"""
-        with open(self.__text_file, 'r', encoding='utf-8') as file:
-            text = file.read().replace('\n', '')
+    def __treat_text(self, text:str) -> str:
+        """Treat the text before synthesis"""
+        # numbers
         numbers = extract_numbers(text)
         if numbers:
             for num in numbers:
                 text = text.replace(str(num), enlettres(num))
+        # symbols
         text = text.replace("&", "et")
         text = text.replace("€", "euros")
         text = text.replace("°", "degrés")
@@ -37,6 +37,18 @@ class TextToSpeech:
         text = text.replace("£", "livres")
         text = text.replace("¥", "yens")
         text = text.replace("#", "hashtag")
+        # ponctuation
+        text = text.replace(" ?", "?")
+        text = text.replace(" !", "!")
+        text = text.replace(" .", ".")
+        text = text.replace(" ,", ",")
+        text = text.replace(" ;", ";")
+        return text
+
+    def __read_text(self) -> str:
+        """Read the input text file and return the text as string"""
+        with open(self.__text_file, 'r', encoding='utf-8') as file:
+            text = file.read().replace('\n', '')
         return text
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -71,6 +83,7 @@ class TextToSpeech:
         self.__running = True
 
         text = self.__read_text()
+        text = self.__treat_text(text)
 
         if not text:
             logging.error("SpeechToText: No text to synthesize.")

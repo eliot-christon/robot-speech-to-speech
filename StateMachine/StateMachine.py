@@ -3,6 +3,7 @@ from utils import \
     last_speech_detected_seconds, \
     text_transcribed, \
     tools_running, \
+    stop_tools, \
     get_clean_generated_sentences, \
     sleep_02, \
     clear_time_speech_detected, \
@@ -28,12 +29,13 @@ class StateMachine:
         self.states = {
             "WAIT"      : State(number=0, name="WAIT",
                                 start_tools=['T6', 'T8'],
-                                stop_tools=['T7', 'T9']),
+                                stop_tools=['T7', 'T9'],
+                                on_enter=(leds_reset,)),
             "GEN_HI"    : State(number=13, name="GEN_HI",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8'],
                                 on_enter=(move_hi_to_say, leds_yellow),
-                                on_exit=(sleep_02,)),
+                                on_exit=(sleep_02, sleep_02)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
                                 on_enter=(self.init_current_conversation,),
@@ -41,7 +43,7 @@ class StateMachine:
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
-                                on_exit=(sleep_02, sleep_02, leds_reset)),
+                                on_exit=(sleep_02, sleep_02)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, leds_blue)),
@@ -66,7 +68,7 @@ class StateMachine:
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(move_bye_to_say,),
+                                on_enter=(move_bye_to_say, leds_yellow),
                                 on_exit=(sleep_02,)),
             "BYE"       : State(number=11, name="BYE",
                                 start_tools=['T0']),
@@ -203,6 +205,7 @@ class StateMachine:
         return abs(lsds - time.time()) > self.threshold_nothing_said
     
     def cond_T1_finished(self):
+        stop_tools(['T1'])
         return tools_running(['T1']) == ['False']
 
     def cond_T03_finished(self):

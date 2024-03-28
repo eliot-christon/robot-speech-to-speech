@@ -64,7 +64,11 @@ class PersonRecognition:
 
             # iterate over all the people
             for person_name in people:
-                _, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
+                try:
+                    _, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
+                except Exception as e:
+                    logging.error(f"PersonRecognition: verify_person error")
+                    result = False
                 if result:
                     self.__person_recognized = person_name
                     break
