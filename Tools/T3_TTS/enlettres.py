@@ -199,6 +199,14 @@ def enlettres(nombre, options=None, separateur=None):
         nom = enlettres(nombre)
         NEL = NELsave
         return nom
+    
+    # compter le nombre de 0 au début du nombre
+    nb_zeros = 0
+    for chiffre in nombre:
+        if chiffre == '0':
+            nb_zeros += 1
+        else:
+            break
 
     # Ne garder que les chiffres, puis supprimer les 0 du début
     nombre = ''.join(filter(str.isdigit, nombre)).lstrip('0')
@@ -207,7 +215,7 @@ def enlettres(nombre, options=None, separateur=None):
         if NEL['ordinal'] == 'nieme':
             return 'zéroième'
         else:
-            return 'zéro'
+            return 'zéro' if nb_zeros == 0 else 'zéro-' + 'zéro-' * (nb_zeros - 1) + 'ième'
 
     table_noms = {}
     idx = 0
@@ -272,7 +280,7 @@ def enlettres(nombre, options=None, separateur=None):
 
 if __name__ == "__main__":
 
-    num_to_test = ["5907805", "7", "70", "71", "456789745013654897485614563"]
+    num_to_test = ["5907805", "7", "70", "71", "456789745013654897485614563", "007"]
 
     for num in num_to_test:
         print("enlettres('{}')".format(num) + " -> " + enlettres(num))

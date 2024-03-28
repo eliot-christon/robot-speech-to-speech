@@ -1,6 +1,7 @@
 import time
 import re
 import yaml
+import wave
 from Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
@@ -83,6 +84,9 @@ def get_status(fast_com_dir):
 def start_tools(list_tools):
     for tool in list_tools:
         send_command('start', fast_com_dict[tool])
+    if len(list_tools) > 0:
+        # sleep just 0.1s to give time for the tools to start (this helps to avoid transition problems)
+        time.sleep(0.1)
 
 def stop_tools(list_tools):
     for tool in list_tools:
@@ -106,6 +110,23 @@ def move_bye_to_say():
         text = file.read()
     with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
         file.write(text)
+
+def play_sound_effect():
+    # first copy sound_level_up.wav to audio_generated.wav
+    with wave.open("data/stored/assistant/sound_level_up.wav", "rb") as file:
+        with wave.open("data/live/audio_generated.wav", "wb") as file2:
+            file2.setnchannels(file.getnchannels())
+            file2.setsampwidth(file.getsampwidth())
+            file2.setframerate(file.getframerate())
+            file2.writeframes(file.readframes(file.getnframes()))
+    
+    # then send the command to play the sound
+    send_command("start", fast_com_dict["T0"])
+
+if __name__ == "__main__":
+    print("play sound effect")
+    play_sound_effect()
+
 
 def clear_data_live_folder():
     # AUDIO
@@ -215,16 +236,8 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 
     prompt = ""
     
-    last_user_message = True
-
-    for message in list_messages[::-1]:
-        if last_user_message and message.role == "user":
-            prompt = prompt_template[message.role]["start"] + message.content + " (réponds moi en deux phrases uniquement)" + prompt_template[message.role]["end"][0] + prompt
-            last_user_message = False
-        elif message.role in prompt_template.keys():
-            prompt = prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0] + prompt
-        else:
-            raise ValueError(f"Unknown role: {message.role}")
+    for message in list_messages:
+        prompt += prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0]
     
     prompt = prompt.replace(prompt_template["system"]["end"][0] + prompt_template["system"]["start"], "\n")
     prompt = prompt.replace("<</SYS>>\n<s>[INST]", "<</SYS>>\n")
@@ -236,7 +249,7 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 assert(clean_text("openhermes", "Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
-assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello (réponds moi en deux phrases uniquement)[/INST]Hi</s>")
+assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello[/INST]Hi</s>")
 
 
 #%% LEDS ==================================================================================================================

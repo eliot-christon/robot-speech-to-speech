@@ -1,8 +1,20 @@
 import subprocess
 import time
+import os
 
 server_processes = []
 
+def get_ollama_app_path():
+    # Get the path to the Ollama app executable
+    # This path is specific to my Windows machine
+    # let's consider that the path is \\AppData\\Local\\Programs\\Ollama\\ollama app.exe from the user's home directory
+
+    # first get the user's home directory
+    user_home = os.path.expanduser("~")
+    # then append the rest of the path
+    ollama_app_path = os.path.join(user_home, "AppData", "Local", "Programs", "Ollama", "ollama app.exe")
+
+    return ollama_app_path
 
 def start_servers():
 
@@ -16,6 +28,10 @@ def start_servers():
     server_command_T[7] = "py -2.7 Tools/T7_CaptureImages/fast_app.py"
     server_command_T[8] = "py -3.11 Tools/T8_STT/fast_app.py"
     server_command_T[9] = "py -2.7 Tools/T9_LEDS/fast_app.py"
+
+    # Start the Ollama app in a separate subprocess
+    subprocess.Popen(get_ollama_app_path(), shell=True)
+    time.sleep(3)
 
     # Start each server in a separate subprocess
     for server_command in server_command_T:

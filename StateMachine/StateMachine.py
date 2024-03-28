@@ -34,16 +34,14 @@ class StateMachine:
             "GEN_HI"    : State(number=13, name="GEN_HI",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8'],
-                                on_enter=(move_hi_to_say, leds_yellow),
-                                on_exit=(sleep_02, sleep_02)),
+                                on_enter=(move_hi_to_say, leds_yellow)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
                                 on_enter=(self.init_current_conversation,),
                                 on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
-                                on_exit=(sleep_02, sleep_02)),
+                                on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, leds_blue)),
@@ -68,8 +66,7 @@ class StateMachine:
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(move_bye_to_say, leds_yellow),
-                                on_exit=(sleep_02,)),
+                                on_enter=(move_bye_to_say, leds_yellow)),
             "BYE"       : State(number=11, name="BYE",
                                 start_tools=['T0']),
         }
@@ -101,7 +98,7 @@ class StateMachine:
 
         # key words
         self.key_words = {
-            "start" : ["bonjour", "salut", "hello", "hi", "coucou", "hey"],
+            "start" : ["bonjour", "salut" , "coucou"],
             "bye"   : ["au revoir", "bye", "ciao", "à plus", "à bientôt", "à la prochaine", "bye bye", "goodbye", "good bye"],
         }
 
@@ -166,7 +163,7 @@ class StateMachine:
             person_recognized = file.read()
         with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
             person_info = file.read()
-        self.current_conversation[1] = Message(role="system", content="Voici les informations de ton locuteur : " + person_info, timestamp=time.time())
+        self.current_conversation[1] = Message(role="system", content="Voici les informations de la personne qui s'adresse à toi : " + person_info, timestamp=time.time())
 
     def add_text_generated_to_conversation(self):
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
@@ -200,9 +197,9 @@ class StateMachine:
     
     def cond_nothing_said(self):
         lsds = last_speech_detected_seconds()
-        if lsds == None:
-            return abs(self.time_when_entered_listen - time.time()) > self.threshold_nothing_said
-        return abs(lsds - time.time()) > self.threshold_nothing_said
+        if lsds != None:
+            self.update_time_when_entered_listen()
+        return abs(self.time_when_entered_listen - time.time()) > self.threshold_nothing_said
     
     def cond_T1_finished(self):
         stop_tools(['T1'])
@@ -254,11 +251,12 @@ class StateMachine:
 
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
-    from utils import stop_tools
+    from utils import stop_tools, play_sound_effect
     logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
     logging.getLogger().setLevel(logging.INFO)
     sm = StateMachine()
     clear_data_live_folder()
+    play_sound_effect()
     try:
         sm.run()
     except KeyboardInterrupt:

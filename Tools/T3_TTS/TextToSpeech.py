@@ -37,12 +37,23 @@ class TextToSpeech:
         text = text.replace("£", "livres")
         text = text.replace("¥", "yens")
         text = text.replace("#", "hashtag")
+        # operations
+        text = text.replace("+", "plus")
+        text = text.replace(" - ", " moins ")
+        text = text.replace(" * ", " fois ")
+        text = text.replace(" / ", " divisé par ")
         # ponctuation
         text = text.replace(" ?", "?")
         text = text.replace(" !", "!")
         text = text.replace(" .", ".")
         text = text.replace(" ,", ",")
         text = text.replace(" ;", ";")
+        # site
+        text = text.replace("www.", "trois w point ")
+        text = text.replace(".com", " point com")
+        # others
+        text = text.replace("  ", " ")
+        text = text.replace("etc.", "et cetera.")
         return text
 
     def __read_text(self) -> str:
