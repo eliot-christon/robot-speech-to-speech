@@ -2,6 +2,8 @@ import time
 import re
 import yaml
 import wave
+import os
+import random
 from Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
@@ -112,8 +114,11 @@ def move_bye_to_say():
         file.write(text)
 
 def play_sound_effect():
-    # first copy sound_level_up.wav to audio_generated.wav
-    with wave.open("data/stored/assistant/sound_level_up.wav", "rb") as file:
+    # first select a random wav file in the sound effects folder
+    list_wav_files = os.listdir("data/stored/assistant/sound_effects/")
+    random_wav_file = random.choice(list_wav_files)
+    # then copy to audio_generated.wav
+    with wave.open("data/stored/assistant/sound_effects/" + random_wav_file, "rb") as file:
         with wave.open("data/live/audio_generated.wav", "wb") as file2:
             file2.setnchannels(file.getnchannels())
             file2.setsampwidth(file.getsampwidth())

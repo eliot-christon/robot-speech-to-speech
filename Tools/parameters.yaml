@@ -35,7 +35,7 @@ T3_TTS: {
   language: "fr-fr", # "fr-fr", "fr"
   input_text_file: data/live/text_to_say.txt,
   output_wav_file: data/live/audio_generated.wav,
-  speaker_wav_file: data/stored/assistant/voices/pierre_faury.mp3,
+  speaker_wav_file: data/stored/assistant/voices/jean_pierre_pernaut.mp3,
   # eliot_christon, example_reference, jean_pierre_pernaut, perrine_laffont, ptisham, roberto_caurand, teddy_riner, pierre_faury, eugenie_declaron
 }
 
