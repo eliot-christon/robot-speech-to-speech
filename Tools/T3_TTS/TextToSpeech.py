@@ -37,6 +37,9 @@ class TextToSpeech:
         text = text.replace("£", "livres")
         text = text.replace("¥", "yens")
         text = text.replace("#", "hashtag")
+        text = text.replace("@", "arobase")
+        text = text.replace("«", "")
+        text = text.replace("»", "")
         # exceptions
         text = text.replace("est - ce", "est-ce")
         # operations
