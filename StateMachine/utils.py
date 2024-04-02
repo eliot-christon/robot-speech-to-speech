@@ -113,12 +113,21 @@ def move_bye_to_say():
     with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
         file.write(text)
 
-def play_sound_effect():
+def play_sound_effect(sound_type:str="random"):
     # first select a random wav file in the sound effects folder
-    list_wav_files = os.listdir("data/stored/assistant/sound_effects/")
+    dir_path_dict = {
+        "start": "data/stored/assistant/sound_effects/start/",
+        "stop": "data/stored/assistant/sound_effects/stop/",
+    }
+    if sound_type in dir_path_dict.keys():
+        my_dir = dir_path_dict[sound_type]
+    else:
+        my_dir = dir_path_dict["start"]
+
+    list_wav_files = os.listdir(my_dir)
     random_wav_file = random.choice(list_wav_files)
     # then copy to audio_generated.wav
-    with wave.open("data/stored/assistant/sound_effects/" + random_wav_file, "rb") as file:
+    with wave.open(my_dir + random_wav_file, "rb") as file:
         with wave.open("data/live/audio_generated.wav", "wb") as file2:
             file2.setnchannels(file.getnchannels())
             file2.setsampwidth(file.getsampwidth())
@@ -249,7 +258,6 @@ def build_prompt(list_messages:list) -> str:
 assert(clean_text("openhermes", "Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
-print(build_prompt(list_messages))
 assert(build_prompt(list_messages) == "system réponds en deux phrases en français\nuser Hello\nassistant Hi\n")
 
 

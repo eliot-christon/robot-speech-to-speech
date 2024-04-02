@@ -260,8 +260,10 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     sm = StateMachine()
     clear_data_live_folder()
-    play_sound_effect()
+    play_sound_effect("start")
     try:
         sm.run()
     except KeyboardInterrupt:
         stop_tools(['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9'])
+    
+    play_sound_effect("stop")
