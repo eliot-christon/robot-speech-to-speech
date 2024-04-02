@@ -13,7 +13,7 @@ class TextGeneration:
         self.__options = ollama_generate_options
 
         self.__running = False
-        self.__text = ""
+        self.__response = ""
 
         # Initialize the Ollama model with the given model name by generating from nearly empty prompt
         ollama.generate(
@@ -28,12 +28,22 @@ class TextGeneration:
     def __write_to_file(self):
         """Write the generated text to the output text file."""
         with open(self.__output_file, "w", encoding='utf-8') as file:
-            file.write(self.__text)
+            file.write(self.__response)
     
     def __read_from_file(self):
         """Read the input text from the input text file."""
         with open(self.__input_file, "r", encoding='utf-8') as file:
-            return file.read()
+            text_lines = file.readlines()
+        
+        # create the list of "role" and "content" pairs
+        res = []
+        for line in text_lines:
+            role = line.split(" ")[0]
+            content = line[len(role)+1:].strip()
+            res.append({"role": role, "content": content})
+        
+        return res
+
 
 #%% GETTERS AND SETTERS ==================================================================================================
     
@@ -41,7 +51,7 @@ class TextGeneration:
         return self.__running
     
     def get_text(self) -> str:
-        return self.__text
+        return self.__response
     
     def get_model_name(self) -> str:
         return self.__model_name
@@ -55,24 +65,24 @@ class TextGeneration:
         """Start the text generation process"""
 
         self.__running = True
-        self.__text = ""
+        self.__response = ""
 
         try:
-            stream = ollama.generate(
+            stream = ollama.chat(
                 model=self.__model_name,
-                prompt=self.__read_from_file(),
+                messages=self.__read_from_file(),
                 stream=True,
                 options=self.__options
             )
             for chunk in stream:
-                self.__text += chunk['response']
+                self.__response += chunk['message']['content']
                 self.__write_to_file()
             
         except Exception as e:
             logging.error(f"TextGeneration: Error while generating text: {e}")
         
         # Add a dot at the end of the text
-        self.__text += "."
+        self.__response += "."
         self.__write_to_file()
 
         self.__running = False

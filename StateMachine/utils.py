@@ -236,16 +236,11 @@ def get_prompt_template(model_name:str) -> dict:
     return {"start":"", "mid":"", "end":["</s>"]}
 
 
-def build_prompt(model_name:str, list_messages:list) -> str:
-    prompt_template = get_prompt_template(model_name)
-
+def build_prompt(list_messages:list) -> str:
     prompt = ""
     
     for message in list_messages:
-        prompt += prompt_template[message.role]["start"] + message.content + prompt_template[message.role]["end"][0]
-    
-    prompt = prompt.replace(prompt_template["system"]["end"][0] + prompt_template["system"]["start"], "\n")
-    prompt = prompt.replace("<</SYS>>\n<s>[INST]", "<</SYS>>\n")
+        prompt += message.role + " " + message.content + "\n"
 
     return prompt
 
@@ -254,7 +249,8 @@ def build_prompt(model_name:str, list_messages:list) -> str:
 assert(clean_text("openhermes", "Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
 assert(get_prompt_template("mistral") == prompt_templates["mistral"])
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
-assert(build_prompt("test", list_messages) == "<s>[INST] <<SYS>>réponds en deux phrases en français<</SYS>>\nHello[/INST]Hi</s>")
+print(build_prompt(list_messages))
+assert(build_prompt(list_messages) == "system réponds en deux phrases en français\nuser Hello\nassistant Hi\n")
 
 
 #%% LEDS ==================================================================================================================

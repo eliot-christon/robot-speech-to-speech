@@ -68,7 +68,8 @@ class StateMachine:
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(move_bye_to_say, leds_yellow)),
             "BYE"       : State(number=11, name="BYE",
-                                start_tools=['T0']),
+                                start_tools=['T0'],
+                                stop_tools=['T8']),
         }
 
         self.conditions = {
@@ -176,7 +177,7 @@ class StateMachine:
             self.current_conversation.append(Message(role="assistant", content=text, timestamp=time.time()))
 
     def edit_prompt(self):
-        text = build_prompt(self.model_name, self.current_conversation)
+        text = build_prompt(self.current_conversation)
         with open("data/live/text_prompt.txt", "w", encoding="utf-8") as file:
             file.write(text)
     
