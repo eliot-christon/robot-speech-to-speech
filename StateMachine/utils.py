@@ -219,6 +219,14 @@ prompt_templates = {
         "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
         "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
         "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
+    "qwen:7b"  : {
+        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
+        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
+        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
+    "qwen:4b"  : {
+        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
+        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
+        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
 }
 
 def clean_text(model_name:str, text:str) -> str:

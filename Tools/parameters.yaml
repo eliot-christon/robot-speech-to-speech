@@ -16,7 +16,7 @@ T2_TextGeneration: {
   port: 5002,
   input_text_file: data/live/text_prompt.txt,
   output_text_file: data/live/text_generated.txt,
-  model_name: "openchat", # openchat, mistral, llama2, gemma, openhermes
+  model_name: "gemma", # openchat, mistral, llama2, gemma, openhermes
   ollama_generate_options: {
     "top_k": 50,
     "top_p": 0.95,
@@ -80,7 +80,7 @@ T6_RecordAudio: {
   channel: 2,
   output_wav_file: data/live/audio_recorded.wav,
   output_speech_detected_file: data/live/time_speech_detected.txt,
-  seconds_to_keep: 10,
+  seconds_to_keep: 15,
   sample_rate: 48000,
   loudness_threshold: 0.5,
 }

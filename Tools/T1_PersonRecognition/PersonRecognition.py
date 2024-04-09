@@ -1,6 +1,8 @@
 import os
 import logging
 import time
+import numpy as np
+import pandas as pd
 from speechbrain.inference.speaker import SpeakerRecognition
 
 class PersonRecognition:
@@ -58,6 +60,8 @@ class PersonRecognition:
 
             self.__person_recognized = None
 
+            local_df = None
+
             # get all the people in the folder
             people = os.listdir(self.__people_folder)
             people = [person_name for person_name in people if os.path.isdir(self.__people_folder + person_name)]
@@ -65,13 +69,21 @@ class PersonRecognition:
             # iterate over all the people
             for person_name in people:
                 try:
-                    _, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
+                    proba, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
                 except Exception as e:
                     logging.error(f"PersonRecognition: verify_person error")
-                    result = False
-                if result:
-                    self.__person_recognized = person_name
-                    break
+                    proba, result = 0.0, False
+                # add the result to the dataframe
+                if local_df is None:
+                    local_df = pd.DataFrame([[person_name, result, proba]], columns=['Person', 'Result', 'Probability'])
+                else:
+                    local_df = pd.concat([local_df, pd.DataFrame([[person_name, result, proba]], columns=['Person', 'Result', 'Probability'])])
+            
+            # get the person with the highest probability if the result is True
+            if local_df is not None:
+                local_df = local_df[local_df['Result'] == True]
+                if len(local_df) > 0:
+                    self.__person_recognized = local_df[local_df['Probability'] == local_df['Probability'].max()]['Person'].values[0]
             
             if self.__person_recognized is None:
                 self.__person_recognized = "Unknown"
