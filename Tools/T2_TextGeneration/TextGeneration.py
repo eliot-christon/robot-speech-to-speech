@@ -1,5 +1,6 @@
 import logging
 import ollama
+from utils import build_prompt
 
 class TextGeneration:
     """Class for generating text from a pre-trained text model."""
@@ -43,6 +44,10 @@ class TextGeneration:
             res.append({"role": role, "content": content})
         
         return res
+    
+    def __get_prompt(self):
+        """Build the prompt string from the input text file."""
+        return build_prompt(self.__model_name, self.__read_from_file())
 
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -68,15 +73,29 @@ class TextGeneration:
         self.__response = ""
 
         try:
-            stream = ollama.chat(
+
+            ## WITH GENERATE -----------------------------------------
+            stream = ollama.generate(
                 model=self.__model_name,
-                messages=self.__read_from_file(),
+                prompt=self.__get_prompt(),
                 stream=True,
                 options=self.__options
             )
+
             for chunk in stream:
-                self.__response += chunk['message']['content']
+                self.__response += chunk['response']
                 self.__write_to_file()
+
+            # ## WITH CHAT --------------------------------------------
+            # stream = ollama.chat(
+            #     model=self.__model_name,
+            #     messages=self.__read_from_file(),
+            #     stream=True,
+            #     options=self.__options
+            # )
+            # for chunk in stream:
+            #     self.__response += chunk['message']['content']
+            #     self.__write_to_file()
             
         except Exception as e:
             logging.error(f"TextGeneration: Error while generating text: {e}")
