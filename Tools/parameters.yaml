@@ -16,7 +16,7 @@ T2_TextGeneration: {
   port: 5002,
   input_text_file: data/live/text_prompt.txt,
   output_text_file: data/live/text_generated.txt,
-  model_name: "gemma", # openchat, mistral, llama2, gemma, openhermes
+  model_name: "qwen:7b", # openchat, mistral, llama2, gemma, openhermes, qwen:7b
   ollama_generate_options: {
     "top_k": 50,
     "top_p": 0.95,
@@ -35,7 +35,7 @@ T3_TTS: {
   language: "fr-fr", # "fr-fr", "fr"
   input_text_file: data/live/text_to_say.txt,
   output_wav_file: data/live/audio_generated.wav,
-  speaker_wav_file: data/stored/assistant/voices/pierre_faury.mp3,
+  speaker_wav_file: data/stored/assistant/voices/thomas_oxisoglou.mp3,
   # eliot_christon, example_reference, jean_pierre_pernaut, perrine_laffont, ptisham, roberto_caurand, teddy_riner, pierre_faury, eugenie_declaron, thomas_oxisoglou
 }
 
