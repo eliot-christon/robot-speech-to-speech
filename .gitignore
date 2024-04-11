@@ -8,6 +8,7 @@
 *.txt
 *.flac
 *.pth
+*.m4a
 *__pycache__*
 old/*
 checkpoints/*
