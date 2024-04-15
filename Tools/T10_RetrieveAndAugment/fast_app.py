@@ -23,13 +23,14 @@ if __name__ == '__main__':
         input_database_folder = params["input_database_folder"],
         input_question_text_file = params["input_text_file"],
         output_text_file = params["output_text_file"],
+        load_directory=params["load_directory"],
         input_additional_files = params["input_additional_files"],
         number_of_results = params["number_of_results"]
     )
     logging.info("RetrieveAndAugment object initialized successfully.")
 
     T10_fast_app = ToolFastApp(
-        command_dict        = {"start": RetrieveAndAugment.start},
+        command_dict        = {"start": RetrieveAndAugment.start, "update": RetrieveAndAugment.update_vectordb},
         get_status_function = RetrieveAndAugment.get_running,
         status_file         = "Tools/T10_RetrieveAndAugment/fast_com/status.txt",
         command_file        = "Tools/T10_RetrieveAndAugment/fast_com/command.txt"

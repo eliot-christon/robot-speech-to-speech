@@ -15,15 +15,19 @@ class RetrieveAndAugment:
                  input_database_folder: str, 
                  input_question_text_file: str, 
                  output_text_file: str, 
+                 load_directory: str,
                  input_additional_files: List[str] = [], 
-                 number_of_results: int = 3):
+                 number_of_results: int = 3,
+                 chunk_size: int = 1000,):
         """Constructor for the RetrieveAndAugment class."""
         self.__init_input_files(input_database_folder, input_additional_files)
         self.__input_file = input_question_text_file
         self.__output_file = output_text_file
-        self.__embeddings = OllamaEmbeddings()
-        self.__vectordb, self.__docs = self.__get_index_for_txt(self.__input_db_files)
+        self.__embeddings = OllamaEmbeddings(model="mistral")
         self.__number_of_results = number_of_results
+        self.__chunk_size = chunk_size
+        self.__load_directory = load_directory
+        self.__vectordb = self.load_vectordb()
 
         self.__running = False
 
@@ -36,13 +40,13 @@ class RetrieveAndAugment:
 
     def __augment(self, search_results: list) -> str:
         """Augment the search results."""
-        separator = "\n\n" + "="*50 + "\n\n"
+        separator = f"\n{'-' * 100}\n"
         if len(search_results) == 0:
             return "No results found."
         if isinstance(search_results[0], tuple):
-            return separator.join([f"proba :{doc[1]}\n\n{doc[0].page_content}" for doc in search_results])
+            return separator.join([f"Document {i+1}: score {d[1]}\n\n{d[0].page_content}\nMetadata: {d[0].metadata}" for i, d in enumerate(search_results)])
         else:
-            return separator.join([doc.page_content for doc in search_results])
+            return separator.join([f"Document {i+1}:\n\n{d.page_content}\nMetadata: {d.metadata}" for i, d in enumerate(search_results)])
 
     def __text_to_docs(self, text: List[str], filename: str) -> List[Document]:
         if isinstance(text, str):
@@ -54,7 +58,7 @@ class RetrieveAndAugment:
         doc_chunks = []
         for doc in page_docs:
             text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
+                chunk_size=self.__chunk_size,
                 separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
                 chunk_overlap=0,
             )
@@ -71,15 +75,25 @@ class RetrieveAndAugment:
     def __docs_to_index(self, docs):
         index = FAISS.from_documents(docs, self.__embeddings)
         return index
+    
+    def load_vectordb(self) -> FAISS:
+        # check if the directory exists
+        if not os.path.exists(self.__load_directory):
+            logging.warning(f"Directory {self.__load_directory} does not exist. Updating the vectordb.")
+            return self.update_vectordb()
+        return FAISS.load_local(self.__load_directory, embeddings=self.__embeddings, allow_dangerous_deserialization=True)
 
-    def __get_index_for_txt(self, text_files: List[str]) -> Tuple[FAISS, List[Document]]:
+    def update_vectordb(self) -> FAISS:
         docs = []
-        for file in text_files:
+        for file in self.__input_db_files:
             with open(file, "r") as f:
                 text = f.read()
             docs += self.__text_to_docs(text, file)
-        index = self.__docs_to_index(docs)
-        return index, docs
+        vectordb = self.__docs_to_index(docs)
+        # save the vectordb
+        vectordb.save_local(self.__load_directory)
+        logging.info("RetrieveAndAugment: Updated the vectordb.")
+        return vectordb
 
 #%% GETTERS AND SETTERS ==================================================================================================
 
@@ -96,8 +110,8 @@ class RetrieveAndAugment:
             question = f.read()
         
         # retrieve the most similar documents
-        search_results = self.__vectordb._similarity_search_with_relevance_scores(question, k=self.__number_of_results)
-
+        search_results = self.__vectordb.similarity_search_with_score(question, k=self.__number_of_results)
+        
         # augment the results
         search_results_str = self.__augment(search_results)
 
