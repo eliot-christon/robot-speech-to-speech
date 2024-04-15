@@ -16,11 +16,11 @@ T2_TextGeneration: {
   port: 5002,
   input_text_file: data/live/text_prompt.txt,
   output_text_file: data/live/text_generated.txt,
-  model_name: "qwen:7b", # openchat, mistral, llama2, gemma, openhermes, qwen:7b
+  model_name: "qwen:7b", # gemma, llama2, mistral, openbuddy-mistral, openchat, openhermes, qwen:4b, qwen:7b, vigogne, vigostral
   ollama_generate_options: {
     "top_k": 50,
     "top_p": 0.95,
-    "temperature": 0.85,
+    "temperature": 0.8,
     "repeat_penalty": 1.9,
     "repeat_last_n": 100,
   }
@@ -56,6 +56,16 @@ T9_LEDS: {
   port: 5009,
   nao_ip: "192.168.0.105",
   input_text_file: data/live/led_rgb.txt,
+}
+
+T10_RetrieveAndAugment: {
+  python_version: 3.11,
+  port: 5010,
+  input_text_file: data/live/text_transcribed.txt,
+  input_database_folder: data/stored/documents/,
+  output_text_file: data/live/documents_context.txt,
+  input_additional_files: [],
+  number_of_results: 35,
 }
 
 #---------------------------------------#
