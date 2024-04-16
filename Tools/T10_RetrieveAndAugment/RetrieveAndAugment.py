@@ -30,9 +30,10 @@ class RetrieveAndAugment:
         self.__output_csv_file = output_csv_file
         # IO other attributes
         self.__embeddings = OllamaEmbeddings(model=ollama_model)
+        self.__ollama_model = ollama_model
         self.__number_of_results = number_of_results
         self.__chunk_size = chunk_size
-        self.__load_directory = load_directory
+        self.__load_directory = load_directory + f"/{self.__ollama_model}"
         self.__vectordb = self.load_vectordb()
         # internal attributes
         self.__running = False
@@ -101,6 +102,9 @@ class RetrieveAndAugment:
             docs += self.__text_to_docs(text, file)
         vectordb = self.__docs_to_index(docs)
         self.__vectordb = vectordb
+        # check if the load directory exists, else create it
+        if not os.path.exists(self.__load_directory):
+            os.makedirs(self.__load_directory)
         # save the vectordb
         vectordb.save_local(self.__load_directory)
         logging.info("RetrieveAndAugment: Updated the vectordb.")

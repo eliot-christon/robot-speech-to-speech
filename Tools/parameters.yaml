@@ -1,5 +1,5 @@
 T10_RetrieveAndAugment:
-  chunk_size: 4000
+  chunk_size: 3000
   input_additional_files: []
   input_database_folder: data/stored/documents/
   input_text_file: data/live/text_transcribed.txt
