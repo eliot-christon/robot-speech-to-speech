@@ -63,16 +63,17 @@ assert(time_strftime_to_seconds("03/22/24 14:06:46") == 1711112806.0)
 #%% TOOL RELATED FUNCTIONS =================================================================================================
 
 fast_com_dict = {
-    "T0": "Tools/T0_ReadAudio/fast_com/",
-    "T1": "Tools/T1_PersonRecognition/fast_com/",
-    "T2": "Tools/T2_TextGeneration/fast_com/",
-    "T3": "Tools/T3_TTS/fast_com/",
-    "T4": "Tools/T4_ActionSelection/fast_com/",
-    "T5": "Tools/T5_PerformAction/fast_com/",
-    "T6": "Tools/T6_RecordAudio/fast_com/",
-    "T7": "Tools/T7_CaptureImages/fast_com/",
-    "T8": "Tools/T8_STT/fast_com/",
-    "T9": "Tools/T9_LEDS/fast_com/"
+    "T0" : "Tools/T0_ReadAudio/fast_com/",
+    "T1" : "Tools/T1_PersonRecognition/fast_com/",
+    "T2" : "Tools/T2_TextGeneration/fast_com/",
+    "T3" : "Tools/T3_TTS/fast_com/",
+    "T4" : "Tools/T4_ActionSelection/fast_com/",
+    "T5" : "Tools/T5_PerformAction/fast_com/",
+    "T6" : "Tools/T6_RecordAudio/fast_com/",
+    "T7" : "Tools/T7_CaptureImages/fast_com/",
+    "T8" : "Tools/T8_STT/fast_com/",
+    "T9" : "Tools/T9_LEDS/fast_com/",
+    "T10": "Tools/T10_RetrieveAndAugment/fast_com/"
 }
 
 def send_command(command, fast_com_dir):
