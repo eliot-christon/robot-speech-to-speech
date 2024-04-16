@@ -6,7 +6,7 @@ class Message:
         if self.timestamp is None:
             self.timestamp = time.time()
         self.role = role
-        self.content = content.replace("\n", "")
+        self.content = content.replace("\n", "/n")
 
     def __str__(self):
         return f"{time.strftime('%H:%M:%S', time.localtime(self.timestamp))} {self.role}: {self.content}"

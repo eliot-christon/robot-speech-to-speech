@@ -41,6 +41,7 @@ class TextGeneration:
         for line in text_lines:
             role = line.split(" ")[0]
             content = line[len(role)+1:].strip()
+            content = content.replace("/n", "\n")
             res.append({"role": role, "content": content})
         
         return res
