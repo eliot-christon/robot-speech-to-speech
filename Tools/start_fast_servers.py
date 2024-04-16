@@ -1,6 +1,7 @@
 import subprocess
 import time
 import os
+from utils import load_yaml
 
 server_processes = []
 
@@ -18,17 +19,13 @@ def get_ollama_app_path():
 
 def start_servers():
 
-    # Command to start each server
-    server_command_T = [None] * 11
-    server_command_T[0] = "py -2.7 Tools/T0_ReadAudio/fast_app.py"
-    server_command_T[1] = "py -3.11 Tools/T1_PersonRecognition/fast_app.py"
-    server_command_T[2] = "py -3.11 Tools/T2_TextGeneration/fast_app.py"
-    server_command_T[3] = "py -3.10 Tools/T3_TTS/fast_app.py"
-    server_command_T[6] = "py -2.7 Tools/T6_RecordAudio/fast_app.py"
-    server_command_T[7] = "py -2.7 Tools/T7_CaptureImages/fast_app.py"
-    server_command_T[8] = "py -3.11 Tools/T8_STT/fast_app.py"
-    server_command_T[9] = "py -2.7 Tools/T9_LEDS/fast_app.py"
-    server_command_T[10]= "py -3.11 Tools/T10_RetrieveAndAugment/fast_app.py"
+    params = load_yaml("Tools/parameters.yaml")
+
+    server_command_T = []
+
+    for tool, tool_params in params.items():
+        command_str = f"py -{tool_params['python_version']} Tools/{tool}/fast_app.py"
+        server_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
     subprocess.Popen(get_ollama_app_path(), shell=True)
@@ -49,6 +46,20 @@ def stop_servers():
         process.wait()
 
 if __name__ == "__main__":
+
+    import argparse
+    from utils import copy_parameters
+
+    # Instantiate the parser
+    parser = argparse.ArgumentParser()
+    # Add optional arguments
+    parser.add_argument("--params", help="Path to the parameters file", default="StateMachine/SM_textual_parameters.yaml")
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # copy the parameters file to the Tools folder
+    copy_parameters(args.params, "Tools/parameters.yaml")
+
     try:
         start_servers()
 

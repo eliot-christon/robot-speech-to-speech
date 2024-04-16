@@ -11,6 +11,10 @@ def load_yaml(file_path):
         except yaml.YAMLError as exc:
             logging.error(exc)
 
+def copy_parameters(from_yaml:str, to_yaml:str):
+    data = load_yaml(from_yaml)
+    with open(to_yaml, 'w') as file:
+        yaml.dump(data, file)
 
 class ToolFastApp:
 
