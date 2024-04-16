@@ -46,6 +46,7 @@ class RetrieveAndAugment:
         """Initialize the input files."""
         self.__input_db_files = [os.path.join(input_database_folder, file) for file in os.listdir(input_database_folder) if file.split(".")[-1] in supported_extensions]
         self.__input_db_files += input_additionnal_files
+        print(f"Input files: {self.__input_db_files}")
 
     def __augment(self, search_results: list) -> str:
         """Augment the search results."""
@@ -82,15 +83,15 @@ class RetrieveAndAugment:
         return doc_chunks
 
     def __docs_to_index(self, docs):
-        index = FAISS.from_documents(docs, self.__embeddings)
+        index = FAISS.from_documents(docs, embedding=self.__embeddings, normalize_L2=True)
         return index
     
     def load_vectordb(self) -> FAISS:
         # check if the directory exists
         if not os.path.exists(self.__load_directory):
-            logging.warning(f"Directory {self.__load_directory} does not exist. Updating the vectordb.")
+            logging.warning(f"RetrieveAndAugment: The directory {self.__load_directory} does not exist. Updating the vectordb.")
             return self.update_vectordb()
-        return FAISS.load_local(self.__load_directory, embeddings=self.__embeddings, allow_dangerous_deserialization=True)
+        return FAISS.load_local(self.__load_directory, embeddings=self.__embeddings, allow_dangerous_deserialization=True, normalize_L2=True)
 
     def update_vectordb(self) -> FAISS:
         docs = []
@@ -99,6 +100,7 @@ class RetrieveAndAugment:
                 text = f.read()
             docs += self.__text_to_docs(text, file)
         vectordb = self.__docs_to_index(docs)
+        self.__vectordb = vectordb
         # save the vectordb
         vectordb.save_local(self.__load_directory)
         logging.info("RetrieveAndAugment: Updated the vectordb.")

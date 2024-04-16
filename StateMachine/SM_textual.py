@@ -40,8 +40,8 @@ class StateMachine:
 
         self.conversation = [Message(role="system", content=\
 """Vous êtes un assistant utile qui répond aux questions des utilisateurs sur la base de plusieurs extraits de documents qui vous sont donnés.
-Votre réponse doit être courte et pertinente. 
-Répondez "Sans objet" si le texte n'est pas pertinent.
+Votre réponse doit être courte et pertinente. .
+Répondez sans tenir compte des documents s'ils ne sont pas pertinents.
 """)]
 
         logging.info("StateMachine initialized")

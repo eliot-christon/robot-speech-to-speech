@@ -29,7 +29,8 @@ if __name__ == '__main__':
         load_directory           = params["load_directory"],
         ollama_model             = ollama_model_name,
         input_additional_files   = params["input_additional_files"],
-        number_of_results        = params["number_of_results"]
+        number_of_results        = params["number_of_results"],
+        chunk_size               = params["chunk_size"]
     )
     logging.info("RetrieveAndAugment object initialized successfully.")
 

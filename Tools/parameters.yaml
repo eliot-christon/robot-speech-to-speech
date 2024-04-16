@@ -1,4 +1,5 @@
 T10_RetrieveAndAugment:
+  chunk_size: 4000
   input_additional_files: []
   input_database_folder: data/stored/documents/
   input_text_file: data/live/text_transcribed.txt
@@ -10,7 +11,7 @@ T10_RetrieveAndAugment:
   python_version: '3.11'
 T2_TextGeneration:
   input_text_file: data/live/text_prompt.txt
-  model_name: vigostral
+  model_name: vigogne
   ollama_generate_options:
     repeat_last_n: 100
     repeat_penalty: 1.9
