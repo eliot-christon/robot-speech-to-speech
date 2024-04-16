@@ -16,16 +16,20 @@ if __name__ == '__main__':
     logging.info("Starting the RetrieveAndAugment API server...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T10_RetrieveAndAugment"]
+    all_params = load_yaml("Tools/parameters.yaml")
+    params = all_params["T10_RetrieveAndAugment"]
+    ollama_model_name = all_params["T2_TextGeneration"]["model_name"]
 
     # Initialize the RetrieveAndAugment object
     RetrieveAndAugment = RetrieveAndAugment(
-        input_database_folder = params["input_database_folder"],
+        input_database_folder    = params["input_database_folder"],
         input_question_text_file = params["input_text_file"],
-        output_text_file = params["output_text_file"],
-        load_directory=params["load_directory"],
-        input_additional_files = params["input_additional_files"],
-        number_of_results = params["number_of_results"]
+        output_text_file         = params["output_text_file"],
+        output_csv_file          = params["output_csv_file"],
+        load_directory           = params["load_directory"],
+        ollama_model             = ollama_model_name,
+        input_additional_files   = params["input_additional_files"],
+        number_of_results        = params["number_of_results"]
     )
     logging.info("RetrieveAndAugment object initialized successfully.")
 

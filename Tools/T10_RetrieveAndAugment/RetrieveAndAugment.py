@@ -1,4 +1,5 @@
 import logging
+import pandas as pd
 import os
 from typing import List, Tuple
 from langchain.docstore.document import Document
@@ -15,21 +16,29 @@ class RetrieveAndAugment:
                  input_database_folder: str, 
                  input_question_text_file: str, 
                  output_text_file: str, 
+                 output_csv_file: str,
                  load_directory: str,
+                 ollama_model: str,
                  input_additional_files: List[str] = [], 
                  number_of_results: int = 3,
                  chunk_size: int = 1000,):
         """Constructor for the RetrieveAndAugment class."""
+        # files
         self.__init_input_files(input_database_folder, input_additional_files)
         self.__input_file = input_question_text_file
-        self.__output_file = output_text_file
-        self.__embeddings = OllamaEmbeddings(model="mistral")
+        self.__output_text_file = output_text_file
+        self.__output_csv_file = output_csv_file
+        # IO other attributes
+        self.__embeddings = OllamaEmbeddings(model=ollama_model)
         self.__number_of_results = number_of_results
         self.__chunk_size = chunk_size
         self.__load_directory = load_directory
         self.__vectordb = self.load_vectordb()
-
+        # internal attributes
         self.__running = False
+        self.__df = pd.DataFrame(columns=["filename", "page", "chunk", "score"])
+
+        self.start() # the first call could be longer because of the embeddings usage, ollama model loading, etc.
 
 #%% METHODS ==============================================================================================================
 
@@ -44,9 +53,9 @@ class RetrieveAndAugment:
         if len(search_results) == 0:
             return "No results found."
         if isinstance(search_results[0], tuple):
-            return separator.join([f"Document {i+1}: score {d[1]}\n\n{d[0].page_content}\nMetadata: {d[0].metadata}" for i, d in enumerate(search_results)])
+            return separator.join([f"Extrait de document {i+1}: {d.metadata['filename'].split('/')[-1]}\n\n{d.page_content}" for i, (d, _) in enumerate(search_results)])
         else:
-            return separator.join([f"Document {i+1}:\n\n{d.page_content}\nMetadata: {d.metadata}" for i, d in enumerate(search_results)])
+            return separator.join([f"Extrait de document {i+1}: {d.metadata['filename'].split('/')[-1]}\n\n{d.page_content}" for i, d in enumerate(search_results)])
 
     def __text_to_docs(self, text: List[str], filename: str) -> List[Document]:
         if isinstance(text, str):
@@ -115,8 +124,16 @@ class RetrieveAndAugment:
         # augment the results
         search_results_str = self.__augment(search_results)
 
+        # build the dataframe
+        self.__df = pd.DataFrame(columns=["filename", "page", "chunk", "score"])
+        for i, (doc, score) in enumerate(search_results):
+            self.__df.loc[i] = [doc.metadata["filename"], doc.metadata["page"], doc.metadata["chunk"], score]
+        
+        # save the dataframe to the output csv file
+        self.__df.to_csv(self.__output_csv_file, index=False)
+
         # write the results to the output file
-        with open(self.__output_file, "w") as f:
+        with open(self.__output_text_file, "w") as f:
             f.write(search_results_str)
 
         self.__running = False

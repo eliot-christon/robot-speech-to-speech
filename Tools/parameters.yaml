@@ -64,6 +64,7 @@ T10_RetrieveAndAugment: {
   input_text_file: data/live/text_transcribed.txt,
   input_database_folder: data/stored/documents/,
   output_text_file: data/live/documents_context.txt,
+  output_csv_file: data/live/documents_context.csv,
   load_directory: data/pretrained_models/vectordb/,
   input_additional_files: [],
   number_of_results: 10,
