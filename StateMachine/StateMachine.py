@@ -44,10 +44,10 @@ class StateMachine:
                                 on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_person_info_to_conversation, self.add_transcribed_to_conversation, leds_blue)),
+                                on_enter=(leds_blue)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
-                                on_enter=(self.edit_prompt,)),
+                                on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, self.edit_prompt,)),
             "GEN"       : State(number=4, name="GEN",
                                 on_exit =(self.write_text_to_say, clear_time_speech_detected, leds_blue)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
@@ -77,7 +77,7 @@ class StateMachine:
             "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "GEN_BYE"   : self.cond_nothing_said},
-            "CONTEXT"   : {"START_GEN"  : self.cond_T1_finished},
+            "CONTEXT"   : {"START_GEN"  : self.cond_T110_finished},
             "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,   "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,   "ACT_A"     : self.cond_T45_finished},
@@ -205,9 +205,9 @@ class StateMachine:
             self.update_time_when_entered_listen()
         return abs(self.time_when_entered_listen - time.time()) > self.threshold_nothing_said
     
-    def cond_T1_finished(self):
+    def cond_T110_finished(self):
         stop_tools(['T1'])
-        return tools_running(['T1']) == ['False']
+        return tools_running(['T1', 'T10']) == ['False'] * 2
 
     def cond_T03_finished(self):
         return tools_running(['T0', 'T3']) == ['False', 'False']
