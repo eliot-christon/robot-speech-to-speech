@@ -8,6 +8,7 @@
 *.txt
 *.flac
 *.pth
+*.api
 *.m4a
 *__pycache__*
 old/*
