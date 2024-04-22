@@ -1,17 +1,18 @@
-T10_RetrieveAndAugment:
-  chunk_size: 3000
-  input_additional_files: []
-  input_database_folder: data/stored/documents/
-  input_text_file: data/live/text_transcribed.txt
-  load_directory: data/pretrained_models/vectordb/
-  number_of_results: 3
-  output_csv_file: data/live/documents_context.csv
-  output_text_file: data/live/documents_context.txt
-  port: 5010
+T0_ReadAudio:
+  input_wav_file: data/live/audio_generated.wav
+  nao_ip: 192.168.0.105
+  port: 5000
+  python_version: '2.7'
+T1_PersonRecognition:
+  input_audio_file: data/live/audio_recorded.wav
+  input_model_dir: data/pretrained_models/
+  input_people_folder: data/stored/people/
+  output_text_file: data/live/person_recognized.txt
+  port: 5001
   python_version: '3.11'
 T2_TextGeneration:
   input_text_file: data/live/text_prompt.txt
-  model_name: vigogne
+  model_name: llama3
   ollama_generate_options:
     repeat_last_n: 100
     repeat_penalty: 1.9
@@ -21,3 +22,47 @@ T2_TextGeneration:
   output_text_file: data/live/text_generated.txt
   port: 5002
   python_version: '3.11'
+T3_TTS:
+  input_text_file: data/live/text_to_say.txt
+  language: fr-fr
+  model_name: tts_models/multilingual/multi-dataset/your_tts
+  output_wav_file: data/live/audio_generated.wav
+  port: 5003
+  python_version: '3.10'
+  speaker_wav_file: data/stored/assistant/voices/thomas_oxisoglou.mp3
+T6_RecordAudio:
+  channel: 2
+  loudness_threshold: 0.5
+  nao_ip: 192.168.0.105
+  output_speech_detected_file: data/live/time_speech_detected.txt
+  output_wav_file: data/live/audio_recorded.wav
+  port: 5006
+  python_version: '2.7'
+  sample_rate: 48000
+  seconds_to_keep: 15
+T7_CaptureImages:
+  face_detection_time_ms: 500
+  image_args:
+    height: 248
+    width: 248
+  interval: 1
+  nao_ip: 192.168.0.105
+  number_of_images: 10
+  output_image_folder: data/live/images/
+  port: 5007
+  python_version: '2.7'
+  video_device_args:
+    color_space: 11
+    fps: 30
+    resolution: 2
+T8_STT:
+  input_wav_file: data/live/audio_recorded.wav
+  model_size: medium
+  output_text_file: data/live/text_transcribed.txt
+  port: 5008
+  python_version: '3.11'
+T9_LEDS:
+  input_text_file: data/live/led_rgb.txt
+  nao_ip: 192.168.0.105
+  port: 5009
+  python_version: '2.7'
