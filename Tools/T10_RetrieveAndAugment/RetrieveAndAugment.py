@@ -30,10 +30,10 @@ class RetrieveAndAugment:
         self.__output_csv_file = output_csv_file
         # IO other attributes
         self.__embeddings = OllamaEmbeddings(model=ollama_model)
-        self.__ollama_model = ollama_model
+        self.__ollama_model = ollama_model.replace(":","")
         self.__number_of_results = number_of_results
         self.__chunk_size = chunk_size
-        self.__load_directory = load_directory + f"/{self.__ollama_model}"
+        self.__load_directory = load_directory + f"{self.__ollama_model}"
         self.__vectordb = self.load_vectordb()
         # internal attributes
         self.__running = False
