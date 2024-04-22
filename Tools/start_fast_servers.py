@@ -53,7 +53,7 @@ if __name__ == "__main__":
     # Instantiate the parser
     parser = argparse.ArgumentParser()
     # Add optional arguments
-    parser.add_argument("--params", help="Path to the parameters file", default="StateMachine/SM_textual_parameters.yaml")
+    parser.add_argument("--params", help="Path to the parameters file", default="StateMachine/SM_NAO_parameters.yaml")
     # Parse the arguments
     args = parser.parse_args()
 
