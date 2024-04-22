@@ -44,7 +44,7 @@ class StateMachine:
                                 on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(leds_blue)),
+                                on_enter=(leds_blue,)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
                                 on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, self.edit_prompt,)),
@@ -141,7 +141,7 @@ class StateMachine:
             file.write(" ".join(self.sentences_to_say))
 
     def update_sentences_to_say(self):
-        sentences, current_sentence_generated = get_clean_generated_sentences(self.model_name)
+        sentences, current_sentence_generated = get_clean_generated_sentences()
         self.sentences_to_say = [sentence for sentence in sentences if sentence not in self.sentences_said]
         self.current_sentence_generated = current_sentence_generated
     
@@ -171,7 +171,7 @@ class StateMachine:
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
             text = file.read()
         if text != "":
-            text = clean_text(self.model_name, text)
+            text = clean_text(text)
             self.current_conversation.append(Message(role="assistant", content=text, timestamp=time.time()))
 
     def edit_prompt(self):

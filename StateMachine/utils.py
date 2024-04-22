@@ -187,54 +187,20 @@ def text_transcribed():
     with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
         return file.read().strip()
 
-def get_clean_generated_sentences(model_name:str) -> str:
+def get_clean_generated_sentences() -> str:
     with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
         message = file.read().replace("\n", " ").strip()
     
-    return msg_to_sentences(clean_text(model_name, message))
+    return msg_to_sentences(clean_text(message))
 
 #%% PROMPTING ==============================================================================================================
 
-prompt_templates = {
-    "gemma"    : {
-        "user"      : {"start":"<start_of_turn>user\n",     "end":["<end_of_turn>\n"]},
-        "assistant" : {"start":"<start_of_turn>model\n",    "end":["<end_of_turn>model\n"]},
-        "system"    : {"start":"<start_of_turn>system\n",   "end":["<end_of_turn>system\n"]}},
-    "test"     : {
-        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
-        "assistant" : {"start":"",                          "end":["</s>"]},
-        "system"    : {"start":"<s>[INST] <<SYS>>",         "end":["<</SYS>>\n"]}},
-    "mistral"  : {
-        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
-        "assistant" : {"start":"",                          "end":["</s>"]},
-        "system"    : {"start":"<s>[INST] <<SYS>>",         "end":["<</SYS>>\n"]}},
-    "llama2"   : {
-        "user"      : {"start": "<s>[INST]",                "end":["[/INST]"]},
-        "assistant" : {"start":"",                          "end":["</s>"]},
-        "system"    : {"start":"<s>[INST] <<SYS>>\n",       "end":["\n<</SYS>>\n\n"]}},
-    "openchat" : {
-        "user"      : {"start":"GPT4 Correct User: ",       "end":["<|end_of_turn|>"]},
-        "assistant" : {"start":"GPT4 Correct Assistant: ",  "end":["<|end_of_turn|>", "</s>", "<|end", "<||", "< |end", "< | end"]},
-        "system"    : {"start":"<|system|>\n",              "end":["<|/system|>\n"]}},
-    "openhermes" : {
-        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
-        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
-        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
-    "qwen:7b"  : {
-        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
-        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
-        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
-    "qwen:4b"  : {
-        "user"      : {"start":"<|im_start|>user\n",        "end":["<|im_end|>\n"]},
-        "assistant" : {"start":"<|im_start|>assistant\n",   "end":["<|im_end|>\n", "<|im_end|>", "###"]},
-        "system"    : {"start":"<|im_start|>system\n",      "end":["<|im_end|>\n"]}},
-}
-
-def clean_text(model_name:str, text:str) -> str:
+def clean_text(text:str) -> str:
     # check if key in model_name
-    prompt_template = get_prompt_template(model_name)
+    
+    ends = ["###", "<|", "</", "[/]"]
 
-    for end in prompt_template["assistant"]["end"]:
+    for end in ends:
         text_split = text.split(end)
         if len(text_split) > 1:
             text = text_split[0] + "."
@@ -244,14 +210,6 @@ def clean_text(model_name:str, text:str) -> str:
     text = rm_smileys(text)
 
     return text
-
-
-def get_prompt_template(model_name:str) -> dict:
-    # check if key in model_name
-    for key in prompt_templates.keys():
-        if key in model_name:
-            return prompt_templates[key]
-    return {"start":"", "mid":"", "end":["</s>"]}
 
 
 def build_prompt(list_messages:list) -> str:
@@ -264,8 +222,7 @@ def build_prompt(list_messages:list) -> str:
 
 # TESTS
 
-assert(clean_text("openhermes", "Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
-assert(get_prompt_template("mistral") == prompt_templates["mistral"])
+assert(clean_text("Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
 list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
 assert(build_prompt(list_messages) == "system réponds en deux phrases en français\nuser Hello\nassistant Hi\n")
 
