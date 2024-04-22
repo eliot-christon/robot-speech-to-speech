@@ -4,6 +4,7 @@ import yaml
 import wave
 import os
 import random
+import shutil
 from Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
@@ -128,12 +129,7 @@ def play_sound_effect(sound_type:str="random"):
     list_wav_files = os.listdir(my_dir)
     random_wav_file = random.choice(list_wav_files)
     # then copy to audio_generated.wav
-    with wave.open(my_dir + random_wav_file, "rb") as file:
-        with wave.open("data/live/audio_generated.wav", "wb") as file2:
-            file2.setnchannels(file.getnchannels())
-            file2.setsampwidth(file.getsampwidth())
-            file2.setframerate(file.getframerate())
-            file2.writeframes(file.readframes(file.getnframes()))
+    shutil.copyfile(my_dir + random_wav_file, "data/live/audio_generated.wav")
     
     # then send the command to play the sound
     send_command("start", fast_com_dict["T0"])
