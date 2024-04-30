@@ -16,7 +16,7 @@ T2_TextGeneration: {
   port: 5002,
   input_text_file: data/live/text_prompt.txt,
   output_text_file: data/live/text_generated.txt,
-  model_name: "qwen:7b", # gemma, llama2, llama3, mistral, openbuddy-mistral, openchat, openhermes, qwen:4b, qwen:7b, vigogne, vigostral
+  model_name: "openchat", # gemma, llama2, llama3, mistral, openbuddy-mistral, openchat, openhermes, qwen:4b, qwen:7b, vigogne, vigostral, phi3
   ollama_generate_options: {
     "top_k": 50,
     "top_p": 0.95,
@@ -40,17 +40,17 @@ T3_TTS: {
 }
 
 # Tool 4: Action Selection
-T4_ActionSelection: {
-  python_version: "3.11",
-  port: 5004,
-  input_text_file: data/live/text_to_say.txt,
-}
+# T4_ActionSelection: {
+#   python_version: "3.11",
+#   port: 5004,
+#   input_text_file: data/live/text_to_say.txt,
+# }
 
 # Tool 5: Perform Action
-T5_PerformAction: {
-  python_version: "3.11",
-  port: 5005,
-}
+# T5_PerformAction: {
+#   python_version: "3.11",
+#   port: 5005,
+# }
 
 T9_LEDS: {
   python_version: "2.7",
@@ -59,18 +59,18 @@ T9_LEDS: {
   input_text_file: data/live/led_rgb.txt,
 }
 
-T10_RetrieveAndAugment: {
-  python_version: "3.11",
-  port: 5010,
-  input_text_file: data/live/text_transcribed.txt,
-  input_database_folder: data/stored/documents/,
-  output_text_file: data/live/documents_context.txt,
-  output_csv_file: data/live/documents_context.csv,
-  load_directory: data/pretrained_models/vectordb/,
-  input_additional_files: [],
-  number_of_results: 3,
-  chunk_size: 4000,
-}
+# T10_RetrieveAndAugment: {
+#   python_version: "3.11",
+#   port: 5010,
+#   input_text_file: data/live/text_transcribed.txt,
+#   input_database_folder: data/stored/documents/,
+#   output_text_file: data/live/documents_context.txt,
+#   output_csv_file: data/live/documents_context.csv,
+#   load_directory: data/pretrained_models/vectordb/,
+#   input_additional_files: [],
+#   number_of_results: 3,
+#   chunk_size: 4000,
+# }
 
 #---------------------------------------#
 #       INFINITE TOOLS PARAMETERS       #
