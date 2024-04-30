@@ -225,13 +225,16 @@ class StateMachine:
         return tools_running(['T0', 'T3']) == ['False', 'False']
     
     def cond_T45_finished(self):
+        return tools_running(['T4']) == ['False']
         return True # tools_running(['T4', 'T5']) == ['False', 'False'] # TODO NOT_IMPLEMENTED
     
     def cond_T068_finished(self):
         return tools_running(['T0', 'T6', 'T8']) == ['False'] * 3
     
     def cond_bye(self):
-        return False # TODO
+        with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
+            action_selected = file.read()
+        return action_selected == "au revoir"
     
     def cond_else(self):
         return True

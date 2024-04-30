@@ -22,6 +22,7 @@ class ActionSelection:
         self.__running = False
         self.__embedding_len = len(self.__vectorize("test"))
         self.__get_classifier()
+        self.__feature_names = np.array([f"vector_{i}" for i in range(self.__embedding_len)])
 
 #%% METHODS ==============================================================================================================
     
@@ -109,7 +110,8 @@ class ActionSelection:
 
         text = self.__load_text()
         vector = self.__vectorize(text)
-        action_result = self.__classifier.predict(vector)
+        vector = pd.DataFrame(vector.reshape(1, -1), columns=self.__feature_names)
+        action_result = self.__classifier.predict(vector).item()
         self.__save_text(action_result)
 
         self.__running = False
