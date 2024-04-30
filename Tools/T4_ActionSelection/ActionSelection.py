@@ -34,7 +34,7 @@ class ActionSelection:
     
     def __save_text(self, text:str):
         """Save the text to the output file"""
-        with open(self.__output_file, "w") as file:
+        with open(self.__output_file, encoding="utf-8", mode="w") as file:
             file.write(text)
     
     def __vectorize(self, text:str) -> np.ndarray:
