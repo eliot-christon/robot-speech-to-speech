@@ -129,6 +129,8 @@ class StateMachine:
             Message(role="system",    content=system_context,  timestamp=time.time()),
             Message(role="assistant", content=bonjour_content, timestamp=time.time())
         ]
+        with open("data/live/text_generated.txt", "w", encoding="utf-8") as file:
+            file.write("")
 
     def update_next_state(self):
         else_state = self.current_state
