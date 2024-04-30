@@ -234,7 +234,7 @@ class StateMachine:
     def cond_bye(self):
         with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
             action_selected = file.read()
-        return action_selected == "au revoir"
+        return action_selected == "dire au revoir"
     
     def cond_else(self):
         return True
