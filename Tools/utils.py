@@ -53,6 +53,7 @@ class ToolFastApp:
                     command = self.__read_command()
                     if command != '_':  # Check if command is not empty
                         self.__execute_command(command)
+                        time.sleep(0.01)
                         self.__erase_command()
                 self.__write_status()
                 time.sleep(0.1)
