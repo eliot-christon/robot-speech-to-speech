@@ -47,7 +47,7 @@ class StateMachine:
                                 on_enter=(leds_blue,)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
-                                on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, self.edit_prompt,)),
+                                on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen,)),
             "GEN"       : State(number=4, name="GEN",
                                 on_exit =(self.write_text_to_say, clear_time_speech_detected, leds_blue)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
@@ -76,15 +76,15 @@ class StateMachine:
             "WAIT"      : {"GEN_HI"     : self.cond_start},
             "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
-            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,   "GEN_BYE"   : self.cond_nothing_said},
+            "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T110_finished},
-            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
-            "GEN"       : {"TTS_AS"     : self.cond_one_sentence,   "LISTEN"    : self.cond_nothing_to_say},
-            "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,   "ACT_A"     : self.cond_T45_finished},
+            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "LISTEN"    : self.cond_nothing_gen},
+            "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
+            "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,       "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
             "ACT_A"     : {"SAY_B"      : self.cond_T03_finished},
-            "SAY_B"     : {"GEN_BYE"    : self.cond_bye,            "GEN"       : self.cond_else},
-            "ACT_B"     : {"GEN_BYE"    : self.cond_bye,            "GEN"       : self.cond_else},
+            "SAY_B"     : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else},
+            "ACT_B"     : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else},
             "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
@@ -96,6 +96,7 @@ class StateMachine:
         self.threshold_nothing_said = 10
         self.threshold_recently_said = 3
         self.threshold_end_sentence = 2
+        self.threshold_nothing_gen = 2
 
         # key words
         self.key_words = {
@@ -109,6 +110,7 @@ class StateMachine:
         self.model_name = load_yaml("Tools/parameters.yaml")["T2_TextGeneration"]["model_name"]
 
         self.time_when_entered_listen = None
+        self.time_when_entered_start_gen = None
 
         # conversation
         self.current_conversation = []
@@ -154,6 +156,9 @@ class StateMachine:
     def update_time_when_entered_listen(self):
         self.time_when_entered_listen = time.time()
     
+    def update_time_when_entered_start_gen(self):
+        self.time_when_entered_start_gen = time.time()
+    
     def add_transcribed_to_conversation(self):
         with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
             text = file.read()
@@ -167,7 +172,7 @@ class StateMachine:
             self.person_recognized = person_recognized
             with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
                 person_info = file.read()
-            self.current_conversation.append(Message(role="system", content="Voici les informations de la personne qui s'adresse à toi : " + person_info, timestamp=time.time()))
+            # self.current_conversation.append(Message(role="system", content="Voici les informations de la personne qui s'adresse à toi : " + person_info, timestamp=time.time()))
 
     def add_text_generated_to_conversation(self):
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
@@ -205,6 +210,11 @@ class StateMachine:
             self.update_time_when_entered_listen()
         return abs(self.time_when_entered_listen - time.time()) > self.threshold_nothing_said
     
+    def cond_nothing_gen(self):
+        if self.time_when_entered_start_gen == None:
+            self.update_time_when_entered_start_gen()
+        return abs(self.time_when_entered_start_gen - time.time()) > self.threshold_nothing_gen
+
     def cond_T110_finished(self):
         stop_tools(['T1'])
         return tools_running(['T1', 'T10']) == ['False'] * 2
