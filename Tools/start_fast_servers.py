@@ -24,6 +24,8 @@ def start_servers():
     server_command_T = []
 
     for tool, tool_params in params.items():
+        if tool == "nao_ip":
+            continue
         command_str = f"py -{tool_params['python_version']} Tools/{tool}/fast_app.py"
         server_command_T.append(command_str)
 
