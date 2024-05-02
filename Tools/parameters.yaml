@@ -69,4 +69,4 @@ T9_LEDS:
   input_text_file: data/live/led_rgb.txt
   port: 5009
   python_version: '2.7'
-nao_ip: 192.168.137.180
+nao_ip: 192.168.137.113
