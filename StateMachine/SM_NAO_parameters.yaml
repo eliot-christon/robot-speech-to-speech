@@ -36,7 +36,7 @@ T3_TTS: {
   language: "fr-fr", # "fr-fr", "fr"
   input_text_file: data/live/text_to_say.txt,
   output_wav_file: data/live/audio_generated.wav,
-  speaker_wav_file: data/stored/assistant/voices/thomas_oxisoglou.mp3,
+  speaker_wav_file: data/stored/assistant/voices/pierre_faury.mp3,
   # eliot_christon, example_reference, jean_pierre_pernaut, perrine_laffont, ptisham, roberto_caurand, teddy_riner, pierre_faury, eugenie_declaron, thomas_oxisoglou
 }
 
@@ -98,7 +98,7 @@ T6_RecordAudio: {
   output_speech_detected_file: data/live/time_speech_detected.txt,
   seconds_to_keep: 15,
   sample_rate: 48000,
-  loudness_threshold: 0.5,
+  loudness_threshold: 0.65,
 }
 
 # Tool 7: Capture Images (from NAO)
