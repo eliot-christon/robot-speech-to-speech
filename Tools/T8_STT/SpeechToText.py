@@ -15,9 +15,10 @@ class SpeechToText:
         self.__running = False
         self.__transcription = ""
         self.__list_nothing_saids = [
+            " Thanks for watching.",
             " Thank you for watching.",
             " Thanks for watching!",
-            " Thank you for watching.",
+            " Thank you for watching!",
             " Thank you.",
             " Thank you. Bye.",
             " ...",
@@ -32,6 +33,7 @@ class SpeechToText:
             " MBC 뉴스 이재경입니다.",
             " 다음 영상에서 뵙겠습니다."
             " Ah!",
+            " О, я поплескал.",
         ]
 
 #%% METHODS ==============================================================================================================
