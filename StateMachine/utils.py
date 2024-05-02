@@ -129,12 +129,13 @@ def play_sound_effect(sound_type:str="random"):
     else:
         my_dir = dir_path_dict["start"]
 
-    list_wav_files = os.listdir(my_dir)
-    random_wav_file = random.choice(list_wav_files)
+    list_audio_files = [f for f in os.listdir(my_dir) if f.endswith(".wav") or f.endswith(".mp3")]
+    random_wav_file = random.choice(list_audio_files)
     # then copy to audio_generated.wav
     source = os.path.join(my_dir, random_wav_file)
+    print(f"source: {source}")
     destination = os.path.join("data/live/audio_generated.wav")
-    shutil.copyfile(source, destination)
+    os.popen(f"cp {source} {destination}")
     
     # then send the command to play the sound
     send_command("start", fast_com_dict["T0"])
