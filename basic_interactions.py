@@ -1,5 +1,6 @@
 from naoqi import ALProxy
-NAO_IP = "192.168.0.105"
+from Tools.utils import load_yaml
+NAO_IP = load_yaml("Tools/parameters.yaml")["nao_ip"]
 
 print("NAO_IP: ", NAO_IP)
 
