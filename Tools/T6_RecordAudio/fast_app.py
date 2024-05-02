@@ -14,20 +14,22 @@ if __name__ == '__main__':
     logging.info("Starting the RecordAudio API server...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T6_RecordAudio"]
+    params = load_yaml("Tools/parameters.yaml")
+    nao_ip = params["nao_ip"]
+    params = params["T6_RecordAudio"]
 
     # Create a proxy to the NAO robot
     import naoqi
     myBroker = naoqi.ALBroker("myBroker",
                                "0.0.0.0",           # listen to anyone
                                0,                   # find a free port and use it
-                               params["nao_ip"],    # parent broker IP
+                               nao_ip,              # parent broker IP
                                9559)                # parent broker port
 
     # Initialize the SoundReceiver object
     SoundReceiver = SoundReceiverModule(
         strModuleName="SoundReceiver",
-        nao_ip=params["nao_ip"],
+        nao_ip=nao_ip,
         output_wav_file=params["output_wav_file"],
         output_speech_detected_file=params["output_speech_detected_file"],
         channel=params["channel"],

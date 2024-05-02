@@ -14,11 +14,13 @@ if __name__ == '__main__':
     logging.info("Starting the ReadAudio process...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T0_ReadAudio"]
+    params = load_yaml("Tools/parameters.yaml")
+    nao_ip = params["nao_ip"]
+    params = params["T0_ReadAudio"]
 
     # Initialize the ReadAudio object
     read_audio = ReadAudio(
-        nao_ip=params["nao_ip"],
+        nao_ip=nao_ip,
         input_wav_file=params["input_wav_file"]
     )
     logging.info("ReadAudio object initialized successfully.")

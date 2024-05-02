@@ -14,11 +14,13 @@ if __name__ == '__main__':
     logging.info("Starting the CaptureImages API server...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T7_CaptureImages"]
+    params = load_yaml("Tools/parameters.yaml")
+    nao_ip = params["nao_ip"]
+    params = params["T7_CaptureImages"]
 
     # Initialize the CaptureImages object
     capture_images = CaptureImages(
-        nao_ip                  = params["nao_ip"],
+        nao_ip                  = nao_ip,
         output_image_folder     = params["output_image_folder"],
         video_device_args       = params["video_device_args"],
         face_detection_time_ms  = params["face_detection_time_ms"],

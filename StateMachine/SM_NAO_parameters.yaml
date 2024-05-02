@@ -1,3 +1,5 @@
+nao_ip: "192.168.137.180", # "192.168.0.105"
+
 #---------------------------------------#
 #        FINITE TOOLS PARAMETERS        #
 #---------------------------------------#
@@ -6,7 +8,6 @@
 T0_ReadAudio: {
   python_version: "2.7",
   port: 5000,
-  nao_ip: "192.168.0.105",
   input_wav_file: data/live/audio_generated.wav,
 }
 
@@ -58,7 +59,6 @@ T4_ActionSelection: {
 T9_LEDS: {
   python_version: "2.7",
   port: 5009,
-  nao_ip: "192.168.0.105",
   input_text_file: data/live/led_rgb.txt,
 }
 
@@ -93,7 +93,6 @@ T1_PersonRecognition: {
 T6_RecordAudio: {
   python_version: "2.7",
   port: 5006,
-  nao_ip: "192.168.0.105",
   channel: 2,
   output_wav_file: data/live/audio_recorded.wav,
   output_speech_detected_file: data/live/time_speech_detected.txt,
@@ -106,7 +105,6 @@ T6_RecordAudio: {
 T7_CaptureImages: {
   python_version: "2.7",
   port: 5007,
-  nao_ip: "192.168.0.105",
   output_image_folder: data/live/images/,
   number_of_images: 10,
   interval: 1,

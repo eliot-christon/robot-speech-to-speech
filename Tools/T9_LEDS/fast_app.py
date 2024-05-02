@@ -16,11 +16,13 @@ if __name__ == '__main__':
     logging.info("Starting the Leds API server...")
 
     # Load the configuration parameters from the config file
-    params = load_yaml("Tools/parameters.yaml")["T9_LEDS"]
+    params = load_yaml("Tools/parameters.yaml")
+    nao_ip = params["nao_ip"]
+    params = params["T9_LEDS"]
 
     # Initialize the Leds object
     leds = Leds(
-        nao_ip=params["nao_ip"],
+        nao_ip=nao_ip,
         input_text_file=params["input_text_file"]
     )
     logging.info("Leds object initialized successfully.")
