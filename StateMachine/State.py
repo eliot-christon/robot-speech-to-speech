@@ -1,5 +1,4 @@
 from utils import start_tools, stop_tools
-import time
 
 class State:
     """Base class for all states"""

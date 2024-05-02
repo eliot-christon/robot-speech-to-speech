@@ -2,9 +2,7 @@ from State import State
 from utils import \
     tools_running, \
     stop_tools, \
-    get_clean_generated_sentences, \
     clear_data_live_folder, \
-    clean_text, \
     load_yaml, \
     build_prompt
 from Message import Message

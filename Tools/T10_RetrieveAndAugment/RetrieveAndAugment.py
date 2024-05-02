@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import os
-from typing import List, Tuple
+from typing import List
 from langchain.docstore.document import Document
 from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings.ollama import OllamaEmbeddings

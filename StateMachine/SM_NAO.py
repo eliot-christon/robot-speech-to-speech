@@ -5,7 +5,6 @@ from utils import \
     tools_running, \
     stop_tools, \
     get_clean_generated_sentences, \
-    sleep_02, \
     clear_time_speech_detected, \
     clear_data_live_folder, \
     clear_text_transcribed, \
