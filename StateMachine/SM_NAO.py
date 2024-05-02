@@ -41,7 +41,7 @@ class StateMachine:
                                 on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
                                 start_tools=['T1', 'T6', 'T7', 'T8'],
-                                on_enter=(self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green)),
+                                on_enter=(clear_time_speech_detected, self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green)),
             "CONTEXT"   : State(number=10, name="CONTEXT",
                                 stop_tools=['T1', 'T6', 'T7', 'T8'],
                                 on_enter=(leds_blue,)),
@@ -172,15 +172,15 @@ class StateMachine:
         
         if person_recognized != self.person_recognized:
             self.person_recognized = person_recognized
-            with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
-                person_info = file.read()
+            # with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
+            #     person_info = file.read()
             # self.current_conversation.append(Message(role="system", content="Voici les informations de la personne qui s'adresse à toi : " + person_info, timestamp=time.time()))
 
     def add_text_generated_to_conversation(self):
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
             text = file.read()
-        if text != "":
-            text = clean_text(text)
+        text = clean_text(text)
+        if text not in ["", " ", "."]:
             self.current_conversation.append(Message(role="assistant", content=text, timestamp=time.time()))
 
     def edit_prompt(self):
@@ -204,7 +204,9 @@ class StateMachine:
         lsds = last_speech_detected_seconds()
         if lsds == None:
             return False
-        return abs(lsds - time.time()) > self.threshold_end_sentence
+        with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
+            text = file.read()
+        return abs(lsds - time.time()) > self.threshold_end_sentence and len(text) > 1
     
     def cond_nothing_said(self):
         lsds = last_speech_detected_seconds()
