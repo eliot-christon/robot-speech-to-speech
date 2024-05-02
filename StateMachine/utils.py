@@ -131,7 +131,6 @@ def play_sound_effect(sound_type:str="random"):
     random_wav_file = random.choice(list_audio_files)
     # then copy to audio_generated.wav
     source = os.path.join(my_dir, random_wav_file)
-    print(f"source: {source}")
     destination = os.path.join("data/live/audio_generated.wav")
     os.popen(f"cp {source} {destination}")
     
