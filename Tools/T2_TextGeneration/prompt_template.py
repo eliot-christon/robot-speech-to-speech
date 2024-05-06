@@ -7,20 +7,22 @@ prompt = {
     6 : "{{ if .system }}<<SYS>>{{ .system }}<</SYS>>\n\n{{ end .system }}User: {{ .user }}\nAssistant: {{ if .assistant }}{{ .assistant }}\n{{ end .assistant }}",
     7 : "{{ if .system }}<|start_header_id|>system<|end_header_id|>\n\n{{ .system }}<|eot_id|>{{ end .system }}<|start_header_id|>user<|end_header_id|>\n\n{{ .user }}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n{{ if .assistant }}{{ .assistant }}<|eot_id|>\n{{ end .assistant }}",
     8 : "{{ if .system }}<|system|>\n{{ .system }}<|end|>\n{{ end .system }}<|user|>\n{{ .user }}<|end|>\n<|assistant|>\n{{ if .assistant }}{{ .assistant }}<|end|>\n{{ end .assistant }}",
+    9 : "{{ if .system }}### Instructions\n{{ .system }}\n\n{{ end .system }}### Input\n{{ .user }}\n\n### Response\n{{ if .assistant }}{{ .assistant }}\n\n{{ end .assistant }}"
 }
 
 
 TEMPLATE = {
-    "llama2"            : prompt[1],
-    "mistral"           : prompt[1],
-    "vigostral"         : prompt[1],
-    "gemma"             : prompt[2],
-    "qwen:4b"           : prompt[3],
-    "qwen:7b"           : prompt[3],
-    "openhermes"        : prompt[3],
-    "openchat"          : prompt[4],
-    "vigogne"           : prompt[4],
-    "openbuddy-mistral" : prompt[6],
-    "llama3"            : prompt[7],
-    "phi3"              : prompt[8],
+    "llama2"                : prompt[1],
+    "mistral"               : prompt[1],
+    "vigostral"             : prompt[1],
+    "gemma"                 : prompt[2],
+    "qwen:4b"               : prompt[3],
+    "qwen:7b"               : prompt[3],
+    "openhermes"            : prompt[3],
+    "openchat"              : prompt[4],
+    "vigogne"               : prompt[4],
+    "openbuddy-mistral"     : prompt[6],
+    "llama3"                : prompt[7],
+    "phi3"                  : prompt[8],
+    "french-alpaca-llama3"  : prompt[9]
 }
