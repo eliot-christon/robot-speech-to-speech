@@ -201,7 +201,7 @@ def get_clean_generated_sentences() -> str:
 def clean_text(text:str) -> str:
     # check if key in model_name
     
-    ends = ["###", "<|", "</", "[/]", "```"]
+    ends = ["###", "<|", "</", "[/]", "```", "{{ .sys"]
 
     for end in ends:
         text_split = text.split(end)

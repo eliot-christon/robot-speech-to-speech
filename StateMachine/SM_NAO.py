@@ -77,7 +77,7 @@ class StateMachine:
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T110_finished},
-            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "LISTEN"    : self.cond_nothing_gen},
+            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "CONTEXT"   : self.cond_nothing_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,       "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
