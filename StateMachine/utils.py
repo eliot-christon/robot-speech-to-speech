@@ -7,6 +7,9 @@ from Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
 
+def sleep_2():
+    time.sleep(2)
+
 def sleep_02():
     time.sleep(0.2)
 
