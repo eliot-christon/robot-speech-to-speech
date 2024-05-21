@@ -100,7 +100,7 @@ class SoundReceiverModule(naoqi.ALModule):
 
         self.__running = True
 
-        logging.info("RecordAudio: started!")
+        logging.info("T6_RecordAudio: started!")
 
     def stop(self):
         """stop the listening process"""
@@ -111,7 +111,7 @@ class SoundReceiverModule(naoqi.ALModule):
 
         self.__running = False
 
-        logging.info("RecordAudio: stopped!")
+        logging.info("T6_RecordAudio: stopped!")
     
 #%% CALLBACK ============================================================================================================
 

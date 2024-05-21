@@ -70,7 +70,7 @@ class PersonRecognition:
                 try:
                     proba, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
                 except Exception as e:
-                    logging.error(f"PersonRecognition: verify_person error")
+                    logging.error(f"T1_PersonRecognition: verify_person error")
                     proba, result = 0.0, False
                 # add the result to the dataframe
                 if local_df is None:
@@ -91,7 +91,7 @@ class PersonRecognition:
 
             time.sleep(0.8)
 
-        logging.info("PersonRecognition: Finished.")
+        logging.info("T1_PersonRecognition: Finished.")
     
     def stop(self):
         """Stop the process"""

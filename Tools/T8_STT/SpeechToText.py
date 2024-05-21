@@ -79,9 +79,9 @@ class SpeechToText:
                 time.sleep(0.1)
 
             except Exception as e:
-                logging.error(f"SpeechToText: {e}")
+                logging.error(f"T8_STT: {e}")
         
-        logging.info("SpeechToText: Finished.")
+        logging.info("T8_STT: Finished.")
     
     def stop(self):
         """Stop the transcription process"""

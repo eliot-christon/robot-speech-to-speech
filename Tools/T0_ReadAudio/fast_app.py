@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the ReadAudio process...")
+    logging.info("Starting the T0_ReadAudio process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         nao_ip=nao_ip,
         input_wav_file=params["input_wav_file"]
     )
-    logging.info("ReadAudio object initialized successfully.")
+    logging.info("T0_ReadAudio object initialized successfully.")
 
     T0_fast_app = ToolFastApp(
         command_dict        = {"start": read_audio.start},
@@ -32,6 +32,6 @@ if __name__ == '__main__':
         command_file        = "Tools/T0_ReadAudio/fast_com/command.txt"
     )
 
-    logging.info("ReadAudio process started successfully.")
+    logging.info("T0_ReadAudio process started successfully.")
 
     T0_fast_app.run()

@@ -45,7 +45,7 @@ class ActionSelection:
         if os.path.exists(self.__pretrained_model_folder + self.__model_name + "_classifier.joblib"):
             self.__classifier = joblib.load(self.__pretrained_model_folder + self.__model_name + "_classifier.joblib")
         else:
-            logging.warning("ActionSelection: Classifier not found. Training a new classifier.")
+            logging.warning("T4_ActionSelection: Classifier not found. Training a new classifier.")
             self.__train_classifier()
     
     def __save_classifier(self):
@@ -116,5 +116,5 @@ class ActionSelection:
 
         self.__running = False
 
-        logging.info("ActionSelection: Finished.")
+        logging.info("T4_ActionSelection: Finished.")
     

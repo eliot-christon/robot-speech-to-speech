@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the Speech-to-Text API server...")
+    logging.info("Starting the T8_STT process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")["T8_STT"]
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         input_wav_file=params["input_wav_file"],
         output_text_file=params["output_text_file"]
     )
-    logging.info("Speech-to-Text object initialized successfully.")
+    logging.info("T8_STT object initialized successfully.")
 
     T8_fast_app = ToolFastApp(
         command_dict        = {"start": speech_to_text.start, "stop": speech_to_text.stop},

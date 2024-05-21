@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the Text-to-Speech API server...")
+    logging.info("Starting the T3_TTS process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")["T3_TTS"]
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         speaker_wav_file = params["speaker_wav_file"],
         language = params["language"]
     )
-    logging.info("Text-to-Speech object initialized successfully.")
+    logging.info("T3_TTS object initialized successfully.")
 
     T3_fast_app = ToolFastApp(
         command_dict        = {"start": text_to_speech.start},

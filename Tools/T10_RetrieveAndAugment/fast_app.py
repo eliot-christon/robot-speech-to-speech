@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the RetrieveAndAugment API server...")
+    logging.info("Starting the T10_RetrieveAndAugment process...")
 
     # Load the configuration parameters from the config file
     all_params = load_yaml("Tools/parameters.yaml")
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         number_of_results        = params["number_of_results"],
         chunk_size               = params["chunk_size"]
     )
-    logging.info("RetrieveAndAugment object initialized successfully.")
+    logging.info("T10_RetrieveAndAugment object initialized successfully.")
 
     T10_fast_app = ToolFastApp(
         command_dict        = {"start": RetrieveAndAugment.start, "update": RetrieveAndAugment.update_vectordb},

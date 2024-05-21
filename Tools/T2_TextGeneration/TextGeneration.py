@@ -99,7 +99,7 @@ class TextGeneration:
             #     self.__write_to_file()
             
         except Exception as e:
-            logging.error(f"TextGeneration: Error while generating text: {e}")
+            logging.error(f"T2_TextGeneration: Error while generating text: {e}")
         
         # Add a dot at the end of the text
         self.__response += "."
@@ -107,5 +107,5 @@ class TextGeneration:
 
         self.__running = False
 
-        logging.info("TextGeneration: Finished.")
+        logging.info("T2_TextGeneration: Finished.")
     

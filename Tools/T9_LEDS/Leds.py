@@ -32,7 +32,7 @@ class Leds:
         rgb = self.__read_file()
         self.__leds_proxy.fadeRGB("FaceLeds", rgb, 0.5)
         self.__running = False
-        logging.info("Leds: Finished.")
+        logging.info("T9_LEDS: Finished.")
 
     def reset(self):
         self.__leds_proxy.reset("FaceLeds")

@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the Text Generation API server...")
+    logging.info("Starting the T2_TextGeneration process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")["T2_TextGeneration"]
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         output_text_file        = params["output_text_file"],
         ollama_generate_options = params["ollama_generate_options"]
     )
-    logging.info("Text Generation object initialized successfully.")
+    logging.info("T2_TextGeneration object initialized successfully.")
 
     T2_fast_app = ToolFastApp(
         command_dict        = {"start": text_generation.start},

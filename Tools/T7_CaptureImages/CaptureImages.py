@@ -127,9 +127,9 @@ class CaptureImages:
                 time.sleep(self.__delay)
 
             except Exception as e:
-                logging.error("CaptureImages: " + str(e))
+                logging.error("T7_CaptureImages: " + str(e))
         
-        logging.info("CaptureImages: Finished.")
+        logging.info("T7_CaptureImages: Finished.")
     
     def stop(self):
         self.__runnning = False
@@ -138,5 +138,5 @@ class CaptureImages:
                 self.__video_device_proxy.unsubscribe(self.__name_id)
                 self.__face_detection_proxy.unsubscribe("FaceDetection")
             except Exception as e:
-                logging.error("CaptureImages: unsubscribing error: " + str(e))
+                logging.error("T7_CaptureImages: unsubscribing error: " + str(e))
         

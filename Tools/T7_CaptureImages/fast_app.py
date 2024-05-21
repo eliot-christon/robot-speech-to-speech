@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the CaptureImages API server...")
+    logging.info("Starting the T7_CaptureImages process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         interval                = params["interval"],
         number_of_images        = params["number_of_images"]
     )
-    logging.info("CaptureImages object initialized successfully.")
+    logging.info("T7_CaptureImages object initialized successfully.")
 
     T7_fast_app = ToolFastApp(
         command_dict        = {"start": capture_images.start, "stop": capture_images.stop},

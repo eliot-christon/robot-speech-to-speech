@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the Action Selection API server...")
+    logging.info("Starting the T4_ActionSelection process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         pretrained_model_folder         = params["pretrained_model_folder"],
         model_name                      = model_name,
     )
-    logging.info("Action Selection object initialized successfully.")
+    logging.info("T4_ActionSelection object initialized successfully.")
 
     T4_fast_app = ToolFastApp(
         command_dict        = {"start": action_selection.start},

@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the Leds API server...")
+    logging.info("Starting the T9_LEDS process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         nao_ip=nao_ip,
         input_text_file=params["input_text_file"]
     )
-    logging.info("Leds object initialized successfully.")
+    logging.info("T9_LEDS object initialized successfully.")
 
     T9_fast_app = ToolFastApp(
         command_dict        = {"start": leds.start, "reset": leds.reset, "stop": leds.reset},

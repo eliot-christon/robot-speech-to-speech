@@ -55,12 +55,12 @@ class ReadAudio:
         try:
             self.audio_player.playFile(self.__robot_file)
         except Exception as e:
-            logging.error("ReadAudio: Error playing audio file on NAO robot")
+            logging.error("T0_ReadAudio: Error playing audio file on NAO robot")
             time.sleep(1)
             # try again
             self.audio_player.playFile(self.__robot_file)
 
         self.__running = False
 
-        logging.info("ReadAudio: Finished.")
+        logging.info("T0_ReadAudio: Finished.")
     

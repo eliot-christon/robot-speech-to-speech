@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the PersonRecognition API server...")
+    logging.info("Starting the T1_PersonRecognition API server...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")["T1_PersonRecognition"]
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         input_people_folder = params["input_people_folder"],
         input_model_dir     = params["input_model_dir"]
     )
-    logging.info("PersonRecognition object initialized successfully.")
+    logging.info("T1_PersonRecognition object initialized successfully.")
 
     T1_fast_app = ToolFastApp(
         command_dict        = {"start": person_recognition.start, "stop": person_recognition.stop},

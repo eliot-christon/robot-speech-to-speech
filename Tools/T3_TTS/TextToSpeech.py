@@ -101,7 +101,7 @@ class TextToSpeech:
         text = self.__treat_text(text)
 
         if not text:
-            logging.error("SpeechToText: No text to synthesize.")
+            logging.error("T3_TTS: No text to synthesize.")
             self.__running = False
             return
 
@@ -121,4 +121,4 @@ class TextToSpeech:
 
         self.__running = False
 
-        logging.info("TextToSpeech: Finished.")
+        logging.info("T3_TTS: Finished.")

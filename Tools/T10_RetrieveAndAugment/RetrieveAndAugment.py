@@ -90,7 +90,7 @@ class RetrieveAndAugment:
     def load_vectordb(self) -> FAISS:
         # check if the directory exists
         if not os.path.exists(self.__load_directory):
-            logging.warning(f"RetrieveAndAugment: The directory {self.__load_directory} does not exist. Updating the vectordb.")
+            logging.warning(f"T10_RetrieveAndAugment: The directory {self.__load_directory} does not exist. Updating the vectordb.")
             return self.update_vectordb()
         return FAISS.load_local(self.__load_directory, embeddings=self.__embeddings, allow_dangerous_deserialization=True, normalize_L2=True)
 
@@ -107,7 +107,7 @@ class RetrieveAndAugment:
             os.makedirs(self.__load_directory)
         # save the vectordb
         vectordb.save_local(self.__load_directory)
-        logging.info("RetrieveAndAugment: Updated the vectordb.")
+        logging.info("T10_RetrieveAndAugment: Updated the vectordb.")
         return vectordb
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -143,4 +143,4 @@ class RetrieveAndAugment:
             f.write(search_results_str)
 
         self.__running = False
-        logging.info("RetrieveAndAugment: Finished.")
+        logging.info("T10_RetrieveAndAugment: Finished.")

@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
     
-    logging.info("Starting the RecordAudio API server...")
+    logging.info("Starting the T6_RecordAudio process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         sample_rate=params["sample_rate"],
         loudness_threshold=params["loudness_threshold"]
     )
-    logging.info("RecordAudio object initialized successfully.")
+    logging.info("T6_RecordAudio object initialized successfully.")
 
     T6_fast_app = ToolFastApp(
         command_dict        = {"start": SoundReceiver.start, "stop": SoundReceiver.stop},
