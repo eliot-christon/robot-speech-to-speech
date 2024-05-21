@@ -11,10 +11,6 @@ from Tools.utils import ToolFastApp, load_yaml
 if __name__ == '__main__':
     import logging
 
-    # Set up the logging configuration
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
-    logging.getLogger().setLevel(logging.INFO)
-
     logging.info("Starting the Action Selection API server...")
 
     # Load the configuration parameters from the config file

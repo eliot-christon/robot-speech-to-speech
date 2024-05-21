@@ -8,8 +8,6 @@ from CaptureImages import CaptureImages
 from Tools.utils import ToolFastApp, load_yaml
 
 if __name__ == '__main__':
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
-    logging.getLogger().setLevel(logging.INFO)
 
     logging.info("Starting the CaptureImages API server...")
 

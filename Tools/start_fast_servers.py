@@ -51,6 +51,12 @@ if __name__ == "__main__":
 
     import argparse
     from utils import copy_parameters
+    import logging
+
+    logging.basicConfig(level=logging.INFO, format="[%(levelname)s] - %(asctime)s - %(message)s", filename="Tools/log.txt", filemode="w")
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    logging.getLogger().addHandler(console)
 
     # Instantiate the parser
     parser = argparse.ArgumentParser()
