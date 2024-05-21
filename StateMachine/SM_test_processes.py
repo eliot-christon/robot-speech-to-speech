@@ -60,11 +60,18 @@ class StateMachine:
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
     from utils import stop_tools
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
+    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='StateMachine/log.txt', filemode='w')
     logging.getLogger().setLevel(logging.INFO)
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    logging.getLogger().addHandler(console)
+
     sm = StateMachine()
     clear_data_live_folder()
     try:
         sm.run()
     except KeyboardInterrupt:
         stop_tools(['T' + str(i) for i in range(11)])
+    
+    # save log to file
+    logging.shutdown()
