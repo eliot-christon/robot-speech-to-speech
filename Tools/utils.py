@@ -60,3 +60,11 @@ class ToolFastApp:
             except KeyboardInterrupt:
                 logging.info("Exiting the FastApp...")
                 break
+
+def log_config():
+    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='Tools/log.txt', filemode='a')
+    logging.getLogger().setLevel(logging.INFO)
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(logging.Formatter('[%(levelname)s] - %(asctime)s - %(message)s'))
+    logging.getLogger().addHandler(console)

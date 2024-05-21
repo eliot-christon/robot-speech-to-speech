@@ -5,9 +5,11 @@ sys.path.append(pckg_dir)
 
 import logging
 from RetrieveAndAugment import RetrieveAndAugment
-from Tools.utils import ToolFastApp, load_yaml
+from Tools.utils import ToolFastApp, load_yaml, log_config
 
 if __name__ == '__main__':
+
+    log_config()
 
     logging.info("Starting the RetrieveAndAugment API server...")
 

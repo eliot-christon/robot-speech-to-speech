@@ -50,13 +50,13 @@ def stop_servers():
 if __name__ == "__main__":
 
     import argparse
-    from utils import copy_parameters
-    import logging
+    from utils import copy_parameters, log_config
 
-    logging.basicConfig(level=logging.INFO, format="[%(levelname)s] - %(asctime)s - %(message)s", filename="Tools/log.txt", filemode="w")
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    logging.getLogger().addHandler(console)
+    # clear Tools/log.txt
+    with open("Tools/log.txt", "w") as file:
+        file.write("")
+
+    log_config()
 
     # Instantiate the parser
     parser = argparse.ArgumentParser()
@@ -78,3 +78,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\nKeyboard interrupt detected. Stopping servers...")
         stop_servers()
+    

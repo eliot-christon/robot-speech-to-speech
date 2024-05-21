@@ -5,11 +5,13 @@ sys.path.append(pckg_dir)
 
 import logging
 from ActionSelection import ActionSelection
-from Tools.utils import ToolFastApp, load_yaml
+from Tools.utils import ToolFastApp, load_yaml, log_config
 
 
 if __name__ == '__main__':
     import logging
+
+    log_config()
 
     logging.info("Starting the Action Selection API server...")
 
