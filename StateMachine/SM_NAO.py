@@ -273,8 +273,13 @@ class StateMachine:
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
     from utils import stop_tools, play_sound_effect
-    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s')
+    
+    logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='StateMachine/log.txt', filemode='w')
     logging.getLogger().setLevel(logging.INFO)
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    logging.getLogger().addHandler(console)
+
     sm = StateMachine()
     clear_data_live_folder()
     play_sound_effect("start")
