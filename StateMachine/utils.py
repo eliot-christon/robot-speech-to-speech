@@ -119,7 +119,7 @@ def move_bye_to_say():
     with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
         file.write(text)
 
-def play_sound_effect(sound_type:str="random"):
+def play_sound_effect(sound_type:str="random", send_the_command=True):
     # first select a random wav file in the sound effects folder
     dir_path_dict = {
         "start": "data/stored/assistant/sound_effects/start/",
@@ -138,7 +138,8 @@ def play_sound_effect(sound_type:str="random"):
     os.popen(f"cp {source} {destination}")
     
     # then send the command to play the sound
-    send_command("start", fast_com_dict["T0"])
+    if send_the_command:
+        send_command("start", fast_com_dict["T0"])
 
 if __name__ == "__main__":
     print("play sound effect")

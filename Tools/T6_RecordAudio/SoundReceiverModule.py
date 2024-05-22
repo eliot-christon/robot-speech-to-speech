@@ -111,7 +111,7 @@ class SoundReceiverModule(naoqi.ALModule):
 
         self.__running = False
 
-        logging.info("T6_RecordAudio: stopped!")
+        logging.info("T6_RecordAudio: Finished.")
     
 #%% CALLBACK ============================================================================================================
 
