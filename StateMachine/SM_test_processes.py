@@ -2,8 +2,8 @@ from State import State
 from utils import \
     stop_tools, \
     clear_data_live_folder, \
+    play_sound_effect, \
     sleep_2
-from Message import Message
 import logging
 import time
 
@@ -59,7 +59,9 @@ class StateMachine:
 
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
-    from utils import stop_tools
+    from utils import stop_tools, build_prompt
+    from Message import Message
+
     logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='StateMachine/log.txt', filemode='w')
     logging.getLogger().setLevel(logging.INFO)
     console = logging.StreamHandler()
@@ -67,10 +69,27 @@ if __name__ == "__main__":
     logging.getLogger().addHandler(console)
 
     sm = StateMachine()
+
     clear_data_live_folder()
+    
+    play_sound_effect("start", send_the_command=False)
+    conv=[Message("user", "Hello, how are you?")]
+    prompt = build_prompt(conv)
+    with open("data/live/text_prompt.txt", "w", encoding="utf-8") as file:
+        file.write(prompt)
+    
+    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+        file.write("Et pourquoi pas?")
+    
+    with open("data/live/led_rgb.txt", "w", encoding="utf-8") as file:
+        file.write("blue")
+
+    sleep_2()
+
     try:
         sm.run()
     except KeyboardInterrupt:
+        play_sound_effect("stop")
         stop_tools(['T' + str(i) for i in range(11)])
     
     # save log to file
