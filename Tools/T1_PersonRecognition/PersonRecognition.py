@@ -1,7 +1,5 @@
-import os
 import logging
 import time
-import pandas as pd
 from speechbrain.inference.encoders import MelSpectrogramEncoder
 from torch import Tensor
 import joblib
@@ -25,6 +23,7 @@ class PersonRecognition:
 
         self.__person_recognized = None
         self.__running = False
+        self.__sleep_time = 0.03
 
 #%% METHODS ==============================================================================================================
 
@@ -55,6 +54,10 @@ class PersonRecognition:
             return "Unknown"
         return self.__labels[probas.argmax()]
 
+    def __train(self):
+        """Train the model"""
+        pass
+
 
 #%% GETTERS AND SETTERS ==================================================================================================
 
@@ -73,19 +76,31 @@ class PersonRecognition:
             self.__person_recognized = "Unknown"
 
             # Load the audio
-            audio = self.__load_audio(self.__audio_file)
+            try:
+                audio = self.__load_audio(self.__audio_file)
+            except Exception as e:
+                logging.error("T1_PersonRecognition: Error loading the audio file")
+                time.sleep(self.__sleep_time)
+                continue
 
             # Get the embedding
-            embedding = self.__get_embedding(audio)
+            try:
+                embedding = self.__get_embedding(audio)
+            except Exception as e:
+                logging.error("T1_PersonRecognition: Error getting the embedding")
+                time.sleep(self.__sleep_time)
+                continue
 
             # Predict the person
             probas = self.__clf_model.predict_proba(embedding)
             self.__person_recognized = self.__predict_with_rejection(probas)
 
+            logging.info("T1_PersonRecognition: Person recognized: " + self.__person_recognized)
+
             # Write the output to a file        
             self.__write_to_file()
 
-            time.sleep(0.025)
+            time.sleep(self.__sleep_time)
 
         logging.info("T1_PersonRecognition: Finished.")
     
