@@ -27,6 +27,7 @@ class ToolFastApp:
 
     def __erase_command(self):
         """Erase the command from the command file (text file)"""
+        # check if the command is still the same
         with open(self.__command_file, 'w') as file:
             file.write("_")
 
@@ -54,7 +55,9 @@ class ToolFastApp:
                     if command != '_':  # Check if command is not empty
                         self.__execute_command(command)
                         time.sleep(0.01)
-                        self.__erase_command()
+                        # check if the command is still the same
+                        if command == self.__read_command():
+                            self.__erase_command()
                 self.__write_status()
                 time.sleep(0.1)
             except KeyboardInterrupt:

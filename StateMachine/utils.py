@@ -80,10 +80,11 @@ fast_com_dict = {
     "T9" : "Tools/T9_LEDS/fast_com/",
     "T10": "Tools/T10_RetrieveAndAugment/fast_com/"
 }
-
+import logging
 def send_command(command, fast_com_dir):
     with open(fast_com_dir + "command.txt", 'w') as file:
         file.write(command)
+    logging.info(f"Command sent to {fast_com_dir}: {command}")
         
 def get_status(fast_com_dir):
     with open(fast_com_dir + "status.txt", 'r') as file:
