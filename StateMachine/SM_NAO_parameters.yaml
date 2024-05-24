@@ -122,3 +122,9 @@ T8_STT: {
   input_wav_file: data/live/audio_recorded.wav,
   output_text_file: data/live/text_transcribed.txt,
 }
+
+# Tool 11: Gesture (for NAO)
+T11_Gesture: {
+  python_version: "2.7",
+  port: 5011,
+}
