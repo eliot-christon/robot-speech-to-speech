@@ -2,19 +2,26 @@ import os
 import logging
 import time
 import pandas as pd
-from speechbrain.inference.speaker import SpeakerRecognition
+from speechbrain.inference.encoders import MelSpectrogramEncoder
+from torch import Tensor
+import joblib
+import torchaudio
+import numpy as np
 
 class PersonRecognition:
     """Class for person recognition"""
 
 #%% CONSTRUCTOR ==========================================================================================================
 
-    def __init__(self, output_text_file:str, input_audio_file:str, input_people_folder:str, input_model_dir:str):
+    def __init__(self, output_text_file:str, input_audio_file:str, input_people_folder:str, input_model_dir:str, rejection_threshold:float=0.17):
         self.__text_file = output_text_file
         self.__audio_file = input_audio_file
         self.__people_folder = input_people_folder
 
-        self.__model = SpeakerRecognition.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb", savedir=input_model_dir + "spkrec-ecapa-voxceleb")
+        self.__embedding_model = MelSpectrogramEncoder.from_hparams(source="speechbrain/spkrec-ecapa-voxceleb-mel-spec", savedir=input_model_dir + "spkrec-ecapa-voxceleb-mel-spec")
+        self.__clf_model = joblib.load(input_model_dir + "person_recognition/speaker_verification_model.pkl")
+        self.__labels = self.__clf_model.classes_
+        self.__rejection_threshold = rejection_threshold
 
         self.__person_recognized = None
         self.__running = False
@@ -26,21 +33,27 @@ class PersonRecognition:
         with open(self.__text_file, 'w', encoding='utf-8') as file:
             file.write(self.__person_recognized)
     
-    def __list_wav_files(self, folder:str):
-        """List all wav files in a folder"""
-        files = os.listdir(folder)
-        return [f for f in files if f.endswith('.wav') or f.endswith('.mp3')]
+    def __load_audio(self, path:str) -> Tensor:
+        """Load the audio file"""
+        waveform, sample_rate = torchaudio.load(path)
+        # resample to 16kHz if needed
+        if sample_rate != 16000:
+            waveform = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)(waveform)
+        # convert to mono if needed
+        if waveform.shape[0] > 1:
+            waveform = waveform.mean(dim=0, keepdim=True)
+        return waveform
+
+    def __get_embedding(self, audio:Tensor) -> np.ndarray:
+        """Get the embedding of the audio"""
+        embedding = self.__embedding_model.encode_waveform(audio)
+        return embedding.detach().numpy().reshape(1, -1)
     
-    def __verify_person(self, person_voices_folder:str):
-        """Verify if the audio file is from the person"""
-        list_wav_files = self.__list_wav_files(person_voices_folder)
-        if len(list_wav_files) == 0:
-            return 0.0, False
-        file_to_verify = list_wav_files[0]
-        verification = self.__model.verify_files(self.__audio_file, person_voices_folder + file_to_verify)
-        if len(verification) == 0:
-            return 0.0, False
-        return verification
+    def __predict_with_rejection(self, probas:np.ndarray) -> str:
+        """Predict the person with rejection"""
+        if probas.max() < self.__rejection_threshold:
+            return "Unknown"
+        return self.__labels[probas.argmax()]
 
 
 #%% GETTERS AND SETTERS ==================================================================================================
@@ -57,39 +70,22 @@ class PersonRecognition:
 
         while self.__running:
 
-            self.__person_recognized = None
+            self.__person_recognized = "Unknown"
 
-            local_df = None
+            # Load the audio
+            audio = self.__load_audio(self.__audio_file)
 
-            # get all the people in the folder
-            people = os.listdir(self.__people_folder)
-            people = [person_name for person_name in people if os.path.isdir(self.__people_folder + person_name)]
+            # Get the embedding
+            embedding = self.__get_embedding(audio)
 
-            # iterate over all the people
-            for person_name in people:
-                try:
-                    proba, result = self.__verify_person(self.__people_folder + person_name + "/voices/")
-                except Exception as e:
-                    logging.error(f"T1_PersonRecognition: verify_person error")
-                    proba, result = 0.0, False
-                # add the result to the dataframe
-                if local_df is None:
-                    local_df = pd.DataFrame([[person_name, result, proba]], columns=['Person', 'Result', 'Probability'])
-                else:
-                    local_df = pd.concat([local_df, pd.DataFrame([[person_name, result, proba]], columns=['Person', 'Result', 'Probability'])])
-            
-            # get the person with the highest probability if the result is True
-            if local_df is not None:
-                local_df = local_df[local_df['Result'] == True]
-                if len(local_df) > 0:
-                    self.__person_recognized = local_df[local_df['Probability'] == local_df['Probability'].max()]['Person'].values[0]
-            
-            if self.__person_recognized is None:
-                self.__person_recognized = "Unknown"
-        
+            # Predict the person
+            probas = self.__clf_model.predict_proba(embedding)
+            self.__person_recognized = self.__predict_with_rejection(probas)
+
+            # Write the output to a file        
             self.__write_to_file()
 
-            time.sleep(0.8)
+            time.sleep(0.025)
 
         logging.info("T1_PersonRecognition: Finished.")
     

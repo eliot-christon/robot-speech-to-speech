@@ -87,6 +87,7 @@ T1_PersonRecognition: {
   input_audio_file: data/live/audio_recorded.wav,
   input_people_folder: data/stored/people/,
   input_model_dir: data/pretrained_models/,
+  rejection_threshold: 0.17,
 }
 
 # Tool 6: Record Audio (from NAO)

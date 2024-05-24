@@ -21,7 +21,8 @@ if __name__ == '__main__':
         output_text_file    = params["output_text_file"],
         input_audio_file    = params["input_audio_file"],
         input_people_folder = params["input_people_folder"],
-        input_model_dir     = params["input_model_dir"]
+        input_model_dir     = params["input_model_dir"],
+        rejection_threshold = params["rejection_threshold"]
     )
     logging.info("T1_PersonRecognition object initialized successfully.")
 
