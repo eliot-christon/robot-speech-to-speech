@@ -18,6 +18,8 @@ class SpeechToText:
             " Thanks for watching.",
             " Thank you for watching.",
             " Thanks for watching!",
+            " Thank you for watching. Please subscribe to the channel.",
+            " Thank you for watching. Please subscribe to the channel from the icon on the right.",
             " Thank you for watching!",
             " Thank you.",
             " Thank you. Bye.",
