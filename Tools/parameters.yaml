@@ -2,6 +2,9 @@ T0_ReadAudio:
   input_wav_file: data/live/audio_generated.wav
   port: 5000
   python_version: '2.7'
+T11_Gesture:
+  port: 5011
+  python_version: '2.7'
 T1_PersonRecognition:
   input_audio_file: data/live/audio_recorded.wav
   input_model_dir: data/pretrained_models/
@@ -56,4 +59,4 @@ T9_LEDS:
   input_text_file: data/live/led_rgb.txt
   port: 5009
   python_version: '2.7'
-nao_ip: 192.168.137.44
+nao_ip: 192.168.137.43

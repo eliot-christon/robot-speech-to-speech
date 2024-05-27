@@ -16,6 +16,15 @@ def copy_parameters(from_yaml, to_yaml):
     with open(to_yaml, 'w') as file:
         yaml.dump(data, file)
 
+def add_nao_ip_to_params(nao_ip_file, params_file):
+    with open(nao_ip_file, 'r') as file:
+        nao_ip = file.read()
+    # add the NAO IP to the parameters file without overwriting the existing data
+    data = load_yaml(params_file)
+    data["nao_ip"] = nao_ip
+    with open(params_file, 'w') as file:
+        yaml.dump(data, file)
+
 class ToolFastApp:
 
     def __init__(self, command_dict, get_status_function, status_file, command_file):
