@@ -20,13 +20,12 @@ if __name__ == '__main__':
 
     # Initialize the Leds object
     gesture = Gesture(
-        nao_ip          = nao_ip,
-        input_text_file = params["input_text_file"]
+        nao_ip = nao_ip,
     )
     logging.info("T11_Gesture object initialized successfully.")
 
     T11_fast_app = ToolFastApp(
-        command_dict        = {"start": gesture.start, "stop": gesture.stop},
+        command_dict        = {"start": gesture.start, "stop": gesture.stop, "hi": gesture.say_hi, "bye": gesture.say_bye},
         get_status_function = gesture.get_running,
         status_file         = "Tools/T11_Gesture/fast_com/status.txt",
         command_file        = "Tools/T11_Gesture/fast_com/command.txt"

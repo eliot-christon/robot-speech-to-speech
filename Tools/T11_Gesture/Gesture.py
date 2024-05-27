@@ -8,12 +8,10 @@ class Gesture:
 
 #%% CONSTRUCTOR ==========================================================================================================
 
-    def __init__(self, nao_ip, input_text_file):
+    def __init__(self, nao_ip):
         self.__nao_ip = nao_ip
-        self.__input_tag_file = input_text_file
         self.__gesture_proxy = naoqi.ALProxy("ALAnimationPlayer", self.__nao_ip, 9559)
         self.__posture_proxy = naoqi.ALProxy("ALRobotPosture", self.__nao_ip, 9559)
-        self.__leds_proxy = naoqi.ALProxy("ALLeds", self.__nao_ip, 9559)
         self.__tags = []
         self.__add_tags()
         self.__running = False
@@ -31,10 +29,6 @@ class Gesture:
         self.__gesture_proxy.addTagForAnimations(tagToAnims)
 
         self.__tags = list(tagToAnims.keys())
-    
-    def __read_tag(self):
-        with open(self.__input_tag_file, 'r') as file:
-            return file.read()
 
 #%% GETTERS AND SETTERS ==================================================================================================
 
@@ -43,19 +37,19 @@ class Gesture:
 
 #%% COMMANDS =============================================================================================================
 
+    def say_hi(self):
+        self.__gesture_proxy.runTag("Bonjour")
+        self.__gesture_proxy.runTag("Moi")
+
+    def say_bye(self):
+        self.__gesture_proxy.runTag("Bonjour")
+
     def start(self):
         self.__running = True
         while self.__running:
-            tag = self.__read_tag()
-            if tag in self.__tags:
-                self.__gesture_proxy.runTag(tag)
-            else:
-                logging.error("T11_Gesture: Tag not found: " + tag)
-                time.sleep(0.1)
-            
+            self.__gesture_proxy.runTag("BodyTalk")
     
     def stop(self):
         self.__posture_proxy.goToPosture("Sit", 0.5)
-        self.__leds_proxy.reset("AllLeds")
         self.__running = False
         logging.info("T11_Gesture: Finished.")
