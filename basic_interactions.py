@@ -1,6 +1,7 @@
 from naoqi import ALProxy
-from Tools.utils import load_yaml
-NAO_IP = load_yaml("Tools/parameters.yaml")["nao_ip"]
+
+with open("Tools/nao_ip.txt", "r") as file:
+    NAO_IP = file.read()
 
 print("NAO_IP: ", NAO_IP)
 

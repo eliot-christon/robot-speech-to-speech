@@ -50,7 +50,7 @@ def stop_servers():
 if __name__ == "__main__":
 
     import argparse
-    from utils import copy_parameters, log_config, add_nao_ip_to_params
+    from utils import copy_parameters, log_config
 
     # clear Tools/log.txt
     with open("Tools/log.txt", "w") as file:
@@ -66,9 +66,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # copy the parameters file to the Tools folder
-    copy_parameters(args.params, "Tools/parameters.yaml")
-    # add the NAO IP to the parameters file
-    add_nao_ip_to_params("Tools/nao_ip.txt", "Tools/parameters.yaml")
+    copy_parameters(args.params, "Tools/parameters.yaml", "Tools/nao_ip.txt")
 
     try:
         start_servers()
