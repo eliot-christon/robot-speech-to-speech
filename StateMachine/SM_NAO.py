@@ -12,8 +12,6 @@ from utils import \
     clean_text, \
     build_prompt, \
     load_yaml, \
-    move_hi_to_say, \
-    move_bye_to_say, \
     leds_blue, \
     leds_yellow, \
     leds_green, \
@@ -31,24 +29,27 @@ class StateMachine:
                                 start_tools=['T6', 'T8'],
                                 stop_tools=['T9'],
                                 on_enter=(leds_reset,)),
+            "IDENTIFY"  : State(number=14, name="IDENTIFY",
+                                start_tools=['T1'],
+                                on_exit=(self.store_person_recognized,),
+                                stop_tools=['T6', 'T8']),
             "GEN_HI"    : State(number=13, name="GEN_HI",
                                 start_tools=['T3'],
-                                stop_tools=['T6', 'T8'],
-                                on_enter=(move_hi_to_say, leds_yellow)),
+                                on_enter=(self.edit_first_phrase, leds_yellow)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
                                 on_enter=(self.init_current_conversation, self.gesture_hi),
                                 on_exit=(clear_time_speech_detected,)),
             "LISTEN"    : State(number=2, name="LISTEN",
-                                start_tools=['T1', 'T6', 'T8'],
+                                start_tools=['T6', 'T8'],
                                 on_enter=(clear_time_speech_detected, self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
                                 stop_tools=['T11']),
             "CONTEXT"   : State(number=10, name="CONTEXT",
-                                stop_tools=['T1', 'T6', 'T8'],
+                                stop_tools=['T6', 'T8'],
                                 on_enter=(leds_blue,)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
-                                on_enter=(self.add_transcribed_to_conversation, self.add_person_info_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen,)),
+                                on_enter=(self.add_transcribed_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen,)),
             "GEN"       : State(number=4, name="GEN",
                                 on_exit =(self.write_text_to_say, clear_time_speech_detected, leds_blue)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
@@ -66,8 +67,8 @@ class StateMachine:
                                 on_enter=(self.update_sentences_said,)),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
-                                stop_tools=['T1', 'T6', 'T8', 'T11'],
-                                on_enter=(move_bye_to_say, leds_yellow)),
+                                stop_tools=['T6', 'T8', 'T11'],
+                                on_enter=(self.edit_last_phrase, leds_yellow)),
             "BYE"       : State(number=11, name="BYE",
                                 start_tools=['T0'],
                                 on_enter=(self.gesture_bye,),
@@ -75,11 +76,12 @@ class StateMachine:
         }
 
         self.conditions = {
-            "WAIT"      : {"GEN_HI"     : self.cond_start},
+            "WAIT"      : {"IDENTIFY"   : self.cond_start},
+            "IDENTIFY"  : {"GEN_HI"     : self.cond_T1_finished},
             "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
-            "CONTEXT"   : {"START_GEN"  : self.cond_T110_finished},
+            "CONTEXT"   : {"START_GEN"  : self.cond_T10_finished},
             "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "CONTEXT"   : self.cond_nothing_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,       "ACT_A"     : self.cond_T45_finished},
@@ -117,6 +119,7 @@ class StateMachine:
         # conversation
         self.current_conversation = []
         self.person_recognized = "Unknown"
+        self.first_phrase = ""
 
         logging.info("StateMachine initialized")
 
@@ -127,16 +130,36 @@ class StateMachine:
     
     def gesture_bye(self):
         send_command("bye", "Tools/T11_Gesture/fast_com/")
+    
+    def store_person_recognized(self):
+        with open("data/live/person_recognized.txt", "r", encoding="utf-8") as file:
+            person_recognized = file.read()
+        self.person_recognized = person_recognized
 
-    def init_current_conversation(self):
+    def edit_first_phrase(self):
         with open("data/stored/assistant/hi.txt", "r", encoding="utf-8") as file:
-            bonjour_content = file.read()
+            hi_content = file.read()
+        self.first_phrase = hi_content.replace("[prenom]", self.person_recognized.split("_")[0].capitalize())
+        # now write the first phrase in the text_to_say file
+        with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+            file.write(self.first_phrase)
+    
+    def edit_last_phrase(self):
+        with open("data/stored/assistant/bye.txt", "r", encoding="utf-8") as file:
+            bye_content = file.read()
+        bye_content = bye_content.replace("[prenom]", self.person_recognized.split("_")[0].capitalize())
+        # now write the last phrase in the text_to_say file
+        with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+            file.write(bye_content)
+        
+    def init_current_conversation(self):
         with open("data/stored/assistant/context.txt", "r", encoding="utf-8") as file:
             system_context = file.read()
         self.current_conversation = [
-            Message(role="system",    content=system_context,  timestamp=time.time()),
-            Message(role="assistant", content=bonjour_content, timestamp=time.time())
+            Message(role="system",    content=system_context,    timestamp=time.time()),
+            Message(role="assistant", content=self.first_phrase, timestamp=time.time())
         ]
+        # could also add person info in system context
         with open("data/live/text_generated.txt", "w", encoding="utf-8") as file:
             file.write("")
 
@@ -173,16 +196,6 @@ class StateMachine:
         with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
             text = file.read()
         self.current_conversation.append(Message(role="user", content=text, timestamp=time.time()))
-    
-    def add_person_info_to_conversation(self):
-        with open("data/live/person_recognized.txt", "r", encoding="utf-8") as file:
-            person_recognized = file.read()
-        
-        if person_recognized != self.person_recognized:
-            self.person_recognized = person_recognized
-            # with open("data/stored/people/" + person_recognized + "/info.txt", "r", encoding="utf-8") as file:
-            #     person_info = file.read()
-            # self.current_conversation.append(Message(role="system", content="Voici les informations de la personne qui s'adresse à toi : " + person_info, timestamp=time.time()))
 
     def add_text_generated_to_conversation(self):
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
@@ -227,7 +240,10 @@ class StateMachine:
             self.update_time_when_entered_start_gen()
         return abs(self.time_when_entered_start_gen - time.time()) > self.threshold_nothing_gen
 
-    def cond_T110_finished(self):
+    def cond_T1_finished(self):
+        return tools_running(['T1']) == ['False']
+
+    def cond_T10_finished(self):
         stop_tools(['T1'])
         return tools_running(['T1', 'T10']) == ['False'] * 2
 
