@@ -9,6 +9,17 @@ T0_ReadAudio: {
   input_wav_file: data/live/audio_generated.wav,
 }
 
+# Tool 1: Person Recognition
+T1_PersonRecognition: {
+  python_version: "3.11",
+  port: 5001,
+  output_text_file: data/live/person_recognized.txt,
+  input_audio_file: data/live/audio_recorded.wav,
+  input_people_folder: data/stored/people/,
+  input_model_dir: data/pretrained_models/,
+  rejection_threshold: 0.17,
+}
+
 # Tool 2: Text Generation
 T2_TextGeneration: {
   python_version: "3.11",
@@ -76,17 +87,6 @@ T9_LEDS: {
 #---------------------------------------#
 #       INFINITE TOOLS PARAMETERS       #
 #---------------------------------------#
-
-# Tool 1: Person Recognition
-T1_PersonRecognition: {
-  python_version: "3.11",
-  port: 5001,
-  output_text_file: data/live/person_recognized.txt,
-  input_audio_file: data/live/audio_recorded.wav,
-  input_people_folder: data/stored/people/,
-  input_model_dir: data/pretrained_models/,
-  rejection_threshold: 0.17,
-}
 
 # Tool 6: Record Audio (from NAO)
 T6_RecordAudio: {

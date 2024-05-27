@@ -9,6 +9,17 @@ T0_ReadAudio: {
   input_wav_file: data/live/audio_generated.wav,
 }
 
+# Tool 1: Person Recognition
+T1_PersonRecognition: {
+  python_version: "3.11",
+  port: 5001,
+  output_text_file: data/live/person_recognized.txt,
+  input_audio_file: data/live/audio_recorded.wav,
+  input_people_folder: data/stored/people/,
+  input_model_dir: data/pretrained_models/,
+  rejection_threshold: 0.17,
+}
+
 # Tool 2: Text Generation
 T2_TextGeneration: {
   python_version: "3.11",
@@ -77,17 +88,6 @@ T9_LEDS: {
 #       INFINITE TOOLS PARAMETERS       #
 #---------------------------------------#
 
-# Tool 1: Person Recognition
-T1_PersonRecognition: {
-  python_version: "3.11",
-  port: 5001,
-  output_text_file: data/live/person_recognized.txt,
-  input_audio_file: data/live/audio_recorded.wav,
-  input_people_folder: data/stored/people/,
-  input_model_dir: data/pretrained_models/,
-  rejection_threshold: 0.17,
-}
-
 # Tool 6: Record Audio (from NAO)
 T6_RecordAudio: {
   python_version: "2.7",
@@ -101,16 +101,16 @@ T6_RecordAudio: {
 }
 
 # Tool 7: Capture Images (from NAO)
-T7_CaptureImages: {
-  python_version: "2.7",
-  port: 5007,
-  output_image_folder: data/live/images/,
-  number_of_images: 10,
-  interval: 1,
-  video_device_args: {resolution: 2, color_space: 11, fps: 30},
-  face_detection_time_ms: 500,
-  image_args: {width: 248, height: 248},
-}
+# T7_CaptureImages: {
+#   python_version: "2.7",
+#   port: 5007,
+#   output_image_folder: data/live/images/,
+#   number_of_images: 10,
+#   interval: 1,
+#   video_device_args: {resolution: 2, color_space: 11, fps: 30},
+#   face_detection_time_ms: 500,
+#   image_args: {width: 248, height: 248},
+# }
 
 # Tool 8: Speech to Text
 T8_STT: {
@@ -119,4 +119,10 @@ T8_STT: {
   model_size: medium,
   input_wav_file: data/live/audio_recorded.wav,
   output_text_file: data/live/text_transcribed.txt,
+}
+
+# Tool 11: Gesture (for NAO)
+T11_Gesture: {
+  python_version: "2.7",
+  port: 5011,
 }
