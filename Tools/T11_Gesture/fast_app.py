@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
     # Initialize the Leds object
     gesture = Gesture(
-        nao_ip=nao_ip,
+        nao_ip          = nao_ip,
+        input_text_file = params["input_text_file"]
     )
     logging.info("T11_Gesture object initialized successfully.")
 

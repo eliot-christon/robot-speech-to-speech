@@ -125,4 +125,5 @@ T8_STT: {
 T11_Gesture: {
   python_version: "2.7",
   port: 5011,
+  input_text_file: data/live/gesture.txt,
 }
