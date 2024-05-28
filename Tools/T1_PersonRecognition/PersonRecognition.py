@@ -3,6 +3,7 @@ import time
 from speechbrain.inference.encoders import MelSpectrogramEncoder
 from torch import Tensor
 import joblib
+import librosa
 import torchaudio
 import numpy as np
 
@@ -43,6 +44,17 @@ class PersonRecognition:
             waveform = waveform.mean(dim=0, keepdim=True)
         return waveform
 
+    def __preprocess_audio(self, audio:Tensor) -> Tensor:
+        """Preprocess the audio"""
+        audio_numpy = audio.squeeze().numpy()
+        intervals = librosa.effects.split(audio_numpy, top_db=20)
+        audio_numpy = np.concatenate([audio_numpy[start:end] for start, end in intervals])
+        # suppress pick sound, equalize
+        audio_numpy = librosa.effects.preemphasis(audio_numpy)
+        # normalize
+        audio_numpy = librosa.util.normalize(audio_numpy)
+        return Tensor(audio_numpy).unsqueeze(0)
+
     def __get_embedding(self, audio:Tensor) -> np.ndarray:
         """Get the embedding of the audio"""
         embedding = self.__embedding_model.encode_waveform(audio)
@@ -80,6 +92,13 @@ class PersonRecognition:
                 audio = self.__load_audio(self.__audio_file)
             except Exception as e:
                 logging.error("T1_PersonRecognition: Error loading the audio file")
+                time.sleep(self.__sleep_time)
+                continue
+                
+            try:
+                audio = self.__preprocess_audio(audio)
+            except Exception as e:
+                logging.error("T1_PersonRecognition: Error preprocessing the audio")
                 time.sleep(self.__sleep_time)
                 continue
 
