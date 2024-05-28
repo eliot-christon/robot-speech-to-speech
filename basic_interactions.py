@@ -17,7 +17,7 @@ basic_awareness.setEnabled(True)
 basic_awareness.getTrackingMode()
 
 audio_device = ALProxy("ALAudioDevice", NAO_IP, 9559)
-audio_device.setOutputVolume(40)
+audio_device.setOutputVolume(45)
 
 tts = ALProxy("ALTextToSpeech", NAO_IP, 9559)
 
