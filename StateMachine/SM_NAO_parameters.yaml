@@ -97,7 +97,7 @@ T6_RecordAudio: {
   output_speech_detected_file: data/live/time_speech_detected.txt,
   seconds_to_keep: 15,
   sample_rate: 48000,
-  loudness_threshold: 0.65,
+  loudness_threshold: 0.60,
 }
 
 # Tool 7: Capture Images (from NAO)
@@ -116,7 +116,7 @@ T6_RecordAudio: {
 T8_STT: {
   python_version: "3.11",
   port: 5008,
-  model_size: medium,
+  model_size: small,
   input_wav_file: data/live/audio_recorded.wav,
   output_text_file: data/live/text_transcribed.txt,
 }
