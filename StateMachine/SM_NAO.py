@@ -313,6 +313,8 @@ if __name__ == "__main__":
         sm.run()
     except KeyboardInterrupt:
         stop_tools(['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11'])
-        send_command("sit", "Tools/T11_Gesture/fast_com/")
     
     play_sound_effect("stop")
+
+    time.sleep(1)
+    send_command("sit", "Tools/T11_Gesture/fast_com/")
