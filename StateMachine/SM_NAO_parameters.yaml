@@ -45,7 +45,7 @@ T3_TTS: {
   language: "fr-fr", # "fr-fr", "fr"
   input_text_file: data/live/text_to_say.txt,
   output_wav_file: data/live/audio_generated.wav,
-  speaker_wav_file: data/stored/assistant/voices/pierre_faury.mp3,
+  speaker_wav_file: data/stored/assistant/voices/thomas_oxisoglou.mp3,
   # eliot_christon, example_reference, jean_pierre_pernaut, perrine_laffont, ptisham, roberto_caurand, teddy_riner, pierre_faury, eugenie_declaron, thomas_oxisoglou
 }
 
@@ -116,7 +116,7 @@ T6_RecordAudio: {
 T8_STT: {
   python_version: "3.11",
   port: 5008,
-  model_size: small,
+  model_size: medium,
   input_wav_file: data/live/audio_recorded.wav,
   output_text_file: data/live/text_transcribed.txt,
 }
