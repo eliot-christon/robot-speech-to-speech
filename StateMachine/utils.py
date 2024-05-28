@@ -171,6 +171,8 @@ def clear_data_live_folder():
         file.write("")
     with open("data/live/action_selected.txt", "w", encoding="utf-8") as file:
         file.write("")
+    with open("data/live/person_recognized.txt", "w", encoding="utf-8") as file:
+        file.write("")
 
 def clear_time_speech_detected():
     with open("data/live/time_speech_detected.txt", "w", encoding="utf-8") as file:

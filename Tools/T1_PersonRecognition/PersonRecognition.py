@@ -71,7 +71,7 @@ class PersonRecognition:
 
         self.__running = True
 
-        while self.__person_recognized == None:
+        while self.__running:
 
             self.__person_recognized = "Unknown"
 
@@ -81,7 +81,6 @@ class PersonRecognition:
             except Exception as e:
                 logging.error("T1_PersonRecognition: Error loading the audio file")
                 time.sleep(self.__sleep_time)
-                person_recognized = None
                 continue
 
             # Get the embedding
@@ -90,7 +89,6 @@ class PersonRecognition:
             except Exception as e:
                 logging.error("T1_PersonRecognition: Error getting the embedding")
                 time.sleep(self.__sleep_time)
-                person_recognized = None
                 continue
 
             # Predict the person
@@ -103,6 +101,6 @@ class PersonRecognition:
             self.__write_to_file()
 
             time.sleep(self.__sleep_time)
+            self.__running = False
 
-        self.__running = False
         logging.info("T1_PersonRecognition: Finished.")
