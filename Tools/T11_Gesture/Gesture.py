@@ -45,6 +45,9 @@ class Gesture:
     def say_bye(self):
         self.__gesture_service.runTag("Bonjour")
         self.__posture_service.goToPosture("Sit", 0.5)
+    
+    def sit(self):
+        self.__posture_service.goToPosture("Sit", 0.3)
 
     def start(self):
         self.__running = True
@@ -57,5 +60,6 @@ class Gesture:
     
     def stop(self):
         self.__running = False
-        self.__future.cancel()
+        if self.__future:
+            self.__future.cancel()
         logging.info("T11_Gesture: Finished.")

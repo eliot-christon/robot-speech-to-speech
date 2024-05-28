@@ -96,7 +96,7 @@ class StateMachine:
         self.current_state = self.states["WAIT"]
         self.next_state = None
 
-        # thresholds
+        # thresholds (in seconds)
         self.threshold_nothing_said = 10
         self.threshold_recently_said = 3
         self.threshold_end_sentence = 2
@@ -219,7 +219,8 @@ class StateMachine:
         lsds = last_speech_detected_seconds()
         if lsds == None:
             return False
-        return abs(lsds - time.time()) < self.threshold_recently_said and any(word in text_transcribed().lower() for word in self.key_words["start"])
+        text = text_transcribed()
+        return (abs(lsds - time.time()) < self.threshold_recently_said) and any(word in text.lower() for word in self.key_words["start"])
 
     def cond_end_sentence(self):
         lsds = last_speech_detected_seconds()
@@ -312,5 +313,6 @@ if __name__ == "__main__":
         sm.run()
     except KeyboardInterrupt:
         stop_tools(['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11'])
+        send_command("sit", "Tools/T11_Gesture/fast_com/")
     
     play_sound_effect("stop")

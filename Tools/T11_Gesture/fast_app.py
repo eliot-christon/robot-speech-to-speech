@@ -25,7 +25,7 @@ if __name__ == '__main__':
     logging.info("T11_Gesture object initialized successfully.")
 
     T11_fast_app = ToolFastApp(
-        command_dict        = {"start": gesture.start, "stop": gesture.stop, "hi": gesture.say_hi, "bye": gesture.say_bye},
+        command_dict        = {"start": gesture.start, "stop": gesture.stop, "hi": gesture.say_hi, "bye": gesture.say_bye, "sit": gesture.sit},
         get_status_function = gesture.get_running,
         status_file         = "Tools/T11_Gesture/fast_com/status.txt",
         command_file        = "Tools/T11_Gesture/fast_com/command.txt"
