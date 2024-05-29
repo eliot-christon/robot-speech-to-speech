@@ -10,6 +10,7 @@ from utils import \
     clear_data_live_folder, \
     clear_text_transcribed, \
     clean_text, \
+    play_sound_effect, \
     build_prompt, \
     load_yaml, \
     leds_blue, \
@@ -22,6 +23,11 @@ import logging
 import time
 
 class StateMachine:
+    """State machine for the NAO robot.
+    The states are predefined in the __init__ method.
+    Basically, the state machine is a loop that checks the conditions of the current state to determine the next state.
+    The conditions are defined in the conditions dictionary.
+    If you wish to add a new state, you must add it to the states dictionary and define the conditions in the conditions dictionary."""
 
     def __init__(self):
         self.states = {
@@ -49,7 +55,7 @@ class StateMachine:
                                 on_enter=(leds_blue,)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
-                                on_enter=(self.add_transcribed_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen,)),
+                                on_enter=(self.add_transcribed_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen, self.filler_sound)),
             "GEN"       : State(number=4, name="GEN",
                                 on_exit =(self.write_text_to_say, clear_time_speech_detected, leds_blue)),
             "TTS_AS"    : State(number=5, name="TTS_AS",
@@ -97,10 +103,10 @@ class StateMachine:
         self.next_state = None
 
         # thresholds (in seconds)
-        self.threshold_nothing_said = 10
+        self.threshold_nothing_said  = 10
         self.threshold_recently_said = 3
-        self.threshold_end_sentence = 2
-        self.threshold_nothing_gen = 2
+        self.threshold_end_sentence  = 2
+        self.threshold_nothing_gen   = 2
 
         # key words
         self.key_words = {
@@ -126,17 +132,26 @@ class StateMachine:
 #%% METHODS ===============================================================================================================
     
     def gesture_hi(self):
+        """Send the command to the gesture tool to make the robot wave its hand and point himself."""
         send_command("hi", "Tools/T11_Gesture/fast_com/")
     
     def gesture_bye(self):
+        """Send the command to the gesture tool to make the robot wave its hand."""
         send_command("bye", "Tools/T11_Gesture/fast_com/")
     
+    def filler_sound(self):
+        """Play a filler sound effect. (Generally used when the robot is thinking, to minimize awkward silence.)"""
+        # play_sound_effect("filler")
+        pass # for now, no filler sounds, because they are very inadequate
+    
     def store_person_recognized(self):
+        """Store the name of the person recognized in the person_recognized file."""
         with open("data/live/person_recognized.txt", "r", encoding="utf-8") as file:
             person_recognized = file.read()
         self.person_recognized = person_recognized
 
     def edit_first_phrase(self):
+        """Edit and write the first phrase to say in text_to_say, by replacing the [prenom] tag by the name of the person recognized."""
         with open("data/stored/assistant/hi.txt", "r", encoding="utf-8") as file:
             hi_content = file.read()
         self.first_phrase = hi_content.replace("[prenom]", self.person_recognized.split("_")[0].capitalize())
@@ -145,6 +160,7 @@ class StateMachine:
             file.write(self.first_phrase)
     
     def edit_last_phrase(self):
+        """Edit and write the last phrase to say in text_to_say, by replacing the [prenom] tag by the name of the person recognized."""
         with open("data/stored/assistant/bye.txt", "r", encoding="utf-8") as file:
             bye_content = file.read()
         bye_content = bye_content.replace("[prenom]", self.person_recognized.split("_")[0].capitalize())
@@ -153,6 +169,7 @@ class StateMachine:
             file.write(bye_content)
         
     def init_current_conversation(self):
+        """Initialize the current conversation with the system context and the first phrase to say."""
         with open("data/stored/assistant/context.txt", "r", encoding="utf-8") as file:
             system_context = file.read()
         self.current_conversation = [
@@ -164,6 +181,7 @@ class StateMachine:
             file.write("")
 
     def update_next_state(self):
+        """Update the next state based on the conditions of the current state."""
         else_state = self.current_state
         for potential_next_state, condition in self.conditions[self.current_state.name].items():
             if condition() and condition != self.cond_else:
@@ -187,17 +205,20 @@ class StateMachine:
         self.sentences_to_say = []
     
     def update_time_when_entered_listen(self):
+        """Update the time when entered listen state."""
         self.time_when_entered_listen = time.time()
     
     def update_time_when_entered_start_gen(self):
         self.time_when_entered_start_gen = time.time()
     
     def add_transcribed_to_conversation(self):
+        """Adds the text from the transcribed file to the current conversation."""
         with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
             text = file.read()
         self.current_conversation.append(Message(role="user", content=text, timestamp=time.time()))
 
     def add_text_generated_to_conversation(self):
+        """Adds the text from the generated file to the current conversation."""
         with open("data/live/text_generated.txt", "r", encoding="utf-8") as file:
             text = file.read()
         text = clean_text(text)
@@ -205,11 +226,13 @@ class StateMachine:
             self.current_conversation.append(Message(role="assistant", content=text, timestamp=time.time()))
 
     def edit_prompt(self):
+        """Edit the prompt file with the current conversation."""
         text = build_prompt(self.current_conversation)
         with open("data/live/text_prompt.txt", "w", encoding="utf-8") as file:
             file.write(text)
     
     def empty_time_speech_detected(self):
+        """Empty the time_speech_detected file only."""
         with open("data/live/time_speech_detected.txt", "w", encoding="utf-8") as file:
             file.write("")
     
@@ -282,6 +305,7 @@ class StateMachine:
 #%% RUN =================================================================================================================
     
     def run(self):
+        """Main loop of the state machine."""
 
         logging.info(f"Starting StateMachine with initial state {self.current_state}")
 
@@ -298,7 +322,7 @@ class StateMachine:
 
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
-    from utils import stop_tools, play_sound_effect
+    from utils import stop_tools
     
     logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='StateMachine/log.txt', filemode='w')
     logging.getLogger().setLevel(logging.INFO)

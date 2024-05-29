@@ -107,25 +107,12 @@ def tools_running(list_tools):
 
 #%% FILE MANAGEMENT ========================================================================================================
 
-def move_hi_to_say():
-    """Move the hi.txt file to text_to_say.txt"""
-    with open("data/stored/assistant/hi.txt", "r", encoding="utf-8") as file:
-        text = file.read()
-    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
-        file.write(text)
-
-def move_bye_to_say():
-    """Move the bye.txt file to text_to_say.txt"""
-    with open("data/stored/assistant/bye.txt", "r", encoding="utf-8") as file:
-        text = file.read()
-    with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
-        file.write(text)
-
 def play_sound_effect(sound_type:str="random", send_the_command=True):
     # first select a random wav file in the sound effects folder
     dir_path_dict = {
         "start": "data/stored/assistant/sound_effects/start/",
         "stop": "data/stored/assistant/sound_effects/stop/",
+        "filler": "data/stored/assistant/sound_effects/filler/",
     }
     if sound_type in dir_path_dict.keys():
         my_dir = dir_path_dict[sound_type]
