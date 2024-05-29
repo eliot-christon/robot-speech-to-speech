@@ -1,0 +1,1 @@
+Bonjour [prenom]! Je suis NAO votre robot assistant, comment puis-je vous aider?

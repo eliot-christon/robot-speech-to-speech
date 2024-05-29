@@ -14,3 +14,6 @@
 old/*
 checkpoints/*
 data/pretrained_models/*
+
+# include the following files
+!data/stored/assistant/*
