@@ -1,0 +1,6 @@
+prénom : Hadrien, 
+nom: GENUER, 
+âge : 23 ans, 
+poste : Alternant en cyber sécurité, 
+entreprise : Groupe Pacte Novation - Novasys Ingéniérie, 
+notes : travaille sur la norme ISO 27001 

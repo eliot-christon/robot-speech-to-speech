@@ -1,0 +1,5 @@
+prénom : Benoit, 
+nom : Frogé, 
+poste : Ingénieur d'affaires, 
+entreprise : Pacte Novation, 
+mission actuelle : Scrapping sur linkedln, 

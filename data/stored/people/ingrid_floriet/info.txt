@@ -1,0 +1,6 @@
+prénom : Ingrid, 
+nom: FLORIET, 
+poste : Responsable communication, 
+entreprise : Pacte Novation, 
+diplôme : Master 2 marketing digital et stratégie, 
+responsable hierarchique : Cecile LEVOUEDEC, 

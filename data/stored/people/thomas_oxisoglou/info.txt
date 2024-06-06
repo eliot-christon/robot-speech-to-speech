@@ -1,0 +1,7 @@
+prénom : Thomas, 
+nom: OXISOGLOU, 
+âge : 24 ans, 
+poste : Stagiaire, ingénieur IA, développeur, 
+entreprise : Pacte Novation, 
+intitulé du stage : détection d'émotions dans des conversations audio, 
+durée du stage : 6 mois, 

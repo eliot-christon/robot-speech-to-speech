@@ -1,0 +1,5 @@
+prénom : Eliot, 
+nom: CHRISTON, 
+âge : 22 ans, 
+poste : Stagiaire, ingénieur IA, développeur, 
+entreprise : Pacte Novation, 

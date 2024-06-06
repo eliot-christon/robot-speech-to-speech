@@ -1,0 +1,6 @@
+prénom : Alex, 
+nom: Pereira Ferreira, 
+poste : stagiaire BSP, 
+entreprise : GPN - Novasys Ingéniérie, 
+ecole : M2 à Esme Sudria, 
+date de naissance : 9 août 2001, 

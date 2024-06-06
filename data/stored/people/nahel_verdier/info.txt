@@ -1,0 +1,6 @@
+prénom : Nahel, 
+nom: VERDIER, 
+poste : Stage BSP carte électronique, 
+entreprise : Groupe Pacte Novation - Novasys Ingéniérie,
+durée : 6 mois, 
+ville : Paris

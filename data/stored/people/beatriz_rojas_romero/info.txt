@@ -1,0 +1,10 @@
+prénom : Beatriz, 
+nom: Rojas Romero, 
+poste : ingénieure d'études et développement, 
+entreprise : Pacte Novation,
+client : MSA,
+date d'arrivée dans l'entreprise : 05/11/2018,
+
+
+
+
