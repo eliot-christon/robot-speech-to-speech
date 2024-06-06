@@ -2,6 +2,9 @@
 Pacte Novation Internship Project - 2024
 
 ## State Machine 0️⃣ ➡️ 1️⃣
+
+<div style="text-align:center"><img src=SM_example.png/></div>
+
 The State Machine is a system that allows the assistant to interact with the user. It is composed of several states, each state corresponds to a step in the interaction. The assistant can move from one state to another depending on diverse conditions. The State Machine is a powerful tool that allows a great flexibility and modularity in the interaction. [Wikipedia link for more details](https://en.wikipedia.org/wiki/Finite-state_machine)
 
 ### How does it work? 🤔
