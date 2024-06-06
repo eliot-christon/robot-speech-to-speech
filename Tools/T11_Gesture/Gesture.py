@@ -1,8 +1,6 @@
 #-*- coding: utf-8 -*-
-import naoqi
 import logging
 import qi
-import time
 
 class Gesture:
     """Class to control the Gestures with ALAnimationPlayer on the NAO robot"""
