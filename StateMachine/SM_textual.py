@@ -1,11 +1,11 @@
-from State import State
-from utils import \
+from .State import State
+from .utils import \
     tools_running, \
     stop_tools, \
     clear_data_live_folder, \
     load_yaml, \
     build_prompt
-from Message import Message
+from .Message import Message
 import logging
 import time
 

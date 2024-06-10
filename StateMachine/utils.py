@@ -3,7 +3,7 @@ import re
 import yaml
 import os
 import random
-from Message import Message
+from .Message import Message
 
 #%% BASIC FUNCTIONS ========================================================================================================
 

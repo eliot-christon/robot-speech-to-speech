@@ -1,7 +1,7 @@
 import subprocess
 import time
 import os
-from utils import load_yaml
+from .utils import load_yaml
 
 server_processes = []
 
@@ -50,7 +50,7 @@ def stop_servers():
 if __name__ == "__main__":
 
     import argparse
-    from utils import copy_parameters, log_config
+    from .utils import copy_parameters, log_config
 
     # clear Tools/log.txt
     with open("Tools/log.txt", "w") as file:

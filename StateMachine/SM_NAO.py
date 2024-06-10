@@ -1,5 +1,5 @@
-from State import State
-from utils import \
+from .State import State
+from .utils import \
     last_speech_detected_seconds, \
     text_transcribed, \
     tools_running, \
@@ -18,7 +18,7 @@ from utils import \
     leds_green, \
     leds_cyan, \
     leds_reset
-from Message import Message
+from .Message import Message
 import logging
 import time
 

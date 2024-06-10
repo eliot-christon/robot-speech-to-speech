@@ -4,8 +4,8 @@ pckg_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__
 sys.path.append(pckg_dir)
 
 import logging
-from SoundReceiverModule import SoundReceiverModule
-from Tools.utils import ToolFastApp, load_yaml, log_config
+from .SoundReceiverModule import SoundReceiverModule
+from ..utils import ToolFastApp, load_yaml, log_config
 
 if __name__ == '__main__':
 
