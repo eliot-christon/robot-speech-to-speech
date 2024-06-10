@@ -4,9 +4,9 @@ pckg_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__
 sys.path.append(pckg_dir)
 
 import logging
-from TextGeneration import TextGeneration
-from Tools.utils import ToolFastApp, load_yaml
-from Tools.ToolApiApp import ToolApiApp
+from .TextGeneration import TextGeneration
+from ..utils import ToolFastApp, load_yaml
+from ..ToolApiApp import ToolApiApp
 
 if __name__ == '__main__':
 

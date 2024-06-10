@@ -1,6 +1,6 @@
 import logging
 import ollama
-from utils import build_prompt
+from .utils import build_prompt
 
 class TextGeneration:
     """Class for generating text from a pre-trained text model."""

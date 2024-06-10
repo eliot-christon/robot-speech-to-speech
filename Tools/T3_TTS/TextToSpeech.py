@@ -1,8 +1,8 @@
 import logging
 import torch
 from TTS.api import TTS
-from extract_num import extract_numbers
-from enlettres import enlettres
+from .extract_num import extract_numbers
+from .enlettres import enlettres
 
 class TextToSpeech:
     """Class for real-time speech TTS from live wav file using a pre-trained audio model."""

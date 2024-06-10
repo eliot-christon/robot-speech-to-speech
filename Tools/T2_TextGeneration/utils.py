@@ -1,4 +1,4 @@
-from prompt_template import TEMPLATE
+from .prompt_template import TEMPLATE
 
 
 def build_prompt(model_name: str, input_list: list[dict]) -> str:
