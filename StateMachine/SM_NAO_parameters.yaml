@@ -5,6 +5,7 @@
 # Tool 0: Read Audio (from file to NAO)
 T0_ReadAudio: {
   python_version: "2.7",
+  python_env_name: "nao_env",
   port: 5000,
   input_wav_file: data/live/audio_generated.wav,
 }
@@ -12,6 +13,7 @@ T0_ReadAudio: {
 # Tool 1: Person Recognition
 T1_PersonRecognition: {
   python_version: "3.11",
+  python_env: "T1_env",  
   port: 5001,
   output_text_file: data/live/person_recognized.txt,
   input_audio_file: data/live/audio_recorded.wav,
@@ -23,6 +25,7 @@ T1_PersonRecognition: {
 # Tool 2: Text Generation
 T2_TextGeneration: {
   python_version: "3.11",
+  python_env: "T2_env",
   port: 5002,
   input_text_file: data/live/text_prompt.txt,
   output_text_file: data/live/text_generated.txt,
@@ -39,6 +42,7 @@ T2_TextGeneration: {
 # Tool 3: Text to Speech
 T3_TTS: {
   python_version: "3.10",
+  python_env: "T3_env",
   port: 5003,
   model_name: "tts_models/multilingual/multi-dataset/your_tts",
   # "tts_models/multilingual/multi-dataset/your_tts", "tts_models/fr/css10/vits", "tts_models/multilingual/multi-dataset/xtts_v2", "tts_models/fr/mai/tacotron2-DDC"
@@ -52,6 +56,7 @@ T3_TTS: {
 # Tool 4: Action Selection
 T4_ActionSelection: {
   python_version: "3.11",
+  python_env: "T4_env",
   port: 5004,
   input_text_file: data/live/text_to_say.txt,
   output_text_file: data/live/action_selected.txt,
@@ -62,17 +67,20 @@ T4_ActionSelection: {
 # Tool 5: Perform Action
 # T5_PerformAction: {
 #   python_version: "3.11",
+#   python_env: "T5_env",
 #   port: 5005,
 # }
 
 T9_LEDS: {
   python_version: "2.7",
+  python_env: "nao_env",
   port: 5009,
   input_text_file: data/live/led_rgb.txt,
 }
 
 # T10_RetrieveAndAugment: {
 #   python_version: "3.11",
+#   python_env: "T10_env",
 #   port: 5010,
 #   input_text_file: data/live/text_transcribed.txt,
 #   input_database_folder: data/stored/documents/,
@@ -91,6 +99,7 @@ T9_LEDS: {
 # Tool 6: Record Audio (from NAO)
 T6_RecordAudio: {
   python_version: "2.7",
+  python_env: "nao_env",
   port: 5006,
   channel: 2,
   output_wav_file: data/live/audio_recorded.wav,
@@ -103,6 +112,7 @@ T6_RecordAudio: {
 # Tool 7: Capture Images (from NAO)
 # T7_CaptureImages: {
 #   python_version: "2.7",
+#   python_env: "nao_env",
 #   port: 5007,
 #   output_image_folder: data/live/images/,
 #   number_of_images: 10,
@@ -115,6 +125,7 @@ T6_RecordAudio: {
 # Tool 8: Speech to Text
 T8_STT: {
   python_version: "3.11",
+  python_env: "T8_env",
   port: 5008,
   model_size: medium,
   input_wav_file: data/live/audio_recorded.wav,
@@ -124,5 +135,6 @@ T8_STT: {
 # Tool 11: Gesture (for NAO)
 T11_Gesture: {
   python_version: "2.7",
+  python_env: "nao_env",
   port: 5011,
 }
