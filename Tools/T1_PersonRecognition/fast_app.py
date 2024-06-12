@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     log_config()
 
-    logging.info("Starting the T1_PersonRecognition API server...")
+    logging.info("Starting the T1_PersonRecognition process...")
 
     # Load the configuration parameters from the config file
     params = load_yaml("Tools/parameters.yaml")["T1_PersonRecognition"]

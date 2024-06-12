@@ -3,7 +3,7 @@ import time
 import os
 from .utils import load_yaml
 
-server_processes = []
+processes = []
 
 def get_ollama_app_path():
     # Get the path to the Ollama app executable
@@ -17,11 +17,11 @@ def get_ollama_app_path():
 
     return ollama_app_path
 
-def start_servers():
+def start_processes():
 
     params = load_yaml("Tools/parameters.yaml")
 
-    server_command_T = []
+    process_command_T = []
 
     envs_folder = params["envs_folder"]
 
@@ -36,24 +36,24 @@ def start_servers():
             command_str = f"source {activate_path} && python -m Tools.{tool}.fast_app"
         else:
             command_str = f"py -{tool_params['python_version']} -m Tools.{tool}.fast_app"
-        server_command_T.append(command_str)
+        process_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
     subprocess.Popen(get_ollama_app_path(), shell=True)
     time.sleep(3)
 
-    # Start each server in a separate subprocess
-    for server_command in server_command_T:
-        if server_command:
-            server_processes.append(subprocess.Popen(server_command, shell=True))
+    # Start each process in a separate subprocess
+    for command in process_command_T:
+        if command:
+            processes.append(subprocess.Popen(command, shell=True))
 
 
-def stop_servers():
-    # Terminate each server process
-    for process in server_processes:
+def stop_processes():
+    # Terminate each process
+    for process in processes:
         process.terminate()
     # Wait for all processes to terminate
-    for process in server_processes:
+    for process in processes:
         process.wait()
 
 if __name__ == "__main__":
@@ -78,13 +78,13 @@ if __name__ == "__main__":
     copy_parameters(args.params, "Tools/parameters.yaml", "Tools/nao_ip.txt", "Tools/envs_folder.txt")
 
     try:
-        start_servers()
+        start_processes()
 
         # Keep the script running until a keyboard interrupt occurs
         while True:
             time.sleep(1)
 
     except KeyboardInterrupt:
-        print("\nKeyboard interrupt detected. Stopping servers...")
-        stop_servers()
+        print("\nKeyboard interrupt detected. Stopping processes...")
+        stop_processes()
     
