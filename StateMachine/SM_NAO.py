@@ -37,6 +37,7 @@ class StateMachine:
                                 on_enter=(leds_reset,)),
             "IDENTIFY"  : State(number=14, name="IDENTIFY",
                                 start_tools=['T1'],
+                                on_enter=(leds_blue,),
                                 on_exit=(self.store_person_recognized,),
                                 stop_tools=['T6', 'T8']),
             "GEN_HI"    : State(number=13, name="GEN_HI",
@@ -88,7 +89,7 @@ class StateMachine:
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
             "CONTEXT"   : {"START_GEN"  : self.cond_T10_finished},
-            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "CONTEXT"   : self.cond_nothing_gen},
+            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,       "ACT_A"     : self.cond_T45_finished},
             "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
@@ -322,7 +323,7 @@ class StateMachine:
 
 #%% MAIN ================================================================================================================
 if __name__ == "__main__":
-    from utils import stop_tools
+    from .utils import stop_tools
     
     logging.basicConfig(format='[%(levelname)s] - %(asctime)s - %(message)s', filename='StateMachine/log.txt', filemode='w')
     logging.getLogger().setLevel(logging.INFO)
