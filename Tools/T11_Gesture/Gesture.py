@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 import logging
 import qi
+import time
 
 class Gesture:
     """Class to control the Gestures with ALAnimationPlayer on the NAO robot"""
@@ -53,6 +54,7 @@ class Gesture:
         while self.__running:
             self.__future = self.__gesture_service.runTag("BodyTalk", _async=True)
             self.__future.wait()
+            time.sleep(1)
 
         self.__running = False
     
