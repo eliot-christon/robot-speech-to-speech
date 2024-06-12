@@ -19,6 +19,7 @@ TEMPLATE = {
     "gemma"                 : prompt[2],
     "qwen:4b"               : prompt[3],
     "qwen:7b"               : prompt[3],
+    "qwen2"                 : prompt[3],
     "openhermes"            : prompt[3],
     "openchat"              : prompt[4],
     "vigogne"               : prompt[4],

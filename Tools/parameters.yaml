@@ -18,7 +18,7 @@ T1_PersonRecognition:
   rejection_threshold: 0.17
 T2_TextGeneration:
   input_text_file: data/live/text_prompt.txt
-  model_name: openchat
+  model_name: qwen2
   ollama_generate_options:
     repeat_last_n: 100
     repeat_penalty: 1.9
@@ -55,7 +55,7 @@ T6_RecordAudio:
   python_env: nao_env
   python_version: '2.7'
   sample_rate: 48000
-  seconds_to_keep: 15
+  seconds_to_keep: 10
 T8_STT:
   input_wav_file: data/live/audio_recorded.wav
   model_size: medium
