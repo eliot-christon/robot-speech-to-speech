@@ -9,6 +9,7 @@ prompt = {
     8 : "{{ if .system }}<|system|>\n{{ .system }}<|end|>\n{{ end .system }}<|user|>\n{{ .user }}<|end|>\n<|assistant|>\n{{ if .assistant }}{{ .assistant }}<|end|>\n{{ end .assistant }}",
     9 : "{{ if .system }}### Instructions\n{{ .system }}\n\n{{ end .system }}### Input\n{{ .user }}\n\n### Response\n{{ if .assistant }}{{ .assistant }}\n\n{{ end .assistant }}",
     10: "{{ if .system }}<|START_OF_TURN_TOKEN|><|SYSTEM_TOKEN|>{{ .system }}<|END_OF_TURN_TOKEN|>{{ end .system }}<|START_OF_TURN_TOKEN|><|USER_TOKEN|>{{ .user }}<|END_OF_TURN_TOKEN|><|START_OF_TURN_TOKEN|><|CHATBOT_TOKEN|>{{ if .assistant }}{{ .assistant }}<|END_OF_TURN_TOKEN|>{{ end .assistant }}",
+    11: "{{ if .system }}{{ .system }} {{ end .system }}USER: {{ .user }} {{ if .assistant }}ASSISTANT: {{ .assistant }} {{ end .assistant }}",
 }
 
 
@@ -28,4 +29,5 @@ TEMPLATE = {
     "phi3"                  : prompt[8],
     "french-alpaca-llama3"  : prompt[9],
     "aya"                   : prompt[10],
+    "wizardlm2"             : prompt[11],
 }

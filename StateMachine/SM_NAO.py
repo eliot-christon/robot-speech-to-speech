@@ -104,7 +104,7 @@ class StateMachine:
         self.next_state = None
 
         # thresholds (in seconds)
-        self.threshold_nothing_said  = 10
+        self.threshold_nothing_said  = 8
         self.threshold_recently_said = 3
         self.threshold_end_sentence  = 2
         self.threshold_nothing_gen   = 2
