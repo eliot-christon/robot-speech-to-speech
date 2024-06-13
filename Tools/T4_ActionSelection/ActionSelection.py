@@ -9,6 +9,10 @@ import os
 import tensorflow as tf
 import joblib
 
+# TF_ENABLE_ONEDNN_OPTS=0
+env = os.environ.copy()
+env["TF_ENABLE_ONEDNN_OPTS"] = "0"
+
 class ActionSelection:
     """Class for selecting actions from a text file."""
 
@@ -19,22 +23,25 @@ class ActionSelection:
         self.__output_file              = output_text_file
         self.__pretrained_model_folder  = pretrained_model_folder
         self.__ollama_model_name        = model_name
-        self.__action_selection_dataset = pd.read_csv(action_selection_dataset_path)
+        self.__action_selection_dataset = pd.read_csv(action_selection_dataset_path).fillna("Unknown")
 
         self.__check_make_dir(self.__pretrained_model_folder + self.__ollama_model_name + "/")
         
-        self.__classes              = self.__action_selection_dataset["action"].unique()
-        self.__num_classes          = len(self.__classes)
-        self.__num_features         = self.__pca_N_components + (self.__num_classes * 2) + 1 # pca + sentence similarity (1 / action) + word in action + affirmative flag
-        self.__stop_words           = self.__load_stop_words()
-        self.__action_embeddings    = self.__get_action_embeddings()
-        self.__sentence_embeddings  = self.__get_sentence_embeddings()
-        self.__pca_N_components     = 50
-        self.__pca                  = self.__get_pca()
-        self.__scaler               = StandardScaler()
-        self.__clf_epochs           = 300
-        self.__clf_train_hist       = None
-        self.__classifier           = None
+        self.__classes          = self.__action_selection_dataset["action"].unique()
+        self.__num_classes      = len(self.__classes)
+        self.__pca_N_components = 50
+        self.__num_features     = self.__pca_N_components + (self.__num_classes * 2) + 1 # pca + sentence similarity (1 / action) + word in action + affirmative flag
+        self.__stop_words       = self.__load_stop_words()
+
+        self.__get_action_embeddings()   # self.__action_embeddings
+        self.__get_sentence_embeddings() # self.__sentence_embeddings
+        self.__get_pca()                 # self.__pca
+
+        self.__clf_epochs       = 300
+        self.__clf_train_hist   = None
+
+        self.__get_classifier() # self.__classifier
+        self.__get_scaler()     # self.__scaler
 
         self.__running = False
 #%% METHODS ==============================================================================================================
@@ -66,15 +73,15 @@ class ActionSelection:
         """Save the classifier"""
         self.__classifier.save(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5")
 
-    def __save_pca(self):
-        """Save the PCA"""
-        joblib.dump(self.__pca, self.__pretrained_model_folder + self.__ollama_model_name + "/pca.joblib")
+    def __save_scaler(self):
+        """Save the scaler"""
+        joblib.dump(self.__scaler, self.__pretrained_model_folder + self.__ollama_model_name + "/scaler.joblib")
     
     def __save_embeddings(self, embeddings:np.ndarray, file_name:str):
         """Save the embeddings"""
         try:
             with open(self.__pretrained_model_folder + self.__ollama_model_name + "/" + file_name, "wb") as file:
-                np.save(file, embeddings)
+                np.save(file, embeddings, allow_pickle=True)
         except:
             logging.error("T4_ActionSelection: Error saving embeddings.")
 
@@ -82,28 +89,18 @@ class ActionSelection:
         """Get the classifier"""
         if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5"):
             self.__classifier = tf.keras.models.load_model(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5")
+
         else:
             logging.warning("T4_ActionSelection: Classifier not found. Training a new classifier.")
-
-            self.__classifier = tf.keras.Sequential([
-                tf.keras.layers.Dense(32, activation='relu', input_shape=(self.__num_features,)),
-                tf.keras.layers.Dense(16, activation='relu'),
-                tf.keras.layers.Dense(self.__num_classes, activation='softmax')
-            ])
-
-            self.__classifier.compile(optimizer=tf.keras.optimizers.Adam(0.001),
-                                      loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-                                      metrics=['accuracy'])
-
-            self.__train_classifier()
+            self.train_classifier()
 
     def __get_action_embeddings(self):
         """Get the action embeddings"""
         if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/action_embeddings.npy"):
-            self.__action_embeddings = np.load(self.__pretrained_model_folder + self.__ollama_model_name + "/action_embeddings.npy")
+            self.__action_embeddings = np.load(self.__pretrained_model_folder + self.__ollama_model_name + "/action_embeddings.npy", allow_pickle=True)
         else:
             logging.warning("T4_ActionSelection: Action embeddings not found. New embeddings will be generated.")
-            self.__action_embeddings = np.array([self.__vectorize(action) for action in self.__action_selection_dataset["action"]])
+            self.__action_embeddings = np.array([(action, self.__vectorize(action)) for action in tqdm(self.__classes, "Action Embeddings")])
             self.__save_embeddings(self.__action_embeddings, "action_embeddings.npy")
     
     def __get_sentence_embeddings(self):
@@ -112,7 +109,7 @@ class ActionSelection:
             self.__sentence_embeddings = np.load(self.__pretrained_model_folder + self.__ollama_model_name + "/sentence_embeddings.npy")
         else:
             logging.warning("T4_ActionSelection: Sentence embeddings not found. New embeddings will be generated.")
-            self.__sentence_embeddings = np.array([self.__vectorize(sentence) for sentence in self.__action_selection_dataset["assistant_sentence"]])
+            self.__sentence_embeddings = np.array([self.__vectorize(sentence) for sentence in tqdm(self.__action_selection_dataset["assistant_sentence"], "Sentence Embeddings")])
             self.__save_embeddings(self.__sentence_embeddings, "sentence_embeddings.npy")
 
     def __get_pca(self):
@@ -123,7 +120,15 @@ class ActionSelection:
             logging.warning("T4_ActionSelection: PCA not found. New PCA will be generated.")
             self.__pca = PCA(n_components=self.__pca_N_components)
             self.__pca.fit(self.__sentence_embeddings)
-            self.__save_pca()
+            joblib.dump(self.__pca, self.__pretrained_model_folder + self.__ollama_model_name + "/pca.joblib")
+
+    def __get_scaler(self):
+        """Get the scaler"""
+        if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/scaler.joblib"):
+            self.__scaler = joblib.load(self.__pretrained_model_folder + self.__ollama_model_name + "/scaler.joblib")
+        else:
+            logging.error("T4_ActionSelection: Scaler not found.")
+            raise FileNotFoundError("Scaler not found.")
 
 # UTILS ------------------------------------------------------------------------------------------------------------------
 
@@ -155,21 +160,33 @@ class ActionSelection:
         if sentence_embeddings is None:
             sentence_embeddings = self.__vectorize(text)
         pca_embeddings      = self.__pca.transform(sentence_embeddings.reshape(1, -1))
-        sentence_similarity = np.array([self.__cosine_similarity(sentence_embeddings, self.__vectorize(action)) for action in self.__action_selection_dataset["assistant_sentence"]])
+        sentence_similarity = np.array([self.__cosine_similarity(sentence_embeddings, action_embedding) for _, action_embedding in self.__action_embeddings]).reshape(1, -1)
         word_in_action      = np.array([[np.any([word in action for word in self.__words(text)])] for action in self.__classes]).astype(float)
-        affirmative_flag    = np.array([0 if text[-1] == '?' else 1]).astype(float)
-        res = np.concatenate((pca_embeddings, sentence_similarity, word_in_action, affirmative_flag), axis=1)
-        return self.__scaler.transform(res)
+        affirmative_flag    = np.array([0 if text[-1] == '?' else 1]).astype(float).reshape(1, -1)
+        return np.concatenate((pca_embeddings, sentence_similarity, word_in_action.T, affirmative_flag), axis=1).flatten()
 
-    def __train_classifier(self):
+    def train_classifier(self):
         """Train the classifier"""
-        X = [self.__features(sentence, self.__sentence_embeddings[i]) for i, sentence in enumerate(self.__action_selection_dataset["assistant_sentence"])]
+        X = np.array([self.__features(sentence, self.__sentence_embeddings[i]) for i, sentence in tqdm(enumerate(self.__action_selection_dataset["assistant_sentence"]), "Training Set")])
+        self.__scaler = StandardScaler()
+        X = self.__scaler.fit_transform(X)
         y_str = self.__action_selection_dataset["action"]
         y = np.array([np.where(self.__classes == action)[0][0] for action in y_str])
+
+        self.__classifier = tf.keras.Sequential([
+                tf.keras.layers.Dense(32, activation='relu', input_shape=(self.__num_features,)),
+                tf.keras.layers.Dense(16, activation='relu'),
+                tf.keras.layers.Dense(self.__num_classes, activation='softmax')
+            ])
+
+        self.__classifier.compile(optimizer=tf.keras.optimizers.Adam(0.001),
+                                    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+                                    metrics=['accuracy'])
 
         self.__clf_train_hist = self.__classifier.fit(X, y, epochs=self.__clf_epochs, validation_split=0.1, verbose=0)
         
         self.__save_classifier()
+        self.__save_scaler()
     
 #%% GETTERS AND SETTERS ==================================================================================================
     
@@ -197,8 +214,8 @@ class ActionSelection:
         self.__running = True
 
         text = self.__load_text()
-        features = self.__features(text)
-        y_proba = self.__classifier.predict(features)
+        features = self.__features(text).reshape(1, -1)
+        y_proba = self.__classifier.predict(self.__scaler.transform(features))
         action_result = self.__classes[np.argmax(y_proba)]
         self.__save_text(action_result)
 

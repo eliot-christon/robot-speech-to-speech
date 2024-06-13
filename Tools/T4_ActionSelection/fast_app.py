@@ -31,7 +31,7 @@ if __name__ == '__main__':
     logging.info("T4_ActionSelection object initialized successfully.")
 
     T4_fast_app = ToolFastApp(
-        command_dict        = {"start": action_selection.start},
+        command_dict        = {"start": action_selection.start, "train": action_selection.train_classifier},
         get_status_function = action_selection.get_running,
         status_file         = "Tools/T4_ActionSelection/fast_com/status.txt",
         command_file        = "Tools/T4_ActionSelection/fast_com/command.txt"
