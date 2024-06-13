@@ -18,7 +18,7 @@ T1_PersonRecognition:
   rejection_threshold: 0.17
 T2_TextGeneration:
   input_text_file: data/live/text_prompt.txt
-  model_name: wizardlm2
+  model_name: openchat
   ollama_generate_options:
     repeat_last_n: 100
     repeat_penalty: 1.9

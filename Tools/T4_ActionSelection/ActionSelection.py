@@ -30,7 +30,7 @@ class ActionSelection:
         self.__classes          = self.__action_selection_dataset["action"].unique()
         self.__num_classes      = len(self.__classes)
         self.__pca_N_components = 50
-        self.__num_features     = self.__pca_N_components + (self.__num_classes * 2) + 1 # pca + sentence similarity (1 / action) + word in action + affirmative flag
+        self.__num_features     = self.__pca_N_components + (self.__num_classes * 2) # pca + sentence similarity (1 / action) + word in action
         self.__stop_words       = self.__load_stop_words()
 
         self.__get_action_embeddings()   # self.__action_embeddings
@@ -71,7 +71,7 @@ class ActionSelection:
     
     def __save_classifier(self):
         """Save the classifier"""
-        self.__classifier.save(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5")
+        self.__classifier.save(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras")
 
     def __save_scaler(self):
         """Save the scaler"""
@@ -87,8 +87,8 @@ class ActionSelection:
 
     def __get_classifier(self):
         """Get the classifier"""
-        if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5"):
-            self.__classifier = tf.keras.models.load_model(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.h5")
+        if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras"):
+            self.__classifier = tf.keras.models.load_model(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras")
 
         else:
             logging.warning("T4_ActionSelection: Classifier not found. Training a new classifier.")
@@ -161,9 +161,8 @@ class ActionSelection:
             sentence_embeddings = self.__vectorize(text)
         pca_embeddings      = self.__pca.transform(sentence_embeddings.reshape(1, -1))
         sentence_similarity = np.array([self.__cosine_similarity(sentence_embeddings, action_embedding) for _, action_embedding in self.__action_embeddings]).reshape(1, -1)
-        word_in_action      = np.array([[np.any([word in action for word in self.__words(text)])] for action in self.__classes]).astype(float)
-        affirmative_flag    = np.array([0 if text[-1] == '?' else 1]).astype(float).reshape(1, -1)
-        return np.concatenate((pca_embeddings, sentence_similarity, word_in_action.T, affirmative_flag), axis=1).flatten()
+        word_in_action      = np.array([[np.mean([1 if (word in action) else 0 for word in self.__words(text)])] for action in self.__classes]).astype(float)
+        return np.concatenate((pca_embeddings, sentence_similarity, word_in_action.T), axis=1).flatten()
 
     def train_classifier(self):
         """Train the classifier"""
@@ -175,7 +174,9 @@ class ActionSelection:
 
         self.__classifier = tf.keras.Sequential([
                 tf.keras.layers.Dense(32, activation='relu', input_shape=(self.__num_features,)),
+                tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.Dense(16, activation='relu'),
+                tf.keras.layers.Dropout(0.2),
                 tf.keras.layers.Dense(self.__num_classes, activation='softmax')
             ])
 
