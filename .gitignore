@@ -10,12 +10,14 @@
 *.pth
 *.api
 *.m4a
+*.xlsx
 *__pycache__*
 old/*
 checkpoints/*
 data/pretrained_models/*
+Tools/Evaluation/T4/embeddings/*.npy
 
 # include the following files
-!data/stored/assistant/*
+!data/stored/assistant/**
 !data/stored/people/**
 !**/requirements.txt

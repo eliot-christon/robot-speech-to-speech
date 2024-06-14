@@ -5,8 +5,8 @@ import numpy as np
 from tqdm import tqdm
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 import os
-import tensorflow as tf
 import joblib
 
 # TF_ENABLE_ONEDNN_OPTS=0
@@ -23,7 +23,7 @@ class ActionSelection:
         self.__output_file              = output_text_file
         self.__pretrained_model_folder  = pretrained_model_folder
         self.__ollama_model_name        = model_name
-        self.__action_selection_dataset = pd.read_csv(action_selection_dataset_path).fillna("Unknown")
+        self.__action_selection_dataset = pd.read_csv(action_selection_dataset_path, header=0, sep=";").fillna("Unknown")
 
         self.__check_make_dir(self.__pretrained_model_folder + self.__ollama_model_name + "/")
         
@@ -71,7 +71,7 @@ class ActionSelection:
     
     def __save_classifier(self):
         """Save the classifier"""
-        self.__classifier.save(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras")
+        joblib.dump(self.__classifier, self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.joblib")
 
     def __save_scaler(self):
         """Save the scaler"""
@@ -87,8 +87,8 @@ class ActionSelection:
 
     def __get_classifier(self):
         """Get the classifier"""
-        if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras"):
-            self.__classifier = tf.keras.models.load_model(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.keras")
+        if os.path.exists(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.joblib"):
+            self.__classifier = joblib.load(self.__pretrained_model_folder + self.__ollama_model_name + "/classifier.joblib")
 
         else:
             logging.warning("T4_ActionSelection: Classifier not found. Training a new classifier.")
@@ -172,20 +172,9 @@ class ActionSelection:
         y_str = self.__action_selection_dataset["action"]
         y = np.array([np.where(self.__classes == action)[0][0] for action in y_str])
 
-        self.__classifier = tf.keras.Sequential([
-                tf.keras.layers.Dense(32, activation='relu', input_shape=(self.__num_features,)),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(16, activation='relu'),
-                tf.keras.layers.Dropout(0.2),
-                tf.keras.layers.Dense(self.__num_classes, activation='softmax')
-            ])
-
-        self.__classifier.compile(optimizer=tf.keras.optimizers.Adam(0.001),
-                                    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-                                    metrics=['accuracy'])
-
-        self.__clf_train_hist = self.__classifier.fit(X, y, epochs=self.__clf_epochs, validation_split=0.1, verbose=0)
-        
+        self.__classifier = RandomForestClassifier()
+        self.__classifier.fit(X, y)
+                
         self.__save_classifier()
         self.__save_scaler()
     
@@ -216,8 +205,8 @@ class ActionSelection:
 
         text = self.__load_text()
         features = self.__features(text).reshape(1, -1)
-        y_proba = self.__classifier.predict(self.__scaler.transform(features))
-        action_result = self.__classes[np.argmax(y_proba)]
+        prediction = self.__classifier.predict(self.__scaler.transform(features))
+        action_result = self.__classes[prediction[0]]
         self.__save_text(action_result)
 
         self.__running = False
