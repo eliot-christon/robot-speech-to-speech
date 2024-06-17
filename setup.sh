@@ -30,22 +30,26 @@ create_venv() {
         fi
     fi
 
+    # Remove existing venv directory if present
     if [ -d "$tool_path/venv" ]; then
         rm -rf "$tool_path/venv"
     fi
 
+    # Create a virtual environment for the tool
     if [ "$python_version" == "python2.7" ]; then
-        virtualenv -p $python_version "$tool_path/venv"
+        $python_version -m virtualenv "$tool_path/venv"
 
     else
         $python_version -m venv --without-pip "$tool_path/venv"
     fi
 
+    # Check if the virtual environment was created successfully
     if [ ! -f "$tool_path/venv/bin/activate" ]; then
         echo "Error: Failed to create virtual environment for $tool_path with $python_version."
         return 1
     fi
 
+    # Activate the virtual environment
     source "$tool_path/venv/bin/activate"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to activate virtual environment for $tool_path."
@@ -66,6 +70,7 @@ create_venv() {
         fi
     fi
 
+    # Upgrade pip, setuptools, and wheel
     $tool_path/venv/bin/pip install --upgrade pip setuptools wheel
     if [ $? -ne 0 ]; then
         echo "Error: Failed to upgrade pip, setuptools, and wheel for $tool_path."
@@ -73,6 +78,7 @@ create_venv() {
         return 1
     fi
 
+    # Install the requirements for the tool
     if [ "$python_version" != "python2.7" ]; then
         pip install -r "$tool_path/requirements.txt"
         if [ $? -ne 0 ]; then
@@ -87,6 +93,9 @@ create_venv() {
     deactivate
     echo "Success: $(basename $tool_path) venv created with $python_version"
 }
+
+
+echo "write NAO IP adress here" > Tools/nao_ip.txt
 
 # Define the tools and their corresponding Python versions
 declare -A tools
