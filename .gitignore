@@ -12,6 +12,7 @@
 *.m4a
 *.xlsx
 *__pycache__*
+*venv*
 old/*
 checkpoints/*
 data/pretrained_models/*
