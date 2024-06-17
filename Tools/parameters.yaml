@@ -68,5 +68,4 @@ T9_LEDS:
   port: 5009
   python_env: nao_env
   python_version: '2.7'
-envs_folder: ~/Documents/envs/
 nao_ip: 192.168.137.64

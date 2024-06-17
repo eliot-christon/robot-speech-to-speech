@@ -29,21 +29,35 @@ def start_processes():
 
     params = load_yaml("Tools/parameters.yaml")
 
-    process_command_T = []
+    if os.name == "posix":
+        linux = True
+    else:
+        linux = False
 
-    envs_folder = params["envs_folder"] # TODO modify with venv in each tool folder
+    process_command_T = []
 
     for tool, tool_params in params.items():
         if tool == "nao_ip" or tool == "envs_folder":
             continue
 
-        # try to launch the process from the venv (if it exists)
-        activate_path = os.path.join(envs_folder, tool, "Scripts", "activate.bat") # TODO adapt for Linux, detect OS
-        if os.path.exists(activate_path):
-            print(f"Launching {tool} from the venv...")
-            command_str = f"source {activate_path} && python -m Tools.{tool}.fast_app"
+        if tool_params["python_version"] == "2.7":
+            venv_tool = "nao_env"
         else:
-            command_str = f"py -{tool_params['python_version']} -m Tools.{tool}.fast_app"
+            venv_tool = tool
+
+        if linux:
+            activate_path = f"Tools\\{venv_tool}\\venv\\bin\\activate"
+        else: # Windows
+            activate_path = f"Tools\\{venv_tool}\\venv\\Scripts\\activate"
+
+        if os.path.exists(activate_path):
+            print(f"Launching {tool} from its venv...")
+            if linux:
+                command_str = f"source {activate_path} && python -m Tools.{tool}.fast_app"
+            else: # Windows
+                command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app\""         
+        else:
+            raise FileNotFoundError(f"Could not find the virtual environment for {tool}")
         process_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
@@ -83,7 +97,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # copy the parameters file to the Tools folder
-    copy_parameters(args.params, "Tools/parameters.yaml", "Tools/nao_ip.txt", "Tools/envs_folder.txt")
+    copy_parameters(args.params, "Tools/parameters.yaml", "Tools/nao_ip.txt")
 
     try:
         start_processes()
