@@ -23,41 +23,44 @@ class TextToSpeech:
 
     def __treat_text(self, text:str) -> str:
         """Treat the text before synthesis"""
+        
+        replacements = {
+            "&": "et",
+            "€": "euros",
+            "°": "degrés",
+            "%": "pour cent",
+            "£": "livres",
+            "¥": "yens",
+            "#": "hashtag",
+            "@": "arobase",
+            "«": "",
+            "»": "",
+            "est - ce": "est-ce",
+            "+": "plus",
+            " - ": " moins ",
+            " * ": " fois ",
+            " / ": " divisé par ",
+            " ?": "?",
+            " !": "!",
+            " .": ".",
+            " ,": ",",
+            " ;": ";",
+            "www.": "trois w point ",
+            ".com": " point com",
+            "  ": " ",
+            "etc.": "et cetera."
+        }
+        
         # numbers
         numbers = extract_numbers(text)
         if numbers:
             for num in numbers:
                 text = text.replace(str(num), enlettres(num))
+                
         # symbols
-        text = text.replace("&", "et")
-        text = text.replace("€", "euros")
-        text = text.replace("°", "degrés")
-        text = text.replace("%", "pour cent")
-        text = text.replace("£", "livres")
-        text = text.replace("¥", "yens")
-        text = text.replace("#", "hashtag")
-        text = text.replace("@", "arobase")
-        text = text.replace("«", "")
-        text = text.replace("»", "")
-        # exceptions
-        text = text.replace("est - ce", "est-ce")
-        # operations
-        text = text.replace("+", "plus")
-        text = text.replace(" - ", " moins ")
-        text = text.replace(" * ", " fois ")
-        text = text.replace(" / ", " divisé par ")
-        # ponctuation
-        text = text.replace(" ?", "?")
-        text = text.replace(" !", "!")
-        text = text.replace(" .", ".")
-        text = text.replace(" ,", ",")
-        text = text.replace(" ;", ";")
-        # site
-        text = text.replace("www.", "trois w point ")
-        text = text.replace(".com", " point com")
-        # others
-        text = text.replace("  ", " ")
-        text = text.replace("etc.", "et cetera.")
+        for key, value in replacements.items():
+            text = text.replace(key,value)
+            
         return text
 
     def __read_text(self) -> str:
