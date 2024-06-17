@@ -35,7 +35,7 @@ create_venv() {
     fi
 
     if [ "$python_version" == "python2.7" ]; then
-        virtualenv -p $python_version "$tool_path/venv"
+        $python_version -m virtualenv "$tool_path/venv"
 
     else
         $python_version -m venv --without-pip "$tool_path/venv"
