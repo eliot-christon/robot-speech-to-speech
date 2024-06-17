@@ -30,22 +30,13 @@ create_venv() {
         fi
     fi
 
-    # Install virtualenv if it's not installed
-    if [ "$python_version" == "python2.7" ] && ! command -v virtualenv &> /dev/null; then
-        echo "Installing virtualenv for Python 2.7..."
-        $python_version -m pip install virtualenv
-        if [ $? -ne 0 ]; then
-            echo "Error: Failed to install virtualenv for $python_version."
-            return 1
-        fi
-    fi
-
     if [ -d "$tool_path/venv" ]; then
         rm -rf "$tool_path/venv"
     fi
 
     if [ "$python_version" == "python2.7" ]; then
         virtualenv -p $python_version "$tool_path/venv"
+
     else
         $python_version -m venv --without-pip "$tool_path/venv"
     fi
@@ -82,11 +73,15 @@ create_venv() {
         return 1
     fi
 
-    pip install -r "$tool_path/requirements.txt"
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to install requirements for $tool_path."
-        deactivate
-        return 1
+    if [ "$python_version" != "python2.7" ]; then
+        pip install -r "$tool_path/requirements.txt"
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to install requirements for $tool_path."
+            deactivate
+            return 1
+        fi
+    else # Python 2.7
+        $python_version -m pip install -r "$tool_path/requirements.txt"
     fi
 
     deactivate
