@@ -3,6 +3,13 @@ import time
 import os
 from .utils import load_yaml
 
+
+"""
+This script starts the Ollama app and all the tools in separate subprocesses.
+The Ollama app is started first, then each tool is started from its own virtual environment.
+"""
+
+
 processes = []
 
 def get_ollama_app_path():
@@ -18,19 +25,20 @@ def get_ollama_app_path():
     return ollama_app_path
 
 def start_processes():
+    """Start the Ollama app and all the tools in separate subprocesses."""
 
     params = load_yaml("Tools/parameters.yaml")
 
     process_command_T = []
 
-    envs_folder = params["envs_folder"]
+    envs_folder = params["envs_folder"] # TODO modify with venv in each tool folder
 
     for tool, tool_params in params.items():
         if tool == "nao_ip" or tool == "envs_folder":
             continue
 
         # try to launch the process from the venv (if it exists)
-        activate_path = os.path.join(envs_folder, tool, "Scripts", "activate.bat")
+        activate_path = os.path.join(envs_folder, tool, "Scripts", "activate.bat") # TODO adapt for Linux, detect OS
         if os.path.exists(activate_path):
             print(f"Launching {tool} from the venv...")
             command_str = f"source {activate_path} && python -m Tools.{tool}.fast_app"
