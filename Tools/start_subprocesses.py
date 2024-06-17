@@ -46,18 +46,20 @@ def start_processes():
             venv_tool = tool
 
         if linux:
-            activate_path = f"Tools\\{venv_tool}\\venv\\bin\\activate"
+            activate_path = f"Tools/{venv_tool}/venv/bin/activate"
         else: # Windows
             activate_path = f"Tools\\{venv_tool}\\venv\\Scripts\\activate"
 
         if os.path.exists(activate_path):
             print(f"Launching {tool} from its venv...")
             if linux:
-                command_str = f"source {activate_path} && python -m Tools.{tool}.fast_app"
+                # TODO: find a way to activate the venv and run the app in the same command withoud admin rights
+                #       or run two commands in the same subprocess ? https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
+                command_str = f"{activate_path} && python -m Tools.{tool}.fast_app" 
             else: # Windows
-                command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app\""         
+                command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app"         
         else:
-            raise FileNotFoundError(f"Could not find the virtual environment for {tool}")
+            raise FileNotFoundError(f"Could not find the virtual environment for {tool}, {activate_path}")
         process_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
