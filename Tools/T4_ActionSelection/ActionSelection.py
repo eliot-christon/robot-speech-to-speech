@@ -100,7 +100,7 @@ class ActionSelection:
             self.__action_embeddings = np.load(self.__pretrained_model_folder + self.__ollama_model_name + "/action_embeddings.npy", allow_pickle=True)
         else:
             logging.warning("T4_ActionSelection: Action embeddings not found. New embeddings will be generated.")
-            self.__action_embeddings = np.array([(action, self.__vectorize(action)) for action in tqdm(self.__classes, "Action Embeddings")])
+            self.__action_embeddings = np.array([self.__vectorize(action) for action in tqdm(self.__classes, "Action Embeddings")])
             self.__save_embeddings(self.__action_embeddings, "action_embeddings.npy")
     
     def __get_sentence_embeddings(self):
@@ -160,7 +160,7 @@ class ActionSelection:
         if sentence_embeddings is None:
             sentence_embeddings = self.__vectorize(text)
         pca_embeddings      = self.__pca.transform(sentence_embeddings.reshape(1, -1))
-        sentence_similarity = np.array([self.__cosine_similarity(sentence_embeddings, action_embedding) for _, action_embedding in self.__action_embeddings]).reshape(1, -1)
+        sentence_similarity = np.array([self.__cosine_similarity(sentence_embeddings, action_embedding) for action_embedding in self.__action_embeddings]).reshape(1, -1)
         word_in_action      = np.array([[np.mean([1 if (word in action) else 0 for word in self.__words(text)])] for action in self.__classes]).astype(float)
         return np.concatenate((pca_embeddings, sentence_similarity, word_in_action.T), axis=1).flatten()
 
