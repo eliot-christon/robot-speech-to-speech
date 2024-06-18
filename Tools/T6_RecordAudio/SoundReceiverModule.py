@@ -51,7 +51,7 @@ class SoundReceiverModule(naoqi.ALModule):
     def __write_time_speech_detected_to_file(self):
         """write the current time to the file"""
         with open(self.__speech_detected_file, 'w') as file:
-            file.write("speech detected at: " + time.strftime("%c") + "\n")
+            file.write("speech detected at: " + time.strftime('%m/%d/%y %H:%M:%S') + "\n")
     
     def __speechDetected(self):
         """return True if the given sound data is a speech"""

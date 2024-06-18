@@ -17,6 +17,7 @@ old/*
 checkpoints/*
 data/pretrained_models/*
 Tools/Evaluation/T4/embeddings/*.npy
+Tools/parameters.yaml
 
 # include the following files
 !data/stored/assistant/**
