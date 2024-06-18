@@ -41,6 +41,7 @@ def start_processes():
             continue
 
         if tool_params["python_version"] == "2.7":
+            # BUG: processes in 2.7 not starting from right venv ?
             venv_tool = "nao_env"
         else:
             venv_tool = tool
@@ -53,8 +54,6 @@ def start_processes():
         if os.path.exists(activate_path):
             print(f"Launching {tool} from its venv...")
             if linux:
-                # TODO: find a way to activate the venv and run the app in the same command withoud admin rights
-                #       or run two commands in the same subprocess ? https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
                 command_str = f". {activate_path} && python -m Tools.{tool}.fast_app" 
             else: # Windows
                 command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app"         
