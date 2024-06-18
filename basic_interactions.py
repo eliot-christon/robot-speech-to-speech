@@ -13,8 +13,8 @@ posture = ALProxy("ALRobotPosture", NAO_IP, 9559)
 posture.goToPosture("Sit", 0.5)
 
 basic_awareness = ALProxy("ALBasicAwareness", NAO_IP, 9559)
-# basic_awareness.setEnabled(True)
-# basic_awareness.getTrackingMode()
+basic_awareness.setEnabled(True)
+basic_awareness.getTrackingMode()
 
 audio_device = ALProxy("ALAudioDevice", NAO_IP, 9559)
 audio_device.setOutputVolume(45)
