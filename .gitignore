@@ -22,3 +22,4 @@ Tools/Evaluation/T4/embeddings/*.npy
 !data/stored/assistant/**
 !data/stored/people/**
 !**/requirements.txt
+!data/pretrained_models/person_recognition*
