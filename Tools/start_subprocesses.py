@@ -55,7 +55,7 @@ def start_processes():
             if linux:
                 # TODO: find a way to activate the venv and run the app in the same command withoud admin rights
                 #       or run two commands in the same subprocess ? https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
-                command_str = f"{activate_path} && python -m Tools.{tool}.fast_app" 
+                command_str = f". {activate_path} && python -m Tools.{tool}.fast_app" 
             else: # Windows
                 command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app"         
         else:
