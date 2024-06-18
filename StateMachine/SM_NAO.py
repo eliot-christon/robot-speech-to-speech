@@ -269,8 +269,8 @@ class StateMachine:
         return tools_running(['T1']) == ['False']
 
     def cond_T10_finished(self):
-        stop_tools(['T1'])
-        return tools_running(['T1', 'T10']) == ['False'] * 2
+        # return tools_running(['T1', 'T10']) == ['False'] * 2
+        return True # TODO T10 NOT_IMPLEMENTED
 
     def cond_T03_finished(self):
         return tools_running(['T0', 'T3']) == ['False', 'False']
