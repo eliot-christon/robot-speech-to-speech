@@ -20,6 +20,7 @@ def get_ollama_app_path():
     # first get the user's home directory
     user_home = os.path.expanduser("~")
     # then append the rest of the path
+    # TODO: find a way to run ollama app on linux or on other path installations
     ollama_app_path = os.path.join(user_home, "AppData", "Local", "Programs", "Ollama", "ollama app.exe")
 
     return ollama_app_path
@@ -41,7 +42,6 @@ def start_processes():
             continue
 
         if tool_params["python_version"] == "2.7":
-            # BUG: processes in 2.7 not starting from right venv ?
             venv_tool = "nao_env"
         else:
             venv_tool = tool
