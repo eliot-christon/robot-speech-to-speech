@@ -24,3 +24,4 @@ Tools/parameters.yaml
 !data/stored/people/**
 !**/requirements.txt
 !data/pretrained_models/person_recognition*
+!Tools/T4_ActionSelection/stop_words.txt
