@@ -21,6 +21,8 @@ def get_ollama_app_path():
     user_home = os.path.expanduser("~")
     # then append the rest of the path
     # TODO: find a way to run ollama app on linux or on other path installations
+    if os.name == "posix":
+        return
     ollama_app_path = os.path.join(user_home, "AppData", "Local", "Programs", "Ollama", "ollama app.exe")
 
     return ollama_app_path
@@ -58,7 +60,7 @@ def start_processes():
             else: # Windows
                 command_str = f"{activate_path}.bat && python -m Tools.{tool}.fast_app"         
         else:
-            raise FileNotFoundError(f"Could not find the virtual environment for {tool}, {activate_path}")
+            raise FileNotFoundError(f"Could not find the virtual environment for {tool}, {activate_path}, please run setup.sh first.")
         process_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
