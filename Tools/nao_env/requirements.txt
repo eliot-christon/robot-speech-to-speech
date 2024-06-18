@@ -2,4 +2,4 @@ paramiko==2.12.0
 pyyaml==5.4.1
 numpy==1.16.6
 opencv-python==4.2.0.32
-pandas==0.24.2
+# pandas==0.24.2 # BUG: python2.7 wheel not available, this library is a requirement for the Capture Image module
