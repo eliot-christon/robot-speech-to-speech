@@ -94,6 +94,18 @@ create_venv() {
     echo "Success: $(basename $tool_path) venv created with $python_version"
 }
 
+create_fast_com_files() {
+    # for all the directories beginning with Tools/T* create the fast_com_files directory : tool_path/fast_com/command.txt and tool_path/fast_com/status.txt
+
+    tool_dirs=$(find Tools -type d -name "T*" -print)
+
+    for tool_path in $tool_dirs; do
+        mkdir -p "$tool_path/fast_com"
+        touch "$tool_path/fast_com/command.txt"
+        touch "$tool_path/fast_com/status.txt"
+    done
+}
+
 
 echo "write NAO IP adress here" > Tools/nao_ip.txt
 
@@ -101,12 +113,16 @@ echo "write NAO IP adress here" > Tools/nao_ip.txt
 declare -A tools
 tools=( ["Tools/T1_PersonRecognition"]="python3.11"
         ["Tools/T2_TextGeneration"]="python3.11"
-        ["Tools/T3_TTS"]="python3.11"
+        ["Tools/T3_TTS"]="python3.10"
         ["Tools/T4_ActionSelection"]="python3.11"
-        ["Tools/T8_STT"]="python3.10"
+        ["Tools/T8_STT"]="python3.11"
         ["Tools/nao_env"]="python2.7" )
 
 # Loop over the tools array and create virtual environments
 for tool in "${!tools[@]}"; do
     create_venv "$tool" "${tools[$tool]}"
 done
+
+# Create fast_com_files for each tool
+create_fast_com_files
+echo "Setup completed successfully."
