@@ -15,3 +15,17 @@ The project is divided into three main parts:
  - [Data](data/) 📊 Contains the data used for the project.
  - [StateMachine](StateMachine/) 🛠️ Contains the different State Machines, this is the global architecture, and defines the way the different tools interact with each other.
  - [Tools](Tools/) 🔧 Contains the different tools used in the project. Each tool is a module that can be used to perform a specific task.
+
+## Installation
+
+To install the project, you need to clone the repository and install the dependencies. You can do this by running the following commands:
+
+```bash
+sudo apt install nvidia-cudnn
+```
+
+```bash
+git clone
+cd robot-speech-to-speech
+bash setup.sh
+```
