@@ -20,9 +20,6 @@ def get_ollama_app_path():
     # first get the user's home directory
     user_home = os.path.expanduser("~")
     # then append the rest of the path
-    # TODO: find a way to run ollama app on linux or on other path installations
-    if os.name == "posix":
-        return
     ollama_app_path = os.path.join(user_home, "AppData", "Local", "Programs", "Ollama", "ollama app.exe")
 
     return ollama_app_path
@@ -64,8 +61,10 @@ def start_processes():
         process_command_T.append(command_str)
 
     # Start the Ollama app in a separate subprocess
-    subprocess.Popen(get_ollama_app_path(), shell=True)
-    time.sleep(3)
+    # TODO: find a way to run ollama app on linux or on other path installations
+    if os.name != "posix": # if not linux,
+        subprocess.Popen(get_ollama_app_path(), shell=True)
+        time.sleep(3)
 
     # Start each process in a separate subprocess
     for command in process_command_T:
