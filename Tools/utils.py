@@ -11,14 +11,11 @@ def load_yaml(file_path):
         except yaml.YAMLError as exc:
             logging.error(exc)
 
-def copy_parameters(from_yaml, to_yaml, nao_ip_file, envs_folder_file):
+def copy_parameters(from_yaml, to_yaml, nao_ip_file):
     data = load_yaml(from_yaml)
     with open(nao_ip_file, 'r') as file:
         nao_ip = file.read()
-    with open(envs_folder_file, 'r') as file:
-        envs_folder = file.read()
     data["nao_ip"] = nao_ip
-    data["envs_folder"] = envs_folder
     with open(to_yaml, 'w') as file:
         yaml.dump(data, file)
 
