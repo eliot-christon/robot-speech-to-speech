@@ -169,4 +169,7 @@ echo "Fast communication files created successfully."
 create_data_live_files
 echo "Data live files created successfully."
 
+# parameters.yaml file
+touch Tools/parameters.yaml
+
 echo "Setup completed successfully."
