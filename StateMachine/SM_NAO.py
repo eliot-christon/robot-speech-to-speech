@@ -62,14 +62,7 @@ class StateMachine:
             "TTS_AS"    : State(number=5, name="TTS_AS",
                                 start_tools=['T3', 'T4'],
                                 on_enter=(leds_cyan,)),
-            "SAY_A"     : State(number=6, name="SAY_A",
-                                start_tools=['T0', 'T11'],
-                                on_enter=(self.update_sentences_said,)),
-            "ACT_A"     : State(number=7, name="ACT_A",
-                                start_tools=['T5']),
-            "ACT_B"     : State(number=8, name="ACT_B",
-                                start_tools=['T5']),
-            "SAY_B"     : State(number=9, name="SAY_B",
+            "SAY"       : State(number=6, name="SAY",
                                 start_tools=['T0', 'T11'],
                                 on_enter=(self.update_sentences_said,)),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
@@ -91,11 +84,8 @@ class StateMachine:
             "CONTEXT"   : {"START_GEN"  : self.cond_T10_finished},
             "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
-            "TTS_AS"    : {"SAY_A"      : self.cond_T03_finished,       "ACT_A"     : self.cond_T45_finished},
-            "SAY_A"     : {"ACT_B"      : self.cond_T45_finished},
-            "ACT_A"     : {"SAY_B"      : self.cond_T03_finished},
-            "SAY_B"     : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else},
-            "ACT_B"     : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else},
+            "TTS_AS"    : {"SAY"        : self.cond_T034_finished},
+            "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "IDENTIFY"  : self.cond_reidentify},
             "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
@@ -173,6 +163,12 @@ class StateMachine:
         """Initialize the current conversation with the system context and the first phrase to say."""
         with open("data/stored/assistant/context.txt", "r", encoding="utf-8") as file:
             system_context = file.read()
+
+        with open(f"data/stored/people/{self.person_recognized}/info.txt", "r", encoding="utf-8") as file:
+            person_info = file.read()
+        
+        system_context = system_context.replace("[person_info]", person_info)
+
         self.current_conversation = [
             Message(role="system",    content=system_context,    timestamp=time.time()),
             Message(role="assistant", content=self.first_phrase, timestamp=time.time())
@@ -279,10 +275,9 @@ class StateMachine:
     def cond_T03_finished(self):
         return tools_running(['T0', 'T3']) == ['False', 'False']
     
-    def cond_T45_finished(self):
-        # return tools_running(['T4']) == ['False']
-        return True # tools_running(['T4', 'T5']) == ['False', 'False'] # TODO NOT_IMPLEMENTED
-    
+    def cond_T034_finished(self):
+        return tools_running(['T0', 'T3', 'T4']) == ['False'] * 3
+
     def cond_T068_finished(self):
         return tools_running(['T0', 'T6', 'T8']) == ['False'] * 3
     
@@ -290,6 +285,11 @@ class StateMachine:
         with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
             action_selected = file.read()
         return action_selected == "Dire au revoir"
+    
+    def cond_reidentify(self):
+        with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
+            action_selected = file.read()
+        return action_selected == "Réidentifier"
     
     def cond_else(self):
         return True
