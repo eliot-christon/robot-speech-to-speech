@@ -194,7 +194,10 @@ class StateMachine:
     
     def write_text_to_say(self):
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
-            file.write(" ".join(self.sentences_to_say))
+            if len(self.sentences_to_say) > 0:
+                file.write(self.sentences_to_say[0])
+            else:
+                file.write("")
 
     def update_sentences_to_say(self):
         sentences, current_sentence_generated = get_clean_generated_sentences()
@@ -202,8 +205,9 @@ class StateMachine:
         self.current_sentence_generated = current_sentence_generated
     
     def update_sentences_said(self):
-        self.sentences_said += self.sentences_to_say
-        self.sentences_to_say = []
+        if len(self.sentences_to_say) > 0:
+            self.sentences_said += [self.sentences_to_say[0]]
+            self.sentences_to_say = self.sentences_to_say[1:]
     
     def update_time_when_entered_listen(self):
         """Update the time when entered listen state."""
@@ -283,10 +287,9 @@ class StateMachine:
         return tools_running(['T0', 'T6', 'T8']) == ['False'] * 3
     
     def cond_bye(self):
-        # with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
-        #     action_selected = file.read()
-        # return action_selected == "dire au revoir"
-        return False # TODO NOT_IMPLEMENTED
+        with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
+            action_selected = file.read()
+        return action_selected == "Dire au revoir"
     
     def cond_else(self):
         return True
