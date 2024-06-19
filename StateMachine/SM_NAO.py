@@ -52,8 +52,9 @@ class StateMachine:
                                 on_enter=(clear_time_speech_detected, self.add_text_generated_to_conversation, self.update_time_when_entered_listen, clear_text_transcribed, leds_green),
                                 stop_tools=['T11']),
             "CONTEXT"   : State(number=10, name="CONTEXT",
+                                start_tools=['T4'],
                                 stop_tools=['T6', 'T8'],
-                                on_enter=(leds_blue,)),
+                                on_enter=(leds_blue, self.check_user_action)),
             "START_GEN" : State(number=3, name="START_GEN",
                                 start_tools=['T2'],
                                 on_enter=(self.add_transcribed_to_conversation, self.edit_prompt, self.update_time_when_entered_start_gen, self.filler_sound)),
@@ -86,8 +87,8 @@ class StateMachine:
             "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
-            "CONTEXT"   : {"START_GEN"  : self.cond_T10_finished},
-            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
+            "CONTEXT"   : {"START_GEN"  : self.cond_T1410_finished},
+            "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen, "GEN_RE_ID" : self.cond_reidentify},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY"        : self.cond_T034_finished},
             "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "GEN_RE_ID"  : self.cond_reidentify},
@@ -173,6 +174,13 @@ class StateMachine:
         # now write the re-identification phrase in the text_to_say file
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
             file.write(re_id_content)
+    
+    def check_user_action(self):
+        """Place the user message in text to say so it is checked by the Action Selection tool."""
+        with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
+            text = file.read()
+        with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+            file.write(text)
         
     def init_current_conversation(self):
         """Initialize the current conversation with the system context and the first phrase to say."""
@@ -283,9 +291,9 @@ class StateMachine:
     def cond_T1_finished(self):
         return tools_running(['T1']) == ['False']
 
-    def cond_T10_finished(self):
-        # return tools_running(['T1', 'T10']) == ['False'] * 2
-        return True # TODO T10 NOT_IMPLEMENTED
+    def cond_T1410_finished(self):
+        return tools_running(['T1', 'T4']) == ['False'] * 2
+        return # TODO T10 NOT_IMPLEMENTED
 
     def cond_T03_finished(self):
         return tools_running(['T0', 'T3']) == ['False', 'False']
@@ -319,7 +327,7 @@ class StateMachine:
     
     def cond_not_empty_text_gen(self):
         self.update_sentences_to_say()
-        return len(self.sentences_to_say) > 0 or len(self.current_sentence_generated) > 0
+        return (len(self.sentences_to_say) > 0 or len(self.current_sentence_generated) > 0) and not self.cond_reidentify()
     
 #%% RUN =================================================================================================================
     
