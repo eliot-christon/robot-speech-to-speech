@@ -92,7 +92,7 @@ class StateMachine:
             "TTS_AS"    : {"SAY"        : self.cond_T034_finished},
             "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "GEN_RE_ID"  : self.cond_reidentify},
             "GEN_RE_ID" : {"RE_ID"      : self.cond_T03_finished},
-            "RE_ID"     : {"IDENTIFY"   : self.cond_T0_finished},
+            "RE_ID"     : {"IDENTIFY"   : self.cond_T03_finished},
             "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
