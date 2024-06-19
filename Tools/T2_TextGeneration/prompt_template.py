@@ -29,6 +29,7 @@ TEMPLATE = {
     "openbuddy-mistral"         : prompt[6],
     "llama3"                    : prompt[7],
     "phi3"                      : prompt[8],
+    "phi3:14b"                  : prompt[8],
     "french-alpaca-llama3"      : prompt[9],
     "aya"                       : prompt[10],
     "aya:35b"                   : prompt[10],

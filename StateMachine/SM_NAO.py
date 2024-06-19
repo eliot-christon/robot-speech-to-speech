@@ -65,14 +65,19 @@ class StateMachine:
             "SAY"       : State(number=6, name="SAY",
                                 start_tools=['T0', 'T11'],
                                 on_enter=(self.update_sentences_said,)),
+            "GEN_RE_ID" : State(number=12, name="GEN_RE_ID",
+                                start_tools=['T3'],
+                                stop_tools=['T11'],
+                                on_enter=(self.edit_re_id_sentence, leds_yellow)),
+            "RE_ID"     : State(number=11, name="RE_ID",
+                                start_tools=['T0']),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
                                 stop_tools=['T6', 'T8', 'T11'],
-                                on_enter=(self.edit_last_phrase, leds_yellow)),
+                                on_enter=(self.edit_last_sentence, leds_yellow)),
             "BYE"       : State(number=11, name="BYE",
                                 start_tools=['T0'],
-                                on_enter=(self.gesture_bye,),
-                                stop_tools=['T8']),
+                                on_enter=(self.gesture_bye,)),
         }
 
         self.conditions = {
@@ -85,7 +90,9 @@ class StateMachine:
             "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY"        : self.cond_T034_finished},
-            "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "IDENTIFY"  : self.cond_reidentify},
+            "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "GEN_RE_ID"  : self.cond_reidentify},
+            "GEN_RE_ID" : {"RE_ID"      : self.cond_T03_finished},
+            "RE_ID"     : {"IDENTIFY"   : self.cond_T0_finished},
             "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
@@ -150,7 +157,7 @@ class StateMachine:
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
             file.write(self.first_phrase)
     
-    def edit_last_phrase(self):
+    def edit_last_sentence(self):
         """Edit and write the last phrase to say in text_to_say, by replacing the [prenom] tag by the name of the person recognized."""
         with open("data/stored/assistant/bye.txt", "r", encoding="utf-8") as file:
             bye_content = file.read()
@@ -158,6 +165,14 @@ class StateMachine:
         # now write the last phrase in the text_to_say file
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
             file.write(bye_content)
+    
+    def edit_re_id_sentence(self):
+        """Edit and write the re-identification phrase in text_to_say."""
+        with open("data/stored/assistant/re_id.txt", "r", encoding="utf-8") as file:
+            re_id_content = file.read()
+        # now write the re-identification phrase in the text_to_say file
+        with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
+            file.write(re_id_content)
         
     def init_current_conversation(self):
         """Initialize the current conversation with the system context and the first phrase to say."""
@@ -289,7 +304,7 @@ class StateMachine:
     def cond_reidentify(self):
         with open("data/live/action_selected.txt", "r", encoding="utf-8") as file:
             action_selected = file.read()
-        return action_selected == "Réidentifier"
+        return action_selected == "Se réidentifier"
     
     def cond_else(self):
         return True
