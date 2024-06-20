@@ -19,7 +19,10 @@ class RightsManagement:
     def __read_person_reconized(self) -> str:
         """Read the person reconized"""
         with open(self.__input_person_reconized_file, "r") as file:
-            return file.read().strip()
+            res = file.read().strip()
+        if res == "":
+            return "Unknown"
+        return res
     
     def __get_level_of_duty(self, person:str) -> str:
         """Get the level of duty of a person reading the people folder / person folder / level_of_duty.txt"""
@@ -29,18 +32,18 @@ class RightsManagement:
     def __api_request(self, person:str, level_of_duty:str) -> requests.Response:
         """Make an API request to the RightsManagement API"""
         url = f"{self.__input_url_api_request}?person={person}&level_of_duty={level_of_duty}" # TODO: Check if the URL is correct
-        response = requests.get(url)
+        response = requests.post(url)
         return response
 
     def __write_autorized_documents(self, autorisations:dict):
         """Write the autorized documents in the output file"""
-        with open(self.__output_documents_autorized_file, "w") as file:
+        with open(self.__output_documents_autorized_file, "w", encoding="utf-8") as file:
             for document in autorisations["documents"]:
                 file.write(f"{document}\n")
 
     def __write_autorized_actions(self, autorisations:dict):
         """Write the autorized actions in the output file"""
-        with open(self.__output_actions_autorized_file, "w") as file:
+        with open(self.__output_actions_autorized_file, "w", encoding="utf-8") as file:
             for action in autorisations["actions"]:
                 file.write(f"{action}\n")
     
@@ -55,8 +58,19 @@ class RightsManagement:
 
         person        = self.__read_person_reconized()
         level_of_duty = self.__get_level_of_duty(person)
-        response      = self.__api_request(person, level_of_duty)
-        autorisations = response.json()["autorisations"]
+        try :
+            response      = self.__api_request(person, level_of_duty)
+            try :
+                autorisations = response.json()["autorisations"]
+            except Exception as e:
+                logging.error(f"T12_RightsManagement: Error during the JSON parsing: {e}")
+                self.__running = False
+                return
+        except Exception as e:
+            logging.error(f"T12_RightsManagement: Error during the API request: {e}")
+            self.__running = False
+            autorisations = {"documents": [], "actions": ["Se réidentifier", "Dire au revoir"]}
+        
         self.__write_autorized_documents(autorisations)
         self.__write_autorized_actions(autorisations)
 
