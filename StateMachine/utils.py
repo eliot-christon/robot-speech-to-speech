@@ -208,6 +208,9 @@ def clean_text(text:str) -> str:
     text = rm_smileys(text)
     text = rm_double_braces(text)
 
+    text = text.replace("  ", " ")
+    text = text.replace("revior", "revoir")
+
     return text
 
 
