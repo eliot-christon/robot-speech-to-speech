@@ -1,5 +1,6 @@
 import logging
 import requests
+import time
 
 class RightsManagement:
     """Class to control the RightsManagement through an ODM server"""
@@ -31,8 +32,14 @@ class RightsManagement:
     
     def __api_request(self, person:str, level_of_duty:str) -> requests.Response:
         """Make an API request to the RightsManagement API"""
-        url = f"{self.__input_url_api_request}?person={person}&level_of_duty={level_of_duty}" # TODO: Check if the URL is correct
-        response = requests.post(url)
+        json_in = {
+            "personne": {
+                "identifiant": person,
+                "niveauDeDroits": level_of_duty
+            },
+            "__DecisionID__": str(time.time())
+        }
+        response = requests.post(self.__input_url_api_request, json=json_in)
         return response
 
     def __write_autorized_documents(self, autorisations:dict):
@@ -65,6 +72,7 @@ class RightsManagement:
             except Exception as e:
                 logging.error(f"T12_RightsManagement: Error during the JSON parsing: {e}")
                 self.__running = False
+                print(response.json())
                 return
         except Exception as e:
             logging.error(f"T12_RightsManagement: Error during the API request: {e}")
