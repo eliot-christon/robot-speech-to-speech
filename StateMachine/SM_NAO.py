@@ -41,7 +41,7 @@ class StateMachine:
                                 on_exit=(self.store_person_recognized,),
                                 stop_tools=['T6', 'T8']),
             "GEN_HI"    : State(number=13, name="GEN_HI",
-                                start_tools=['T3'],
+                                start_tools=['T3', 'T12'],
                                 on_enter=(self.edit_first_phrase, leds_yellow)),
             "CONV"      : State(number=1, name="CONV",
                                 start_tools=['T0'],
@@ -71,11 +71,11 @@ class StateMachine:
                                 on_enter=(self.edit_re_id_sentence, leds_yellow)),
             "RE_ID"     : State(number=16, name="RE_ID",
                                 start_tools=['T0']),
-            "PRE_ACT_A" : State(number=17, name="PRE_ACT_A",
+            "PRE_DEL"   : State(number=17, name="PRE_DEL",
                                 start_tools=['T3'],
                                 stop_tools=['T11'],
-                                on_enter=(self.edit_act_a_sentence, leds_yellow)),
-            "ACT_A"     : State(number=18, name="ACT_A",
+                                on_enter=(self.edit_del_user_sentence, leds_yellow)),
+            "DEL_USER"  : State(number=18, name="DEL_USER",
                                 start_tools=['T0']),
             "GEN_BYE"   : State(number=12, name="GEN_BYE",
                                 start_tools=['T3'],
@@ -92,15 +92,15 @@ class StateMachine:
             "GEN_HI"    : {"CONV"       : self.cond_T03_finished},
             "CONV"      : {"LISTEN"     : self.cond_T068_finished},
             "LISTEN"    : {"CONTEXT"    : self.cond_end_sentence,       "GEN_BYE"   : self.cond_nothing_said},
-            "CONTEXT"   : {"GEN_RE_ID"  : self.cond_reidentify,         "PRE_ACT_A" : self.cond_act_a,          "START_GEN" : self.cond_T110_finished},
+            "CONTEXT"   : {"GEN_RE_ID"  : self.cond_reidentify,         "PRE_DEL"   : self.cond_del_user,          "START_GEN" : self.cond_T110_finished},
             "START_GEN" : {"GEN"        : self.cond_not_empty_text_gen},
             "GEN"       : {"TTS_AS"     : self.cond_one_sentence,       "LISTEN"    : self.cond_nothing_to_say},
             "TTS_AS"    : {"SAY"        : self.cond_T034_finished},
             "SAY"       : {"GEN_BYE"    : self.cond_bye,                "GEN"       : self.cond_else,           "GEN_RE_ID" : self.cond_reidentify},
             "GEN_RE_ID" : {"RE_ID"      : self.cond_T03_finished},
             "RE_ID"     : {"IDENTIFY"   : self.cond_T03_finished},
-            "PRE_ACT_A" : {"ACT_A"      : self.cond_T03_finished},
-            "ACT_A"     : {"LISTEN"     : self.cond_T068_finished},
+            "PRE_DEL"   : {"DEL_USER"   : self.cond_T03_finished},
+            "DEL_USER"  : {"LISTEN"     : self.cond_T068_finished},
             "GEN_BYE"   : {"BYE"        : self.cond_T03_finished},
             "BYE"       : {"WAIT"       : self.cond_T068_finished},
         }
@@ -182,13 +182,13 @@ class StateMachine:
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
             file.write(re_id_content)
     
-    def edit_act_a_sentence(self):
+    def edit_del_user_sentence(self):
         """Edit and write the action A phrase in text_to_say."""
-        with open("data/stored/assistant/act_a.txt", "r", encoding="utf-8") as file:
-            act_a_content = file.read()
+        with open("data/stored/assistant/del_user.txt", "r", encoding="utf-8") as file:
+            content = file.read()
         # now write the action A phrase in the text_to_say file
         with open("data/live/text_to_say.txt", "w", encoding="utf-8") as file:
-            file.write(act_a_content)
+            file.write(content)
     
     def check_user_reid(self):
         """Check if the user wants to re-identify himself."""
@@ -349,17 +349,17 @@ class StateMachine:
         self.update_sentences_to_say()
         return (len(self.sentences_to_say) > 0 or len(self.current_sentence_generated) > 0)
     
-    def cond_act_a(self):
+    def cond_del_user(self):
         with open("data/live/text_transcribed.txt", "r", encoding="utf-8") as file:
             text = file.read()
         # actions authorized
         with open("data/live/actions_autorized.txt", "r", encoding="utf-8") as file:
             actions_autorized = file.read()
-        act_a_words = ["action banale"]
-        if any(word in text.lower() for word in act_a_words):
-            if "Action banale" in actions_autorized:
+        activation_words = ["supprimer un utilisateur", "supprimer des utilisateurs", "supprimer un compte", "supprimer des comptes", "suppression d'un utilisateur", "suppression d'utilisateur", "suppression d'un compte", "suppression de compte"]
+        if any(word in text.lower() for word in activation_words):
+            if "supprimer des utilisateurs" in actions_autorized:
                 with open("data/live/action_selected.txt", "w", encoding="utf-8") as file:
-                    file.write("Action banale")
+                    file.write("supprimer des utilisateurs")
                 return True
             self.current_conversation.append(Message(role="system", content="L'action demandée n'est pas autorisée.", timestamp=time.time()))
         return False

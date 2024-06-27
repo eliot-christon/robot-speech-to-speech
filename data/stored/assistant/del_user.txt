@@ -1,0 +1,1 @@
+Lancement de l'action Suppression d'utilisateur. Cette action n'est pas encore implémentée mais elle pourrait bientôt l'être.
