@@ -80,6 +80,7 @@ fast_com_dict = {
     "T9" : "Tools/T9_LEDS/fast_com/",
     "T10": "Tools/T10_RetrieveAndAugment/fast_com/",
     "T11": "Tools/T11_Gesture/fast_com/",
+    "T12": "Tools/T12_RightsManagement/fast_com/",
 }
 import logging
 def send_command(command, fast_com_dir):
