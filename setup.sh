@@ -130,9 +130,11 @@ create_data_live_files() {
     # | [time_speech_detected.txt](time_speech_detected.txt)  | the last time the program detected speech |
 
     touch data/live/action_selected.txt
+    touch data/live/actions_autorized.txt
     touch data/live/audio_generated.wav
     touch data/live/audio_recorded.raw
     touch data/live/audio_recorded.wav
+    touch data/live/documents_autorized.txt
     touch data/live/documents_context.csv
     touch data/live/documents_context.txt
     touch data/live/led_rgb.txt
