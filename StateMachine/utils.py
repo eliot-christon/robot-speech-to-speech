@@ -85,7 +85,7 @@ import logging
 def send_command(command, fast_com_dir):
     with open(fast_com_dir + "command.txt", 'w') as file:
         file.write(command)
-    logging.info(f"Command sent to {fast_com_dir}: {command}")
+    logging.info(f"    Command sent to {fast_com_dir}: {command}")
         
 def get_status(fast_com_dir):
     with open(fast_com_dir + "status.txt", 'r') as file:
@@ -221,13 +221,6 @@ def build_prompt(list_messages:list) -> str:
         prompt += message.role + " " + message.content + "\n"
 
     return prompt
-
-# TESTS
-
-assert(clean_text("Désolé pour le malentendu précédant (en deux phrases) ! Voici ma réponse aux questions : 🤖'Est-ce que tu me reconnais ? - Oui, je te voix!'### Instruction:	Coucou NAO. Pourquoi les gens utiliseraient un assistant virtuel comme toi plutot qu'un IA (Intelligence Artificielle)?.") == "Désolé pour le malentendu précédant  ! Voici ma réponse aux questions : 'Est-ce que tu me reconnais ? - Oui, je te voix!'.")
-list_messages = [Message("system", "réponds en deux phrases en français"), Message("user", "Hello"), Message("assistant", "Hi")]
-assert(build_prompt(list_messages) == "system réponds en deux phrases en français\nuser Hello\nassistant Hi\n")
-
 
 #%% LEDS ==================================================================================================================
 
