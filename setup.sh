@@ -79,6 +79,7 @@ create_venv() {
     fi
 
     # Install the requirements for the tool
+    
     if [ "$python_version" != "python2.7" ]; then
         pip install -r "$tool_path/requirements.txt"
         if [ $? -ne 0 ]; then
